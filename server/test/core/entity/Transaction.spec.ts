@@ -21,6 +21,7 @@ describe('success', () => {
     expect(transaction.value).toBe(input.value);
     expect(transaction.direction).toBe(input.direction);
     expect(transaction.when).toBe(input.when);
+    expect(transaction.category).toBe(input.category);
   });
 
   test('transaction instance with value equal 0', () => {
