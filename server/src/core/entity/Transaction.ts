@@ -6,15 +6,19 @@ export default class Transaction {
   private _value:     number;
   private _direction: TransactionDirection;
   private _when:      Date;
+  private _createdAt: Date;
+  private _updatedAt: Date;
   private _category?: Category;
 
-  constructor(id: string, name: string, value: number, direction: TransactionDirection, when: Date, category?: Category){
+  constructor(id: string, name: string, value: number, direction: TransactionDirection, when: Date, createdAt: Date, updatedAt: Date, category?: Category){
     this._id        = id;
     this._name      = name;
     this._value     = value;
     this._direction = direction;
     this._when      = when;
     this._category  = category;
+    this._createdAt = createdAt;
+    this._updatedAt = updatedAt;
     
     this.isValid();
   }
@@ -25,6 +29,8 @@ export default class Transaction {
   get direction() { return this._direction; }
   get when()      { return this._when; }
   get category()  { return this._category; }
+  get createdAt() { return this._createdAt; }
+  get updatedAt() { return this._updatedAt; }
 
   private isValid(){
     const valueLessThan0 = this.value < 0;
