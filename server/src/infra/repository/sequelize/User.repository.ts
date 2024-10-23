@@ -69,12 +69,36 @@ export default class UserRepository implements IUserRepository {
       return result;
     }catch(err: any){
       console.error(err);
-      throw new Error(err?.errors?.[0]?.message || 'failed on get user by id');
+      throw new Error(err?.errors?.[0]?.message || 'failed on get users');
     }
   }
 
-  async updateBy(id: string, input: User): Promise<User>{ throw new Error(); }
-  async deleteBy(id: string): Promise<User>{ throw new Error(); }
+  async updateBy(id: string, input: User): Promise<User>{
+    try{
+      const result = await this.USER_MODEL.update({
+        name:     input.name,
+        username: input.username,
+        email:    input.email,
+        password: input.password,
+        status:   input.status,
+        role:     input.role
+      }, { where: { id }});
+      return this.getBy(id);
+    }catch(err: any){
+      console.error(err);
+      throw new Error(err?.errors?.[0]?.message || 'failed on update user');
+    }
+  }
+
+  async deleteBy(id: string): Promise<boolean>{
+    try{
+      const result = await this.USER_MODEL.destroy({ where: { id }});
+      return result === 1;
+    }catch(err: any){
+      console.error(err);
+      throw new Error(err?.errors?.[0]?.message || 'failed on delete user by id');
+    }
+  }
 
   private instanceUserFrom(sequelizeResponse: any) {
     return new User(
