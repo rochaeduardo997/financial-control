@@ -89,6 +89,12 @@ describe('success', () => {
     expect(result[1].updatedAt).toBeDefined();
   });
 
+  test('empty array when find all without user registered', async () => {
+    const result = await userRepository.getAll();
+    expect(result).toHaveLength(0);
+  });
+
+
   test('update user', async () => {
     await userRepository.create(users[0]);
     const result = await userRepository.updateBy(users[0].id, users[1]);
@@ -113,10 +119,84 @@ describe('success', () => {
 });
 
 describe('fail', () => {
+  test('create user with same username', async () => {
+    await userRepository.create(users[0]);
+    const userWithSameUsername = new User(
+      users[1].id,
+      users[0].name,
+      users[0].username,
+      users[1].email,
+      users[0].password,
+      users[0].status,
+      users[0].role,
+      users[0].createdAt,
+      users[0].updatedAt
+    );
+    await expect(() => userRepository.create(userWithSameUsername))
+      .rejects
+      .toThrow('username must be unique');
+  });
+
+  test('create user with same email', async () => {
+    await userRepository.create(users[0]);
+    await expect(() => userRepository.create(users[0]))
+      .rejects
+      .toThrow('email must be unique');
+  });
+
   test('login with invalid credentials', async () => {
     await expect(() => userRepository.login({ login: 'login', password: 'password' }))
       .rejects
       .toThrow();
+  });
+
+  test('find by invalid id', async () => {
+    await expect(() => userRepository.getBy('invalid_id'))
+      .rejects
+      .toThrow('failed on get user by id');
+  });
+
+  test('update user with invalid id', async () => {
+    await expect(() => userRepository.updateBy('invalid_id', users[0]))
+      .rejects
+      .toThrow('failed on update user');
+  });
+
+  test('update user with same email', async () => {
+    await userRepository.create(users[0]);
+    await userRepository.create(users[1]);
+    await expect(() => userRepository.updateBy(users[0].id, users[1]))
+      .rejects
+      .toThrow('email must be unique');
+  });
+
+  test('update user with same username', async () => {
+    await userRepository.create(users[0]);
+    await userRepository.create(users[1]);
+    const userWithSameUsername = new User(
+      users[0].id,
+      users[0].name,
+      users[1].username,
+      users[0].email,
+      users[0].password,
+      users[0].status,
+      users[0].role,
+      users[0].createdAt,
+      users[0].updatedAt
+    );
+    await expect(() => userRepository.updateBy(users[0].id, userWithSameUsername))
+      .rejects
+      .toThrow('username must be unique');
+  });
+
+  test('delete user by invalid id', async () => {
+    await userRepository.create(users[0]);
+    await userRepository.create(users[1]);
+    await expect(() => userRepository.deleteBy('invalid_id'))
+      .rejects
+      .toThrow('failed on delete user by id');
+    const getAllResult = await userRepository.getAll();
+    expect(getAllResult).toHaveLength(2);
   });
 });
 

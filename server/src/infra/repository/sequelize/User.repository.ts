@@ -54,6 +54,7 @@ export default class UserRepository implements IUserRepository {
   async getBy(id: string): Promise<User>{
     try{
       const result = await this.USER_MODEL.findOne({ raw: true, where: { id }});
+      if(!result) throw new Error();
       return this.instanceUserFrom(result);
     }catch(err: any){
       console.error(err);
@@ -75,6 +76,8 @@ export default class UserRepository implements IUserRepository {
 
   async updateBy(id: string, input: User): Promise<User>{
     try{
+      const verifyIfUserExists = await this.getBy(id);
+      if(!verifyIfUserExists) throw new Error();
       const result = await this.USER_MODEL.update({
         name:     input.name,
         username: input.username,
@@ -92,6 +95,8 @@ export default class UserRepository implements IUserRepository {
 
   async deleteBy(id: string): Promise<boolean>{
     try{
+      const verifyIfUserExists = await this.getBy(id);
+      if(!verifyIfUserExists) throw new Error();
       const result = await this.USER_MODEL.destroy({ where: { id }});
       return result === 1;
     }catch(err: any){
