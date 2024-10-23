@@ -53,6 +53,19 @@ describe('success', () => {
     expect(result.createdAt).toBeDefined();
     expect(result.updatedAt).toBeDefined();
   });
+
+  test('find by id', async () => {
+    const user   = await userRepository.create(users[0]);
+    const result = await userRepository.getBy(user.id);
+    expect(result.id).toBe(user.id);
+    expect(result.name).toBe(user.name);
+    expect(result.username).toBe(user.username);
+    expect(result.email).toBe(user.email);
+    expect(result.password).toBe(user.password);
+    expect(result.status).toBeFalsy();
+    expect(result.createdAt).toBeDefined();
+    expect(result.updatedAt).toBeDefined();
+  });
 });
 
 describe('fail', () => {
