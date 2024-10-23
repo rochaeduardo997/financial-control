@@ -11,6 +11,28 @@ export default class UserRepository implements IUserRepository {
     this.USER_MODEL = UserModel;
   }
 
+  async login(input: TLoginInput): Promise<User> {
+    try{
+      const user = await this.USER_MODEL
+        .findOne({
+          raw: true,
+          where: {
+            [Op.or]: [
+              { username: input.login },
+              { email:    input.login }
+            ]
+          }
+        });
+      if(!user) throw new Error('incorrect login/password');
+      const passwordMatch = user?.password === input.password;
+      if(!passwordMatch) throw new Error('incorrect login/password');
+      return this.instanceUserFrom(user);
+    }catch(err: any){
+      console.error(err);
+      throw new Error('incorrect login/password');
+    }
+  }
+
   async create(input: User): Promise<User> {
     try{
       const result = (await this.USER_MODEL.create({
@@ -22,7 +44,7 @@ export default class UserRepository implements IUserRepository {
         status:   input.status,
         role:     input.role
       }, { raw: true })).dataValues;
-      return new User(result.id, result.name, result.username, result.email, result.password, result.status, result.role, result.createdAt, result.updatedAt);
+      return this.instanceUserFrom(result);
     }catch(err: any){
       console.error(err);
       throw new Error(err?.errors?.[0]?.message || 'failed on create new user');
@@ -33,4 +55,18 @@ export default class UserRepository implements IUserRepository {
   async getAll(): Promise<User[]>{ throw new Error(); }
   async updateBy(id: string, input: User): Promise<User>{ throw new Error(); }
   async deleteBy(id: string): Promise<User>{ throw new Error(); }
+
+  private instanceUserFrom(sequelizeResponse: any) {
+    return new User(
+      sequelizeResponse.id, 
+      sequelizeResponse.name, 
+      sequelizeResponse.username, 
+      sequelizeResponse.email, 
+      sequelizeResponse.password, 
+      sequelizeResponse.status,
+      sequelizeResponse.role, 
+      sequelizeResponse.createdAt, 
+      sequelizeResponse.updatedAt
+    );
+  }
 }
