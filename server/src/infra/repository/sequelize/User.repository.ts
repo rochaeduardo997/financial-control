@@ -57,11 +57,22 @@ export default class UserRepository implements IUserRepository {
       return this.instanceUserFrom(result);
     }catch(err: any){
       console.error(err);
-      throw new Error(err?.errors?.[0]?.message || 'failed on create new user');
+      throw new Error(err?.errors?.[0]?.message || 'failed on get user by id');
     }
   }
 
-  async getAll(): Promise<User[]>{ throw new Error(); }
+  async getAll(): Promise<User[]>{
+    try{
+      const result: User[] = [];
+      const users = await this.USER_MODEL.findAll({ raw: true });
+      for(let u of users) result.push(this.instanceUserFrom(u));
+      return result;
+    }catch(err: any){
+      console.error(err);
+      throw new Error(err?.errors?.[0]?.message || 'failed on get user by id');
+    }
+  }
+
   async updateBy(id: string, input: User): Promise<User>{ throw new Error(); }
   async deleteBy(id: string): Promise<User>{ throw new Error(); }
 

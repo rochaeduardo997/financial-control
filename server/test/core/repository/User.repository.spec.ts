@@ -10,7 +10,7 @@ let sequelize:  Sequelize;
 let userRepository: IUserRepository;
 
 beforeEach(async () => {
-  users = userSeed();
+  users = userSeed(2);
   sequelize = await instanceSequelize();
   userRepository = new UserRepository(sequelize);
 });
@@ -65,6 +65,28 @@ describe('success', () => {
     expect(result.status).toBeFalsy();
     expect(result.createdAt).toBeDefined();
     expect(result.updatedAt).toBeDefined();
+  });
+
+  test('find all', async () => {
+    await userRepository.create(users[0]);
+    await userRepository.create(users[1]);
+    const result = await userRepository.getAll();
+    expect(result[0].id).toBe(users[0].id);
+    expect(result[0].name).toBe(users[0].name);
+    expect(result[0].username).toBe(users[0].username);
+    expect(result[0].email).toBe(users[0].email);
+    expect(result[0].password).toBe(users[0].password);
+    expect(result[0].status).toBeFalsy();
+    expect(result[0].createdAt).toBeDefined();
+    expect(result[0].updatedAt).toBeDefined();
+    expect(result[1].id).toBe(users[1].id);
+    expect(result[1].name).toBe(users[1].name);
+    expect(result[1].username).toBe(users[1].username);
+    expect(result[1].email).toBe(users[1].email);
+    expect(result[1].password).toBe(users[1].password);
+    expect(result[1].status).toBeFalsy();
+    expect(result[1].createdAt).toBeDefined();
+    expect(result[1].updatedAt).toBeDefined();
   });
 });
 
