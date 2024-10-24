@@ -22,6 +22,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: 'server/package.json'
+        cache-dependency-path: ${{github.workspace}}/server/package-lock.json
     - run: npm install
     - run: npm test
