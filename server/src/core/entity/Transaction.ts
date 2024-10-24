@@ -9,8 +9,9 @@ export default class Transaction {
   private _createdAt: Date;
   private _updatedAt: Date;
   private _category?: Category;
+  private _userId?:   string;
 
-  constructor(id: string, name: string, value: number, direction: TransactionDirection, when: Date, createdAt: Date, updatedAt: Date, category?: Category){
+  constructor(id: string, name: string, value: number, direction: TransactionDirection, when: Date, createdAt: Date, updatedAt: Date, category?: Category, userId?: string){
     this._id        = id;
     this._name      = name;
     this._value     = value;
@@ -19,6 +20,7 @@ export default class Transaction {
     this._category  = category;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
+    this._userId    = userId;
     
     this.isValid();
   }
@@ -28,9 +30,12 @@ export default class Transaction {
   get value()     { return this._value; }
   get direction() { return this._direction; }
   get when()      { return this._when; }
-  get category()  { return this._category; }
   get createdAt() { return this._createdAt; }
   get updatedAt() { return this._updatedAt; }
+  get category()  { return this._category; }
+  get userId()    { return this._userId; }
+
+  associateUser(id: string) { this._userId = id; }
 
   private isValid(){
     const valueLessThan0 = this.value < 0;

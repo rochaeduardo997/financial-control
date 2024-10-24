@@ -11,10 +11,10 @@ const input = {
   when:      new Date('2022-05-04T00:00:00'),
   createdAt: new Date('2022-05-05T00:00:00'),
   updatedAt: new Date('2022-05-06T00:00:00'),
-  category
+  category, userId: 'userId'
 };
 
-beforeEach(() => transaction = new Transaction(input.id, input.name, input.value, input.direction, input.when, input.createdAt, input.updatedAt, category));
+beforeEach(() => transaction = new Transaction(input.id, input.name, input.value, input.direction, input.when, input.createdAt, input.updatedAt, category, input.userId));
 
 describe('success', () => {
   test('validate transaction instance', () => {
@@ -26,6 +26,13 @@ describe('success', () => {
     expect(transaction.updatedAt).toBe(input.updatedAt);
     expect(transaction.when).toBe(input.when);
     expect(transaction.category).toBe(input.category);
+    expect(transaction.userId).toBe(input.userId);
+  });
+
+  test('associate user to transaction', () => {
+    const newUserId = 'newUserId';
+    transaction.associateUser(newUserId);
+    expect(transaction.userId).toBe(newUserId);
   });
 
   test('transaction instance with value equal 0', () => {
