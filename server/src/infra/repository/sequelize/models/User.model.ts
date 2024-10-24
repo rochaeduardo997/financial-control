@@ -1,4 +1,5 @@
-import { DataType, Table, Model, PrimaryKey, Column, Unique, Default } from "sequelize-typescript";
+import { HasMany, DataType, Table, Model, PrimaryKey, Column, Unique, Default } from "sequelize-typescript";
+import CategoryModel from './Category.model';
 
 @Table({ tableName: "users", timestamps: true })
 class UserModel extends Model {
@@ -25,6 +26,9 @@ class UserModel extends Model {
 
   @Column({ defaultValue: 'user', type: DataType.ENUM('admin', 'user') })
   declare role: boolean;
+
+  @HasMany(() => CategoryModel, 'fk_user_id')
+  declare category: CategoryModel[];
 }
 
 export default UserModel;

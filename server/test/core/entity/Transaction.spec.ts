@@ -2,7 +2,7 @@ import Transaction, { TransactionDirection } from '../../../src/core/entity/Tran
 import Category from '../../../src/core/entity/Category';
 
 let transaction: Transaction;
-const category = new Category('id', 'name', 'description');
+const category = new Category('id', 'name', 'description', 'userId');
 const input = {
   id:        'id',
   name:      'name',

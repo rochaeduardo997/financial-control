@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import UserModel from '../../repository/sequelize/models/User.model';
+import CategoryModel from '../../repository/sequelize/models/Category.model';
 
 const instanceSequelize = async () => {
   const database = process.env.DB_DB!;
@@ -26,7 +27,7 @@ const instanceSequelize = async () => {
 
   console.log(nodeEnv == 'test' ? 'using sqlite' : 'using postgresql');
 
-  result.addModels([ UserModel ]);
+  result.addModels([ UserModel, CategoryModel ]);
 
   await result.sync();
 
