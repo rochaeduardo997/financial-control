@@ -22,7 +22,7 @@ describe('success', () => {
     expect(transaction.name).toBe(input.name);
     expect(transaction.value).toBe(input.value);
     expect(transaction.direction).toBe(input.direction);
-    expect(transaction.createdAt).toBe(input.createdAt);
+    expect(transaction.createdAt).toBe(input.direction);
     expect(transaction.updatedAt).toBe(input.updatedAt);
     expect(transaction.when).toBe(input.when);
     expect(transaction.category).toBe(input.category);
