@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  server:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,6 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Install dependencies
       uses: actions/setup-node@v4
       with:
