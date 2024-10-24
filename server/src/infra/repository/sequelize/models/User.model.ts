@@ -1,5 +1,6 @@
 import { HasMany, DataType, Table, Model, PrimaryKey, Column, Unique, Default } from "sequelize-typescript";
 import CategoryModel from './Category.model';
+import TransactionModel from './Transaction.model';
 
 @Table({ tableName: "users", timestamps: true })
 class UserModel extends Model {
@@ -29,6 +30,9 @@ class UserModel extends Model {
 
   @HasMany(() => CategoryModel, 'fk_user_id')
   declare category: CategoryModel[];
+
+  @HasMany(() => CategoryModel, 'fk_user_id')
+  declare transactions: TransactionModel[];
 }
 
 export default UserModel;

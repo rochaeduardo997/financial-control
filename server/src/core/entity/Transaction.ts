@@ -1,23 +1,23 @@
 import Category from './Category';
 
 export default class Transaction {
-  private _id:          string;
-  private _name:        string;
-  private _value:       number;
-  private _direction:   TransactionDirection;
-  private _when:        Date;
-  private _createdAt:   Date;
-  private _updatedAt:   Date;
-  private _categories?: Category[];
-  private _userId?:     string;
+  private _id:         string;
+  private _name:       string;
+  private _value:      number;
+  private _direction:  TransactionDirection;
+  private _when:       Date;
+  private _createdAt:  Date;
+  private _updatedAt:  Date;
+  private _categories: Set<Category>;
+  private _userId?:    string;
 
-  constructor(id: string, name: string, value: number, direction: TransactionDirection, when: Date, createdAt: Date, updatedAt: Date, categories: Category[] = [], userId?: string){
+  constructor(id: string, name: string, value: number, direction: TransactionDirection, when: Date, createdAt: Date, updatedAt: Date, userId?: string){
     this._id         = id;
     this._name       = name;
     this._value      = value;
     this._direction  = direction;
     this._when       = when;
-    this._categories = categories;
+    this._categories = new Set<Category>();
     this._createdAt  = createdAt;
     this._updatedAt  = updatedAt;
     this._userId     = userId;
@@ -32,10 +32,11 @@ export default class Transaction {
   get when()       { return this._when; }
   get createdAt()  { return this._createdAt; }
   get updatedAt()  { return this._updatedAt; }
-  get categories() { return this._categories; }
+  get categories() { return Array.from(this._categories); }
   get userId()     { return this._userId; }
 
-  associateUser(id: string) { this._userId = id; }
+  associateUser(id: string)      { this._userId = id; }
+  associateCategory(c: Category) { this._categories.add(c); }
 
   private isValid(){
     const valueLessThan0 = this.value < 0;
