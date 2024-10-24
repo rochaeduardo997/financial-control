@@ -5,5 +5,7 @@ export type TLoginInput = { login: string, password: string };
 
 export default interface IUserRepository extends IRepository<User> {
   login(input: TLoginInput): Promise<User>;
+  getBy(id: string): Promise<User>;
+  getAll(): Promise<User[]>;
 }
 
