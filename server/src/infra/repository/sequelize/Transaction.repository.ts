@@ -1,28 +1,43 @@
+import { Transaction as TX } from "sequelize";
 import { Sequelize } from 'sequelize-typescript';
+import Category from '../../../core/entity/Category';
 import Transaction from '../../../core/entity/Transaction';
-import TransactionModel from './models/Transaction.model';
 import ITransactionRepository from '../../../core/repository/TransactionRepository.interface';
+import TransactionModel from './models/Transaction.model';
+import TransactionCategoryRelationModel from './models/TransactionCategoryRelation.model';
+import ICategoryRepository from '../../../core/repository/CategoryRepository.interface';
+import CategoryRepository from './Category.repository';
 import { Op } from 'sequelize';
 
 export default class TransactionRepository implements ITransactionRepository {
   private TRANSACTION_MODEL;
+  private TRANSACTION_CATEGORIES_RELATION_MODEL;
+  private categoryRepository: ICategoryRepository;
 
   constructor(private sequelize: Sequelize){
-    this.TRANSACTION_MODEL = TransactionModel;
+    this.TRANSACTION_MODEL                     = TransactionModel;
+    this.TRANSACTION_CATEGORIES_RELATION_MODEL = TransactionCategoryRelationModel;
+    this.categoryRepository = new CategoryRepository(this.sequelize);
   }
 
   async create(input: Transaction): Promise<Transaction> {
+    const transaction = await this.sequelize.transaction();
     try{
-      const result = (await this.TRANSACTION_MODEL.create({
+      const transactions = (await this.TRANSACTION_MODEL.create({
         id:         input.id,
         name:       input.name,
         value:      input.value,
         direction:  input.direction,
         when:       input.when,
         fk_user_id: input.userId
-      }, { raw: true })).dataValues;
-      return this.instanceTransactionFrom(result);
+      }, { raw: true, transaction })).dataValues;
+      const categories = await this.reinsertAssociationWithCategoriesBy(transactions.id, transactions.fk_user_id, input.categories, transaction);
+      const result = this.instanceTransactionFrom(transactions);
+      for(const c of categories) result.associateCategory(c);
+      await transaction.commit();
+      return result
     }catch(err: any){
+      await transaction.rollback();
       console.error(err);
       throw new Error(err?.errors?.[0]?.message || err.message || 'failed on create new transaction');
     }
@@ -83,6 +98,20 @@ export default class TransactionRepository implements ITransactionRepository {
       console.error(err);
       throw new Error(err?.errors?.[0]?.message || 'failed on delete transaction by id');
     }
+  }
+
+  private async reinsertAssociationWithCategoriesBy(transactionId: string, userId: string, categories: Category[], transaction: TX): Promise<Category[]>{
+    const result: Category[] = [];
+    for(const c of categories) {
+      const _c = (await this.TRANSACTION_CATEGORIES_RELATION_MODEL.create({
+        fk_category_id:    c.id,
+        fk_transaction_id: transactionId,
+        fk_user_id:        userId
+      }, { raw: true, transaction })).dataValues;
+      const category = await this.categoryRepository.getBy(_c.fk_category_id, userId);
+      result.push(category);
+    }
+    return result;
   }
 
   private async findBy(id: string): Promise<Transaction>{

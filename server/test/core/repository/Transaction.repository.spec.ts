@@ -32,10 +32,6 @@ beforeEach(async () => {
   await createCategories();
   transactions[0].associateUser(users[0].id);
   transactions[1].associateUser(users[0].id);
-  transactions[0].associateCategory(categories[0]);
-  transactions[0].associateCategory(categories[1]);
-  transactions[1].associateCategory(categories[0]);
-  transactions[1].associateCategory(categories[1]);
 });
 
 async function createUsers(){
@@ -64,19 +60,23 @@ describe('success', () => {
     expect(result.userId).toBe(transactions[0].userId);
   });
 
-  // test.only('create new transaction with associated categories', async () => {
-  //   const result = await transactionRepository.create(transactions[0]);
-  //   expect(result.id).toBe(transactions[0].id);
-  //   expect(result.name).toBe(transactions[0].name);
-  //   expect(result.value).toBe(transactions[0].value);
-  //   expect(result.direction).toBe(transactions[0].direction);
-  //   expect(result.when).toBe(transactions[0].when);
-  //   expect(result.createdAt).toBeDefined();
-  //   expect(result.updatedAt).toBeDefined();
-  //   expect(result.categories[0]).toEqual(categories[0]);
-  //   expect(result.categories[1]).toEqual(categories[1]);
-  //   expect(result.userId).toBe(transactions[0].userId);
-  // });
+  test('create new transaction with associated categories', async () => {
+    transactions[0].associateCategory(categories[0]);
+    transactions[0].associateCategory(categories[1]);
+    transactions[1].associateCategory(categories[0]);
+    transactions[1].associateCategory(categories[1]);
+    const result = await transactionRepository.create(transactions[0]);
+    expect(result.id).toBe(transactions[0].id);
+    expect(result.name).toBe(transactions[0].name);
+    expect(result.value).toBe(transactions[0].value);
+    expect(result.direction).toBe(transactions[0].direction);
+    expect(result.when).toBe(transactions[0].when);
+    expect(result.createdAt).toBeDefined();
+    expect(result.updatedAt).toBeDefined();
+    expect(result.categories[0]).toEqual(categories[0]);
+    expect(result.categories[1]).toEqual(categories[1]);
+    expect(result.userId).toBe(transactions[0].userId);
+  });
 
 //   test('find by id', async () => {
 //     const category = await categoryRepository.create(categories[0]);

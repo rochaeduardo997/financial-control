@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import UserModel from '../../repository/sequelize/models/User.model';
 import CategoryModel from '../../repository/sequelize/models/Category.model';
 import TransactionModel from '../../repository/sequelize/models/Transaction.model';
+import TransactionCategoryRelationModel from '../../repository/sequelize/models/TransactionCategoryRelation.model';
 
 const instanceSequelize = async () => {
   const database = process.env.DB_DB!;
@@ -31,7 +32,7 @@ const instanceSequelize = async () => {
   result.addModels([
     UserModel,
     CategoryModel,
-    TransactionModel
+    TransactionModel, TransactionCategoryRelationModel
   ]);
 
   await result.sync();
