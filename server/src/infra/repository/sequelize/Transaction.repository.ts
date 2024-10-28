@@ -45,12 +45,19 @@ export default class TransactionRepository implements ITransactionRepository {
 
   async getBy(id: string, userId: string): Promise<Transaction>{
     try{
-      throw new Error();
-      // const result = await this.TRANSACTION_MODEL.findOne({ raw: true, where: { id }});
-      // if(!result) throw new Error();
-      // const isFromRespectiveUser = result.fk_user_id === userId;
-      // if(!isFromRespectiveUser) throw new Error('cannot access transaction from another user');
-      // return this.instanceTransactionFrom(result);
+      const transaction = await this.TRANSACTION_MODEL.findOne({
+        where: { id },
+        include: { model: TransactionCategoryRelationModel }
+      });
+      if(!transaction) throw new Error();
+      const isFromRespectiveUser = transaction.fk_user_id === userId;
+      if(!isFromRespectiveUser) throw new Error('cannot access transaction from another user');
+      const result = this.instanceTransactionFrom(transaction);
+      for(const c of transaction.categories){
+        const category = await this.categoryRepository.getBy(c.fk_category_id, userId);
+        result.associateCategory(category);
+      }
+      return result;
     }catch(err: any){
       console.error(err);
       throw new Error(err?.errors?.[0]?.message || err.message || 'failed on get transaction by id');
@@ -131,9 +138,9 @@ export default class TransactionRepository implements ITransactionRepository {
       sequelizeResponse.name,
       sequelizeResponse.value,
       sequelizeResponse.direction,
-      sequelizeResponse.when,
-      sequelizeResponse.createdAt,
-      sequelizeResponse.updatedAt,
+      new Date(sequelizeResponse.when),
+      new Date(sequelizeResponse.createdAt),
+      new Date(sequelizeResponse.updatedAt),
       sequelizeResponse.fk_user_id
     );
   }

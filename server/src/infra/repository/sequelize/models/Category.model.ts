@@ -1,5 +1,7 @@
-import { ForeignKey, BelongsTo, DataType, Table, Model, PrimaryKey, Column, Unique, Default } from "sequelize-typescript";
+import { HasMany, ForeignKey, DataType, Table, Model, PrimaryKey, Column, Unique, Default } from "sequelize-typescript";
 import UserModel from './User.model';
+import TransactionModel from './Transaction.model';
+import TransactionCategoryRelationModel from './TransactionCategoryRelation.model';
 
 @Table({ tableName: "categories", timestamps: true })
 class CategoryModel extends Model {
@@ -20,6 +22,9 @@ class CategoryModel extends Model {
     onUpdate:  'CASCADE'
   })
   declare fk_user_id: string;
+
+  @HasMany(() => TransactionCategoryRelationModel)
+  declare categories: TransactionCategoryRelationModel[];
 }
 
 export default CategoryModel;

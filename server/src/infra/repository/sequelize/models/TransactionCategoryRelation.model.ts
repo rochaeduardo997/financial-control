@@ -31,6 +31,9 @@ class TransactionCategoryRelationModel extends Model {
     onUpdate:  'CASCADE'
   })
   declare fk_user_id: string;
+
+  @BelongsTo(() => TransactionModel) declare transaction: TransactionModel;
+  @BelongsTo(() => CategoryModel)    declare category: CategoryModel;
 }
 
 export default TransactionCategoryRelationModel;

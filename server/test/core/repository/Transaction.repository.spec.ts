@@ -53,7 +53,7 @@ describe('success', () => {
     expect(result.name).toBe(transactions[0].name);
     expect(result.value).toBe(transactions[0].value);
     expect(result.direction).toBe(transactions[0].direction);
-    expect(result.when).toBe(transactions[0].when);
+    expect(result.when).toEqual(transactions[0].when);
     expect(result.createdAt).toBeDefined();
     expect(result.updatedAt).toBeDefined();
     expect(result.categories).toHaveLength(0);
@@ -70,7 +70,7 @@ describe('success', () => {
     expect(result.name).toBe(transactions[0].name);
     expect(result.value).toBe(transactions[0].value);
     expect(result.direction).toBe(transactions[0].direction);
-    expect(result.when).toBe(transactions[0].when);
+    expect(result.when).toEqual(transactions[0].when);
     expect(result.createdAt).toBeDefined();
     expect(result.updatedAt).toBeDefined();
     expect(result.categories[0]).toEqual(categories[0]);
@@ -78,14 +78,13 @@ describe('success', () => {
     expect(result.userId).toBe(transactions[0].userId);
   });
 
-//   test('find by id', async () => {
-//     const category = await categoryRepository.create(categories[0]);
-//     const result = await categoryRepository.getBy(category.id, users[0].id);
-//     expect(result.id).toBe(category.id);
-//     expect(result.name).toBe(category.name);
-//     expect(result.description).toBe(category.description);
-//     expect(result.userId).toBe(category.userId);
-//   });
+  test('find by id', async () => {
+    transactions[0].associateCategory(categories[0]);
+    transactions[0].associateCategory(categories[1]);
+    const transaction = await transactionRepository.create(transactions[0]);
+    const result = await transactionRepository.getBy(transaction.id, users[0].id);
+    expect(result).toEqual(transaction);
+  });
 
 //   test('find all', async () => {
 //     await categoryRepository.create(categories[0]);
