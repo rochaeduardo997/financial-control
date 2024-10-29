@@ -141,14 +141,14 @@ describe('success', () => {
     expect(result.categories).toEqual([ categories[0], categories[1] ]);
   });
 
-//   test('delete category by id', async () => {
-//     await categoryRepository.create(categories[0]);
-//     await categoryRepository.create(categories[1]);
-//     const deleteResult = await categoryRepository.deleteBy(categories[0].id);
-//     expect(deleteResult).toBeTruthy();
-//     const getAllResult = await categoryRepository.getAllBy(users[0].id);
-//     expect(getAllResult).toHaveLength(1);
-//   });
+  test('delete category by id', async () => {
+    await transactionRepository.create(transactions[0]);
+    await transactionRepository.create(transactions[1]);
+    const deleteResult = await transactionRepository.deleteBy(transactions[0].id, transactions[0].userId!);
+    expect(deleteResult).toBeTruthy();
+    const getAllResult = await transactionRepository.getAllBy(users[0].id);
+    expect(getAllResult).toHaveLength(1);
+  });
 });
 
 describe('fail', () => {

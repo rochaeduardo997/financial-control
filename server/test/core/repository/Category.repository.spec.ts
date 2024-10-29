@@ -76,7 +76,7 @@ describe('success', () => {
   test('delete category by id', async () => {
     await categoryRepository.create(categories[0]);
     await categoryRepository.create(categories[1]);
-    const deleteResult = await categoryRepository.deleteBy(categories[0].id);
+    const deleteResult = await categoryRepository.deleteBy(categories[0].id, categories[0].userId!);
     expect(deleteResult).toBeTruthy();
     const getAllResult = await categoryRepository.getAllBy(users[0].id);
     expect(getAllResult).toHaveLength(1);
@@ -119,7 +119,7 @@ describe('fail', () => {
   test('delete category by invalid id', async () => {
     await categoryRepository.create(categories[0]);
     await categoryRepository.create(categories[1]);
-    await expect(() => categoryRepository.deleteBy('invalid_id'))
+    await expect(() => categoryRepository.deleteBy('invalid_id', 'invalid_user_id'))
       .rejects
       .toThrow('failed on delete category by id');
     const getAllResult = await categoryRepository.getAllBy(users[0].id);

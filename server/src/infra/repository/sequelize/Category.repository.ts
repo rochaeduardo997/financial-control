@@ -67,11 +67,11 @@ export default class CategoryRepository implements ICategoryRepository {
     }
   }
 
-  async deleteBy(id: string): Promise<boolean>{
+  async deleteBy(id: string, userId: string): Promise<boolean>{
     try{
       const verifyIfCategoryExists = await this.findBy(id);
       if(!verifyIfCategoryExists) throw new Error();
-      const result = await this.CATEGORY_MODEL.destroy({ where: { id }});
+      const result = await this.CATEGORY_MODEL.destroy({ where: { id, fk_user_id: userId }});
       return result === 1;
     }catch(err: any){
       console.error(err);

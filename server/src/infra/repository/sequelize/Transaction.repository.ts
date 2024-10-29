@@ -121,13 +121,14 @@ export default class TransactionRepository implements ITransactionRepository {
     }
   }
 
-  async deleteBy(id: string): Promise<boolean>{
+  async deleteBy(id: string, userId: string): Promise<boolean>{
+    const tx = await this.sequelize.transaction();
     try{
-      throw new Error();
-      // const verifyIfTransactionExists = await this.findBy(id);
-      // if(!verifyIfTransactionExists) throw new Error();
-      // const result = await this.TRANSACTION_MODEL.destroy({ where: { id }});
-      // return result === 1;
+      const verifyIfTransactionExists = await this.findBy(id);
+      if(!verifyIfTransactionExists) throw new Error();
+      const result = await this.TRANSACTION_MODEL.destroy({ where: { id, fk_user_id: userId }});
+      await this.reinsertAssociationWithCategoriesBy(id, userId, verifyIfTransactionExists.categories, tx);
+      return result === 1;
     }catch(err: any){
       console.error(err);
       throw new Error(err?.errors?.[0]?.message || 'failed on delete transaction by id');
@@ -136,7 +137,7 @@ export default class TransactionRepository implements ITransactionRepository {
 
   private async reinsertAssociationWithCategoriesBy(transactionId: string, userId: string, categories: Category[], transaction: TX): Promise<Category[]>{
     const result: Category[] = [];
-    await this.TRANSACTION_CATEGORIES_RELATION_MODEL.destroy({ where: { fk_transaction_id: transactionId }});
+    await this.TRANSACTION_CATEGORIES_RELATION_MODEL.destroy({ where: { fk_transaction_id: transactionId }, transaction });
     for(const c of categories) {
       const _c = (await this.TRANSACTION_CATEGORIES_RELATION_MODEL.create({
         fk_category_id:    c.id,
