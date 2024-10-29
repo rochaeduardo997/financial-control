@@ -26,6 +26,7 @@ beforeEach(async () => {
   categories[0].associateUser(users[0].id);
   categories[1].associateUser(users[0].id);
 });
+afterEach(async () => await sequelize.close());
 
 describe('success', () => {
   test('create new category', async () => {

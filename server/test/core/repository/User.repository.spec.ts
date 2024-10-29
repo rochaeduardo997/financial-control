@@ -14,6 +14,7 @@ beforeEach(async () => {
   sequelize = await instanceSequelize();
   userRepository = new UserRepository(sequelize);
 });
+afterEach(async () => await sequelize.close());
 
 describe('success', () => {
   test('create new user', async () => {

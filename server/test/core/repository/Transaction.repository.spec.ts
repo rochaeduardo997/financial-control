@@ -33,6 +33,7 @@ beforeEach(async () => {
   transactions[0].associateUser(users[0].id);
   transactions[1].associateUser(users[0].id);
 });
+afterEach(async () => await sequelize.close());
 
 async function createUsers(){
   await userRepository.create(users[0]);
