@@ -64,13 +64,34 @@ export default class TransactionRepository implements ITransactionRepository {
     }
   }
 
-  async getAllBy(userId: string): Promise<Transaction[]>{
+  async getAllCountBy(userId: string): Promise<number>{
     try{
-      throw new Error();
-      // const result: Transaction[] = [];
-      // const transactions = await this.TRANSACTION_MODEL.findAll({ raw: true });
-      // for(let u of transactions) result.push(this.instanceTransactionFrom(u));
-      // return result;
+      return this.TRANSACTION_MODEL.count({ where: { fk_user_id: userId }});
+    }catch(err: any){
+      console.error(err);
+      throw new Error(err?.errors?.[0]?.message || err.message || 'failed on get transactions');
+    }
+  }
+
+  async getAllBy(userId: string, page: number = 0): Promise<Transaction[]>{
+    const limit  = 25;
+    const offset = (page - 1)* limit;
+
+    try{
+      const result: Transaction[] = [];
+      const transactions = await this.TRANSACTION_MODEL.findAll({
+        offset, limit,
+        include: { model: TransactionCategoryRelationModel }
+      });
+      for(let t of transactions) {
+        const _t = this.instanceTransactionFrom(t);
+        for(const c of t.categories){
+          const category = await this.categoryRepository.getBy(c.fk_category_id, userId);
+          _t.associateCategory(category);
+        }
+        result.push(_t);
+      }
+      return result;
     }catch(err: any){
       console.error(err);
       throw new Error(err?.errors?.[0]?.message || err.message || 'failed on get transactions');

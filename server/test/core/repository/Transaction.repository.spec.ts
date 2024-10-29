@@ -86,19 +86,23 @@ describe('success', () => {
     expect(result).toEqual(transaction);
   });
 
-//   test('find all', async () => {
-//     await categoryRepository.create(categories[0]);
-//     await categoryRepository.create(categories[1]);
-//     const result = await categoryRepository.getAllBy(users[0].id);
-//     expect(result[0].id).toBe(categories[0].id);
-//     expect(result[0].name).toBe(categories[0].name);
-//     expect(result[0].description).toBe(categories[0].description);
-//     expect(result[0].userId).toBe(categories[0].userId);
-//     expect(result[1].id).toBe(categories[1].id);
-//     expect(result[1].name).toBe(categories[1].name);
-//     expect(result[1].description).toBe(categories[1].description);
-//     expect(result[1].userId).toBe(categories[1].userId);
-//   });
+  test('find all count', async () => {
+    await transactionRepository.create(transactions[0]);
+    await transactionRepository.create(transactions[1]);
+    const result = await transactionRepository.getAllCountBy(users[0].id);
+    expect(result).toBe(2);
+  });
+
+  test('find all with categories', async () => {
+    transactions[0].associateCategory(categories[0]);
+    transactions[0].associateCategory(categories[1]);
+    const tr1 = await transactionRepository.create(transactions[0]);
+    transactions[1].associateCategory(categories[0]);
+    const tr2 = await transactionRepository.create(transactions[1]);
+    const result = await transactionRepository.getAllBy(users[0].id, 1);
+    expect(result[0]).toEqual(tr1);
+    expect(result[1]).toEqual(tr2);
+  });
 
 //   test('empty array when find all without category registered', async () => {
 //     const result = await categoryRepository.getAllBy(users[0].id);
