@@ -69,7 +69,7 @@ export default class TransactionRepository implements ITransactionRepository {
       return this.TRANSACTION_MODEL.count({ where: { fk_user_id: userId }});
     }catch(err: any){
       console.error(err);
-      throw new Error(err?.errors?.[0]?.message || err.message || 'failed on get transactions');
+      throw new Error(err?.errors?.[0]?.message || err.message || 'failed on get transactions count');
     }
   }
 

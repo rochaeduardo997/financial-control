@@ -84,6 +84,13 @@ describe('success', () => {
 });
 
 describe('fail', () => {
+  test('create that already exists', async () => {
+    await categoryRepository.create(categories[0]);
+    await expect(() => categoryRepository.create(categories[0]))
+      .rejects
+      .toThrow('id must be unique');
+  });
+
   test('find by invalid id', async () => {
     await expect(() => categoryRepository.getBy('invalid_id', users[0].id))
       .rejects

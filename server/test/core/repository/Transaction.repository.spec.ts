@@ -152,46 +152,53 @@ describe('success', () => {
 });
 
 describe('fail', () => {
-  // test('find by invalid id', async () => {
-  //   await expect(() => categoryRepository.getBy('invalid_id', users[0].id))
-  //     .rejects
-  //     .toThrow('failed on get category by id');
-  // });
+  test('create that already exists', async () => {
+    await transactionRepository.create(transactions[0]);
+    await expect(() => transactionRepository.create(transactions[0]))
+      .rejects
+      .toThrow('id must be unique');
+  });
 
-  // test('find by from another user', async () => {
-  //   categories[0].associateUser(users[0].id);
-  //   categories[1].associateUser(users[1].id);
-  //   await categoryRepository.create(categories[0]);
-  //   await categoryRepository.create(categories[1]);
-  //   await expect(() => categoryRepository.getBy(categories[1].id, users[0].id))
-  //     .rejects
-  //     .toThrow('cannot access category from another user');
-  // });
+  test('find by invalid id', async () => {
+    await expect(() => transactionRepository.getBy('invalid_id', users[0].id))
+      .rejects
+      .toThrow('failed on get transaction by id');
+  });
 
-  // test('update category with invalid id', async () => {
-  //   await expect(() => categoryRepository.updateBy('invalid_id', categories[0]))
-  //     .rejects
-  //     .toThrow('failed on get category by id');
-  // });
+  test('find by from another user', async () => {
+    transactions[0].associateUser(users[0].id);
+    transactions[1].associateUser(users[1].id);
+    await transactionRepository.create(transactions[0]);
+    await transactionRepository.create(transactions[1]);
+    await expect(() => transactionRepository.getBy(transactions[1].id, users[0].id))
+      .rejects
+      .toThrow('cannot access transaction from another user');
+  });
 
-  // test('update category from another user', async () => {
-  //   categories[0].associateUser(users[0].id);
-  //   categories[1].associateUser(users[1].id);
-  //   await categoryRepository.create(categories[0]);
-  //   await categoryRepository.create(categories[1]);
-  //   await expect(() => categoryRepository.updateBy(categories[1].id, categories[0]))
-  //     .rejects
-  //     .toThrow('cannot access category from another user');
-  // });
+  test('update transaction with invalid id', async () => {
+    await expect(() => transactionRepository.updateBy('invalid_id', transactions[0]))
+      .rejects
+      .toThrow('failed on get transaction by id');
+  });
 
-  // test('delete category by invalid id', async () => {
-  //   await categoryRepository.create(categories[0]);
-  //   await categoryRepository.create(categories[1]);
-  //   await expect(() => categoryRepository.deleteBy('invalid_id'))
-  //     .rejects
-  //     .toThrow('failed on delete category by id');
-  //   const getAllResult = await categoryRepository.getAllBy(users[0].id);
-  //   expect(getAllResult).toHaveLength(2);
-  // });
+  test('update transaction from another user', async () => {
+    transactions[0].associateUser(users[0].id);
+    transactions[1].associateUser(users[1].id);
+    await transactionRepository.create(transactions[0]);
+    await transactionRepository.create(transactions[1]);
+    await expect(() => transactionRepository.updateBy(transactions[1].id, transactions[0]))
+      .rejects
+      .toThrow('cannot access transaction from another user');
+  });
+
+  test('delete transaction by invalid id', async () => {
+    await transactionRepository.create(transactions[0]);
+    await transactionRepository.create(transactions[1]);
+    await expect(() => transactionRepository.deleteBy('invalid_id', 'invalid_user_id'))
+      .rejects
+      .toThrow('failed on delete transaction by id');
+    const getAllResult = await transactionRepository.getAllBy(users[0].id);
+    expect(getAllResult).toHaveLength(2);
+  });
 });
 
