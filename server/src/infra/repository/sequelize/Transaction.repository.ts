@@ -99,17 +99,23 @@ export default class TransactionRepository implements ITransactionRepository {
   }
 
   async updateBy(id: string, input: Transaction): Promise<Transaction>{
+    const tx = await this.sequelize.transaction();
     try{
-      throw new Error();
-      // if(!input.userId) throw new Error('transaction without user association');
-      // const verifyIfTransactionExists = await this.getBy(id, input.userId);
-      // if(!verifyIfTransactionExists) throw new Error();
-      // const result = await this.TRANSACTION_MODEL.update({
-      //   name:        input.name,
-      //   description: input.description
-      // }, { where: { id }});
-      // return this.getBy(id, input.userId);
+      if(!input.userId) throw new Error('transaction without user association');
+      const verifyIfTransactionExists = await this.getBy(id, input.userId);
+      if(!verifyIfTransactionExists) throw new Error();
+      await this.TRANSACTION_MODEL.update({
+        name:       input.name,
+        value:      input.value,
+        direction:  input.direction,
+        when:       input.when,
+        fk_user_id: input.userId
+      }, { where: { id }, transaction: tx});
+      const categories = await this.reinsertAssociationWithCategoriesBy(id, input.userId, input.categories, tx);
+      await tx.commit();
+      return this.getBy(id, input.userId);
     }catch(err: any){
+      await tx.rollback();
       console.error(err);
       throw new Error(err?.errors?.[0]?.message || err.message || 'failed on update transaction');
     }
@@ -130,6 +136,7 @@ export default class TransactionRepository implements ITransactionRepository {
 
   private async reinsertAssociationWithCategoriesBy(transactionId: string, userId: string, categories: Category[], transaction: TX): Promise<Category[]>{
     const result: Category[] = [];
+    await this.TRANSACTION_CATEGORIES_RELATION_MODEL.destroy({ where: { fk_transaction_id: transactionId }});
     for(const c of categories) {
       const _c = (await this.TRANSACTION_CATEGORIES_RELATION_MODEL.create({
         fk_category_id:    c.id,

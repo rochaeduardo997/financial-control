@@ -104,19 +104,42 @@ describe('success', () => {
     expect(result[1]).toEqual(tr2);
   });
 
-//   test('empty array when find all without category registered', async () => {
-//     const result = await categoryRepository.getAllBy(users[0].id);
-//     expect(result).toHaveLength(0);
-//   });
+  test('find all without categories', async () => {
+    const tr1 = await transactionRepository.create(transactions[0]);
+    const tr2 = await transactionRepository.create(transactions[1]);
+    const result = await transactionRepository.getAllBy(users[0].id, 1);
+    expect(result[0]).toEqual(tr1);
+    expect(result[1]).toEqual(tr2);
+  });
 
-//   test('update category', async () => {
-//     await categoryRepository.create(categories[0]);
-//     const result = await categoryRepository.updateBy(categories[0].id, categories[1]);
-//     expect(result.id).toBe(categories[0].id);
-//     expect(result.name).toBe(categories[1].name);
-//     expect(result.description).toBe(categories[1].description);
-//     expect(result.userId).toBe(categories[1].userId);
-//   });
+  test('empty array when find all without transaction registered', async () => {
+    const result = await transactionRepository.getAllBy(users[0].id, 0);
+    expect(result).toHaveLength(0);
+  });
+
+  test('update transaction without change categories', async () => {
+    transactions[0].associateCategory(categories[0]);
+    await transactionRepository.create(transactions[0]);
+    const result = await transactionRepository.updateBy(transactions[0].id, transactions[1]);
+    expect(result.id).toBe(transactions[0].id);
+    expect(result.name).toBe(transactions[1].name);
+    expect(result.value).toBe(transactions[1].value);
+    expect(result.direction).toBe(transactions[1].direction);
+    expect(result.when).toEqual(transactions[1].when);
+    expect(result.createdAt).toBeDefined();
+    expect(result.updatedAt).toBeDefined();
+    expect(result.categories).toHaveLength(0);
+    expect(result.userId).toBe(transactions[1].userId);
+  });
+
+  test('update transaction changing categories', async () => {
+    transactions[0].associateCategory(categories[0]);
+    transactions[1].associateCategory(categories[0]);
+    transactions[1].associateCategory(categories[1]);
+    await transactionRepository.create(transactions[0]);
+    const result = await transactionRepository.updateBy(transactions[0].id, transactions[1]);
+    expect(result.categories).toEqual([ categories[0], categories[1] ]);
+  });
 
 //   test('delete category by id', async () => {
 //     await categoryRepository.create(categories[0]);
