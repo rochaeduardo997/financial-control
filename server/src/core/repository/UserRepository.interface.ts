@@ -9,4 +9,3 @@ export default interface IUserRepository extends IRepository<User> {
   getAll(): Promise<User[]>;
   deleteBy(id: string): Promise<boolean>;
 }
-
