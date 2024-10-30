@@ -16,14 +16,14 @@ beforeEach(async () => {
 	userRepository = new UserRepository(sequelize);
 	getAllHandler = new GetAllHandler(userRepository);
 	users = userSeed(2);
-	await userRepository.create(users[0]);
-	await userRepository.create(users[1]);
 });
 
 afterEach(async () => await sequelize.close());
 
 describe('success', () => {
-	test('get user by id', async () => {
+	test('get all users', async () => {
+		await userRepository.create(users[0]);
+		await userRepository.create(users[1]);
 		const result = await getAllHandler.execute();
 		expect(result[0].id).toBe(users[0].id);
 		expect(result[0].name).toBe(users[0].name);
@@ -33,5 +33,10 @@ describe('success', () => {
 		expect(result[1].name).toBe(users[1].name);
 		expect(result[1].username).toBe(users[1].username);
 		expect(result[1].email).toBe(users[1].email);
+	});
+	
+	test('get empty array when repository is also empty', async () => {
+		const result = await getAllHandler.execute();
+		expect(result).toHaveLength(0);
 	});
 });
