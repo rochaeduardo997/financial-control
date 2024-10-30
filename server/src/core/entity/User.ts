@@ -33,13 +33,17 @@ export default class User {
     this.isValid();
   }
 
-  get id()        { return this._id; }
-  get name()      { return this._name; }
-  get username()  { return this._username; }
-  get email()     { return this._email; }
-  get password()  { return this._password; }
-  get status()    { return this._status; }
-  get role()      { return this._role; }
+  get id() { return this._id; }
+  get name() { return this._name; }
+  set name(x: string) { this._name = x; }
+  get username() { return this._username; }
+  set username(x: string) { this._username= x; }
+  get email() { return this._email; }
+  set email(x: string) { this._email= x; }
+  get password() { return this._password; }
+  set password(x: string) { this._password = x; }
+  get status() { return this._status; }
+  get role() { return this._role; }
   get createdAt() { return this._createdAt; }
   get updatedAt() { return this._updatedAt; }
 
