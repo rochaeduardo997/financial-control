@@ -1,6 +1,5 @@
 import { createHash } from 'crypto';
 import IUserRepository from '../../repository/UserRepository.interface';
-import User, { UserRole } from '../../entity/User';
 
 type TInput = { 
   id:         string;
