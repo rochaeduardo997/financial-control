@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize-typescript";
 import IUserRepository from '../../../../src/core/repository/UserRepository.interface';
-import UserRepository from '../../../../src/infra/repository/sequelize/User.repository';
 import instanceSequelize from '../../../../src/infra/database/sequelize/instance';
 import GetByIdHandler from "../../../../src/core/usecase/user/GetById";
 import User from "../../../../src/core/entity/User";
 import userSeed from "../../../seed/User.seed";
+import RepositoryFactory from "../../../../src/infra/factory/sequelize/Repository.factory";
 
 let sequelize:  Sequelize;
 let userRepository: IUserRepository;
@@ -14,7 +14,8 @@ let users: User[];
 
 beforeEach(async () => {
 	sequelize = await instanceSequelize();
-	userRepository = new UserRepository(sequelize);
+	const repositoryFactory = new RepositoryFactory(sequelize);
+	userRepository = repositoryFactory.user();
 	getByIdHandler = new GetByIdHandler(userRepository);
 	users = userSeed(2);
 	user = await userRepository.create(users[0]);

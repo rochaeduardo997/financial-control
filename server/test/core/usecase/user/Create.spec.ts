@@ -1,8 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
 import IUserRepository from '../../../../src/core/repository/UserRepository.interface';
-import UserRepository from '../../../../src/infra/repository/sequelize/User.repository';
 import instanceSequelize from '../../../../src/infra/database/sequelize/instance';
 import CreateHandler from "../../../../src/core/usecase/user/Create";
+import RepositoryFactory from "../../../../src/infra/factory/sequelize/Repository.factory";
 
 const input = {
 	name:     'name',
@@ -17,7 +17,8 @@ let createHandler: CreateHandler;
 
 beforeEach(async () => {
 	sequelize = await instanceSequelize();
-	userRepository = new UserRepository(sequelize);
+	const repositoryFactory = new RepositoryFactory(sequelize);
+	userRepository = repositoryFactory.user();
 	createHandler = new CreateHandler(userRepository);
 });
 

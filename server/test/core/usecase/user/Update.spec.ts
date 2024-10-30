@@ -1,11 +1,11 @@
 import { Sequelize } from "sequelize-typescript";
 import IUserRepository from '../../../../src/core/repository/UserRepository.interface';
-import UserRepository from '../../../../src/infra/repository/sequelize/User.repository';
 import instanceSequelize from '../../../../src/infra/database/sequelize/instance';
 import UpdateHandler from "../../../../src/core/usecase/user/Update";
 import userSeed from "../../../seed/User.seed";
 import User from "../../../../src/core/entity/User";
 import CreateHandler from "../../../../src/core/usecase/user/Create";
+import RepositoryFactory from "../../../../src/infra/factory/sequelize/Repository.factory";
 
 const input = {
 	id:       'id',
@@ -23,7 +23,8 @@ let users: User[];
 
 beforeEach(async () => {
 	sequelize = await instanceSequelize();
-	userRepository = new UserRepository(sequelize);
+	const repositoryFactory = new RepositoryFactory(sequelize);
+	userRepository = repositoryFactory.user();
 	updateHandler = new UpdateHandler(userRepository);
 	createHandler = new CreateHandler(userRepository);
 	users = userSeed(2);
