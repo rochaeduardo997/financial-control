@@ -6,6 +6,7 @@ import User from "../../../../src/core/entity/User";
 import userSeed from "../../../seed/User.seed";
 import RepositoryFactory from "../../../../src/infra/factory/sequelize/Repository.factory";
 import JWTFake from "../../../../src/infra/jwt/jwt.fake";
+import CacheFake from "../../../../src/infra/cache/cache.fake";
 
 let sequelize:  Sequelize;
 let userRepository: IUserRepository;
@@ -17,8 +18,9 @@ beforeEach(async () => {
 	sequelize = await instanceSequelize();
 	const repositoryFactory = new RepositoryFactory(sequelize);
 	const jwt = new JWTFake();
+	const cache = new CacheFake();
 	userRepository = repositoryFactory.user();
-	loginHandler = new LoginHandler(userRepository, jwt);
+	loginHandler = new LoginHandler(userRepository, jwt, cache);
 	users = userSeed(2);
 	user = await userRepository.create(users[0]);
 });
