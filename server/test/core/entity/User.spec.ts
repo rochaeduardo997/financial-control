@@ -28,6 +28,17 @@ describe('success', () => {
     expect(user.updatedAt).toBe(input.updatedAt)
   });
 
+  test('validate updated user instance', () => {
+    user.name     = 'new_name';
+    user.username = 'new_username';
+    user.email    = 'new_email';
+    user.password = 'new_password';
+    expect(user.name).toBe('new_name');
+    expect(user.username).toBe('new_username');
+    expect(user.email).toBe('new_email');
+    expect(user.password).toBe('new_password');
+  });
+
   test('validate user instance without status as parameter', () => {
     user = new User(input.id, input.name, input.username, input.email, input.password, undefined, input.role, input.createdAt, input.updatedAt);
     expect(user.status).toBeTruthy()
