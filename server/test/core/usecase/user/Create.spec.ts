@@ -18,13 +18,13 @@ let createHandler: CreateHandler;
 beforeEach(async () => {
 	sequelize = await instanceSequelize();
 	userRepository = new UserRepository(sequelize);
+	createHandler = new CreateHandler(userRepository);
 });
 
 afterEach(async () => await sequelize.close());
 
 describe('success', () => {
 	test('create user', async () => {
-		const createHandler = new CreateHandler(userRepository);
 		const result = await createHandler.execute({ ...input });
 		expect(result.id).toBeDefined();
 		expect(result.name).toBe(input.name);
@@ -35,7 +35,6 @@ describe('success', () => {
 
 describe('fail', () => {
 	test('fail on create user with same username', async () => {
-		const createHandler = new CreateHandler(userRepository);
 		await createHandler.execute(input);
 		await expect(() => createHandler.execute({ ...input, email: 'email2@email.com' }))
 			.rejects
@@ -43,7 +42,6 @@ describe('fail', () => {
 	});
 
 	test('fail on create user with same email', async () => {
-		const createHandler = new CreateHandler(userRepository);
 		await createHandler.execute(input);
 		await expect(() => createHandler.execute({ ...input, username: 'username2' }))
 			.rejects
@@ -51,7 +49,6 @@ describe('fail', () => {
 	});
 
 	test('fail on create user without password', async () => {
-		const createHandler = new CreateHandler(userRepository);
 		await expect(() => createHandler.execute({ ...input, password: '' }))
 			.rejects
 			.toThrow('password must be provided');
