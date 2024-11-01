@@ -5,6 +5,7 @@ type TOutput = {
   name:     string;
   username: string;
   email:    string;
+  status:   boolean;
 };
 
 class GetAllHandler {
@@ -19,7 +20,8 @@ class GetAllHandler {
           id:       u.id,
           name:     u.name,
           username: u.username,
-          email:    u.email
+          email:    u.email,
+          status:   u.status
         });
       return result;
     }catch(err: any){

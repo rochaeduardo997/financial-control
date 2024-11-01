@@ -119,18 +119,17 @@ describe('success', () => {
 		expect(status).toBe(201);
 	});
 
-	// test('find all', async () => {
-	// 	await userRepository.create(new User(input));
-	// 	const { status, body } = await request
-	// 		.get('/api/v1/users/all')
-	// 		.set('Authorization', token);
-	// 	expect(body.result?.[0].id).toBe(input.id);
-	// 	expect(body.result?.[0].username).toBe(input.username);
-	// 	expect(body.result?.[0].email).toBe(input.email);
-	// 	expect(body.result?.[0].status).toBe(input.status);
-	// 	expect(status).toBe(200);
-	// });
-	//
+	test('find all', async () => {
+		const { id } = await createHandler.execute({ ...input });
+		const { status, body } = await request
+			.get('/api/v1/users/all')
+			.set('Authorization', token);
+		expect(body.result?.[0].id).toBe(id);
+		expect(body.result?.[0].username).toBe(input.username);
+		expect(body.result?.[0].email).toBe(input.email);
+		expect(status).toBe(200);
+	});
+
 	// test('find by id', async () => {
 	// 	await userRepository.create(new User(input));
 	// 	const { status, body } = await request
@@ -202,7 +201,6 @@ describe('fail', () => {
 	// });
 
 	test('fail on request without token', async () => {
-		// const { id } = await createHandler.execute({ ...input });
 		const { status, body } = await request
 			.post('/api/v1/logout')
 			.set('Authorization', 'invalid_token');
@@ -211,7 +209,6 @@ describe('fail', () => {
 	});
 
 	test('fail on login with invalid login', async () => {
-		// const { id } = await createHandler.execute({ ...input });
 		const { status, body } = await request
 			.post('/api/v1/login')
 			.set('Authorization', token)
@@ -221,7 +218,6 @@ describe('fail', () => {
 	});
 
 	test('fail on login with invalid password', async () => {
-		// const { id } = await createHandler.execute({ ...input });
 		const { status, body } = await request
 			.post('/api/v1/login')
 			.set('Authorization', token)

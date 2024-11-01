@@ -4,6 +4,7 @@ import IUserRepository from "../../../core/repository/UserRepository.interface";
 import LoginHandler from "../../../core/usecase/user/Login";
 import IHttp from "../../http/HTTP.interface";
 import CreateHandler from "../../../core/usecase/user/Create";
+import GetAll from "../../../core/usecase/user/GetAll";
 
 type TRouteResponse = { statusCode: number, result: any }
 
@@ -16,7 +17,7 @@ class UserController {
 		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/enable/:id`,  this.EnableByIdRoute.bind(this));
 		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/disable/:id`, this.DisableByIdRoute.bind(this));
 		httpAdapter.addRoute('post',   `${BASE_URL_PATH}`,             this.CreateRoute.bind(this));
-		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/all`,         this.FindAllRoute.bind(this));
+		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/all`,         this.FindAllRoute.bind(this));
 		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/:id`,         this.FindByIdRoute.bind(this));
 		// httpAdapter.addRoute('put',    `${BASE_URL_PATH}/:id`,         this.UpdateByIdRoute.bind(this));
 		// httpAdapter.addRoute('delete', `${BASE_URL_PATH}/:id`,         this.DeleteByIdRoute.bind(this));
@@ -79,17 +80,17 @@ class UserController {
 		}
 	}
 
-	// private async FindAllRoute(req: any, res: any): Promise<TRouteResponse>{
-	// 	try{
-	// 		const findAll = new FindAllHandler(this.userRepository);
-	// 		const result = await findAll.execute();
-	// 		return { statusCode: 200, result };
-	// 	}catch(err: any){
-	// 		console.error('failed on route: user find all, ', err);
-	// 		throw new Error(err.message);
-	// 	}
-	// }
-	//
+	private async FindAllRoute(req: any, res: any): Promise<TRouteResponse>{
+		try{
+			const getAll = new GetAll(this.userRepository);
+			const result = await getAll.execute();
+			return { statusCode: 200, result };
+		}catch(err: any){
+			console.error('failed on route: user find all, ', err);
+			throw new Error(err.message);
+		}
+	}
+
 	// private async FindByIdRoute(req: any, res: any): Promise<TRouteResponse>{
 	// 	try{
 	// 		const { id } = req.params;

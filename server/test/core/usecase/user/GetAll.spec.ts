@@ -30,10 +30,12 @@ describe('success', () => {
 		expect(result[0].name).toBe(users[0].name);
 		expect(result[0].username).toBe(users[0].username);
 		expect(result[0].email).toBe(users[0].email);
+		expect(result[0].status).toBeFalsy();
 		expect(result[1].id).toBe(users[1].id);
 		expect(result[1].name).toBe(users[1].name);
 		expect(result[1].username).toBe(users[1].username);
 		expect(result[1].email).toBe(users[1].email);
+		expect(result[1].status).toBeFalsy();
 	});
 	
 	test('get empty array when repository is also empty', async () => {

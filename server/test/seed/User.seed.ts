@@ -19,4 +19,3 @@ export default (howMany: number = 1) => {
 
   return result;
 }
-
