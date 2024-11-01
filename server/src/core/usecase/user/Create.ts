@@ -21,6 +21,7 @@ class CreateHandler {
 
   async execute(input: TInput): Promise<TOutput>{
     try{
+      console.log(input);
       if(!input.password) throw new Error('password must be provided');
       const userId = crypto.randomUUID();
       const password = createHash('sha512')

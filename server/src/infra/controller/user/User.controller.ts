@@ -3,6 +3,7 @@ import IJWT from "../../jwt/jwt.interface";
 import IUserRepository from "../../../core/repository/UserRepository.interface";
 import LoginHandler from "../../../core/usecase/user/Login";
 import IHttp from "../../http/HTTP.interface";
+import CreateHandler from "../../../core/usecase/user/Create";
 
 type TRouteResponse = { statusCode: number, result: any }
 
@@ -14,7 +15,7 @@ class UserController {
 		httpAdapter.addRoute('post',   '/login',                       this.LoginRoute.bind(this));
 		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/enable/:id`,  this.EnableByIdRoute.bind(this));
 		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/disable/:id`, this.DisableByIdRoute.bind(this));
-		// httpAdapter.addRoute('post',   `${BASE_URL_PATH}`,             this.CreateRoute.bind(this));
+		httpAdapter.addRoute('post',   `${BASE_URL_PATH}`,             this.CreateRoute.bind(this));
 		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/all`,         this.FindAllRoute.bind(this));
 		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/:id`,         this.FindByIdRoute.bind(this));
 		// httpAdapter.addRoute('put',    `${BASE_URL_PATH}/:id`,         this.UpdateByIdRoute.bind(this));
@@ -66,18 +67,18 @@ class UserController {
 	// 		throw new Error(err.message);
 	// 	}
 	// }
-	//
-	// private async CreateRoute(req: any, res: any): Promise<TRouteResponse>{
-	// 	try{
-	// 		const createHandler = new CreateHandler(this.userRepository);
-	// 		const result = await createHandler.execute(req.body);
-	// 		return { statusCode: 201, result };
-	// 	}catch(err: any){
-	// 		console.error('failed on route: user create, ', err);
-	// 		throw new Error(err.message);
-	// 	}
-	// }
-	//
+
+	private async CreateRoute(req: any, res: any): Promise<TRouteResponse>{
+		try{
+			const createHandler = new CreateHandler(this.userRepository);
+			const result = await createHandler.execute(req.body);
+			return { statusCode: 201, result };
+		}catch(err: any){
+			console.error('failed on route: user create, ', err);
+			throw new Error(err.message);
+		}
+	}
+
 	// private async FindAllRoute(req: any, res: any): Promise<TRouteResponse>{
 	// 	try{
 	// 		const findAll = new FindAllHandler(this.userRepository);
