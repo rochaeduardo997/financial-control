@@ -130,18 +130,18 @@ describe('success', () => {
 		expect(status).toBe(200);
 	});
 
-	// test('find by id', async () => {
-	// 	await userRepository.create(new User(input));
-	// 	const { status, body } = await request
-	// 		.get(`/api/v1/users/${input.id}`)
-	// 		.set('Authorization', token);
-	// 	expect(body.result?.id).toBe(input.id);
-	// 	expect(body.result?.username).toBe(input.username);
-	// 	expect(body.result?.email).toBe(input.email);
-	// 	expect(body?.result?.status).toBe(input.status);
-	// 	expect(status).toBe(200);
-	// });
-	//
+	test('find by id', async () => {
+		const { id } = await createHandler.execute({ ...input });
+		const { status, body } = await request
+			.get(`/api/v1/users/${id}`)
+			.set('Authorization', token);
+		expect(body.result?.id).toBe(id);
+		expect(body.result?.username).toBe(input.username);
+		expect(body.result?.name).toBe(input.name);
+		expect(body.result?.email).toBe(input.email);
+		expect(status).toBe(200);
+	});
+
 	// test('update by id with all fields', async () => {
 	// 	await userRepository.create(new User(input));
 	// 	const updateInput = { email: 'email_updated@email.com', username: 'username_updated', fullname: 'fullname_updated', password: 'password_updated' };
@@ -188,7 +188,7 @@ describe('fail', () => {
 	// 	const { status, body } = await request
 	// 		.get('/api/v1/users/enable/invalid_id')
 	// 		.set('Authorization', token);
-	// 	expect(body?.msg).toBe('failed on enable user by id invalid_id');
+	// 	expect(body?.result).toBe('failed on enable user by id invalid_id');
 	// 	expect(status).toBe(400);
 	// });
 	//
@@ -196,7 +196,7 @@ describe('fail', () => {
 	// 	const { status, body } = await request
 	// 		.get('/api/v1/users/disable/invalid_id')
 	// 		.set('Authorization', token);
-	// 	expect(body?.msg).toBe('failed on disable user by id invalid_id');
+	// 	expect(body?.result).toBe('failed on disable user by id invalid_id');
 	// 	expect(status).toBe(400);
 	// });
 
@@ -204,7 +204,8 @@ describe('fail', () => {
 		const { status, body } = await request
 			.post('/api/v1/logout')
 			.set('Authorization', 'invalid_token');
-		expect(body?.msg).toBe('invalid token');
+		console.log(status, body)
+		expect(body?.result).toBe('invalid token');
 		expect(status).toBe(401);
 	});
 
@@ -213,7 +214,7 @@ describe('fail', () => {
 			.post('/api/v1/login')
 			.set('Authorization', token)
 			.send({ login: 'invalid_login', password: input.password });
-		expect(body?.msg).toBe('incorrect login/password');
+		expect(body?.result).toBe('incorrect login/password');
 		expect(status).toBe(400);
 	});
 
@@ -222,7 +223,7 @@ describe('fail', () => {
 			.post('/api/v1/login')
 			.set('Authorization', token)
 			.send({ login: input.username, password: 'invalid_password' });
-		expect(body?.msg).toBe('incorrect login/password');
+		expect(body?.result).toBe('incorrect login/password');
 		expect(status).toBe(400);
 	});
 
@@ -231,7 +232,7 @@ describe('fail', () => {
 			.post('/api/v1/users')
 			.set('Authorization', token)
 			.send({ ...input, email: 'email' });
-		expect(body?.msg).toBe('invalid email format');
+		expect(body?.result).toBe('invalid email format');
 		expect(status).toBe(400);
 	});
 
@@ -240,7 +241,7 @@ describe('fail', () => {
 			.post('/api/v1/users')
 			.set('Authorization', token)
 			.send({ ...input, email: 'invalid' });
-		expect(body?.msg).toBe('invalid email format');
+		expect(body?.result).toBe('invalid email format');
 		expect(status).toBe(400);
 	});
 
@@ -250,7 +251,7 @@ describe('fail', () => {
 			.post('/api/v1/users')
 			.set('Authorization', token)
 			.send({ ...input });
-		expect(body?.msg).toBe('email must be unique');
+		expect(body?.result).toBe('email must be unique');
 		expect(status).toBe(400);
 	});
 
@@ -260,8 +261,16 @@ describe('fail', () => {
 			.post('/api/v1/users')
 			.set('Authorization', token)
 			.send({ ...input, email: 'email2@email.com' });
-		expect(body?.msg).toBe('username must be unique');
+		expect(body?.result).toBe('username must be unique');
 		expect(status).toBe(400);
+	});
+
+	test('fail on find by invalid id', async () => {
+		const { status, body } = await request
+			.get(`/api/v1/users/invalid_id`)
+			.set('Authorization', token);
+		expect(body?.result).toBe('failed on get user by id');
+		expect(status).toBe(404);
 	});
 
 	// test('fail on update with invalid email format', async () => {
@@ -270,7 +279,7 @@ describe('fail', () => {
 	// 		.put(`/api/v1/users/${user.id}`)
 	// 		.set('Authorization', token)
 	// 		.send({ ...input, email: 'invalid' });
-	// 	expect(body?.msg).toBe('invalid email format');
+	// 	expect(body?.result).toBe('invalid email format');
 	// 	expect(status).toBe(400);
 	// });
 	//
@@ -281,7 +290,7 @@ describe('fail', () => {
 	// 		.put(`/api/v1/users/${user.id}`)
 	// 		.set('Authorization', token)
 	// 		.send({ email: input.email });
-	// 	expect(body?.msg).toBe('email must be unique');
+	// 	expect(body?.result).toBe('email must be unique');
 	// 	expect(status).toBe(400);
 	// });
 	//
@@ -292,7 +301,7 @@ describe('fail', () => {
 	// 		.put(`/api/v1/users/${user.id}`)
 	// 		.set('Authorization', token)
 	// 		.send({ username: input.username });
-	// 	expect(body?.msg).toBe('username must be unique');
+	// 	expect(body?.result).toBe('username must be unique');
 	// 	expect(status).toBe(400);
 	// });
 });

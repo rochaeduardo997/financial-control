@@ -46,7 +46,7 @@ class ExpressAdapter implements IHttp {
       req.user = { ...tokenVerified, token: token[1] };
       return next();
     }catch(err: any){
-      return res.status(401).json({ status: false, msg: err.message || 'invalid token' });
+      return res.status(401).json({ status: false, result: err.message || 'invalid token' });
     }
   }
 
@@ -62,7 +62,9 @@ class ExpressAdapter implements IHttp {
         const { statusCode, result } = await callback(req, res);
         return res.status(statusCode).json({ result });
       }catch(err: any){
-        return res.status(400).json({ status: false, msg: err?.message });
+        return res
+          .status(400)
+          .json({ status: false, result: err?.message });
       }
     });
   }
