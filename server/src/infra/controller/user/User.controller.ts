@@ -10,6 +10,7 @@ import Update from "../../../core/usecase/user/Update";
 import DeleteByIdHandler from "../../../core/usecase/user/DeleteById";
 import EnableHandler from "../../../core/usecase/user/Enable";
 import Disable from "../../../core/usecase/user/Disable";
+import LogoutHandler from "../../../core/usecase/user/Logout";
 
 type TRouteResponse = { statusCode: number, result: any }
 
@@ -17,7 +18,7 @@ class UserController {
 	constructor(httpAdapter: IHttp, private userRepository: IUserRepository, private cache: ICache, private jwt: IJWT){
 		const BASE_URL_PATH = '/users';
 
-		// httpAdapter.addRoute('post',   '/logout',                      this.LogoutRoute.bind(this));
+		httpAdapter.addRoute('post',   '/logout',                      this.LogoutRoute.bind(this));
 		httpAdapter.addRoute('post',   '/login',                       this.LoginRoute.bind(this));
 		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/enable/:id`,  this.EnableByIdRoute.bind(this));
 		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/disable/:id`, this.DisableByIdRoute.bind(this));
@@ -30,16 +31,16 @@ class UserController {
 		console.log('user controller successful loaded');
 	}
 
-	// private async LogoutRoute(req: any, res: any): Promise<TRouteResponse>{
-	// 	try{
-	// 		const logoutHandler = new LogoutHandler(this.cache);
-	// 		const result = await logoutHandler.execute(req.body);
-	// 		return { statusCode: 200, result };
-	// 	}catch(err: any){
-	// 		console.error('failed on route: user login, ', err);
-	// 		throw new Error(err.message);
-	// 	}
-	// }
+	private async LogoutRoute(req: any, res: any): Promise<TRouteResponse>{
+		try{
+			const logoutHandler = new LogoutHandler(this.cache);
+			const result = await logoutHandler.execute(req.user);
+			return { statusCode: 200, result };
+		}catch(err: any){
+			console.error('failed on route: user login, ', err);
+			throw new Error(err.message);
+		}
+	}
 
 	private async LoginRoute(req: any, res: any): Promise<TRouteResponse>{
 		try{

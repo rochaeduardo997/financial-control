@@ -46,14 +46,14 @@ beforeEach(async () => {
 afterEach(() => sequelize.close());
 
 describe('success', () => {
-	// test('logout', async () => {
-	// 	await createHandler.execute({ ...input, status: false });
-	// 	const { status, body } = await request
-	// 		.post('/api/v1/logout')
-	// 		.set('Authorization', token);
-	// 	expect(body?.result).toBe(true);
-	// 	expect(status).toBe(200);
-	// });
+	test('logout', async () => {
+		await createHandler.execute({ ...input });
+		const { status, body } = await request
+			.post('/api/v1/logout')
+			.set('Authorization', token);
+		expect(body?.result).toBe(true);
+		expect(status).toBe(200);
+	});
 
 	test('login with username', async () => {
 		const { id } = await createHandler.execute({ ...input });
