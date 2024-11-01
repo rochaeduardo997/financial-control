@@ -6,6 +6,7 @@ import IHttp from "../../http/HTTP.interface";
 import CreateHandler from "../../../core/usecase/user/Create";
 import GetAll from "../../../core/usecase/user/GetAll";
 import GetByIdHandler from "../../../core/usecase/user/GetById";
+import Update from "../../../core/usecase/user/Update";
 
 type TRouteResponse = { statusCode: number, result: any }
 
@@ -20,7 +21,7 @@ class UserController {
 		httpAdapter.addRoute('post',   `${BASE_URL_PATH}`,             this.CreateRoute.bind(this));
 		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/all`,         this.FindAllRoute.bind(this));
 		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/:id`,         this.FindByIdRoute.bind(this));
-		// httpAdapter.addRoute('put',    `${BASE_URL_PATH}/:id`,         this.UpdateByIdRoute.bind(this));
+		httpAdapter.addRoute('put',    `${BASE_URL_PATH}/:id`,         this.UpdateByIdRoute.bind(this));
 		// httpAdapter.addRoute('delete', `${BASE_URL_PATH}/:id`,         this.DeleteByIdRoute.bind(this));
 
 		console.log('user controller successful loaded');
@@ -100,23 +101,22 @@ class UserController {
 			return { statusCode: 200, result };
 		}catch(err: any){
 			console.error('failed on route: user find by id, ', err);
-			if(/failed on get/.test(err?.message)) return { statusCode: 404, result: err?.message }
 			throw new Error(err?.message);
 		}
 	}
 
-	// private async UpdateByIdRoute(req: any, res: any): Promise<TRouteResponse>{
-	// 	try{
-	// 		const { id } = req.params;
-	// 		const updateById = new UpdateByIdHandler(this.userRepository);
-	// 		const result = await updateById.execute({ ...req.body, id });
-	// 		return { statusCode: 200, result }
-	// 	}catch(err: any){
-	// 		console.error('failed on route: update user by id', err);
-	// 		throw new Error(err.message);
-	// 	}
-	// }
-	//
+	private async UpdateByIdRoute(req: any, res: any): Promise<TRouteResponse>{
+		try{
+			const { id } = req.params;
+			const updateById = new Update(this.userRepository);
+			const result = await updateById.execute({ ...req.body, id });
+			return { statusCode: 200, result }
+		}catch(err: any){
+			console.error('failed on route: update user by id', err);
+			throw new Error(err.message);
+		}
+	}
+
 	// private async DeleteByIdRoute(req: any, res: any): Promise<TRouteResponse>{
 	// 	try{
 	// 		const { id } = req.params;

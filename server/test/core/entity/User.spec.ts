@@ -31,11 +31,11 @@ describe('success', () => {
   test('validate updated user instance', () => {
     user.name     = 'new_name';
     user.username = 'new_username';
-    user.email    = 'new_email';
+    user.email    = 'new_email@email.com';
     user.password = 'new_password';
     expect(user.name).toBe('new_name');
     expect(user.username).toBe('new_username');
-    expect(user.email).toBe('new_email');
+    expect(user.email).toBe('new_email@email.com');
     expect(user.password).toBe('new_password');
   });
 

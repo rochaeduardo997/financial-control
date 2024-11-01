@@ -89,7 +89,7 @@ describe('success', () => {
 	// 	expect(body?.result?.id).toBe(input.id);
 	// 	expect(body?.result?.email).toBe(input.email);
 	// 	expect(body?.result?.username).toBe(input.username);
-	// 	expect(body?.result?.fullname).toBe(input.fullname);
+	// 	expect(body?.result?.name).toBe(input.name);
 	// 	expect(body?.result?.status).toBe(true);
 	// 	expect(status).toBe(200);
 	// });
@@ -102,7 +102,7 @@ describe('success', () => {
 	// 	expect(body?.result?.id).toBe(input.id);
 	// 	expect(body?.result?.email).toBe(input.email);
 	// 	expect(body?.result?.username).toBe(input.username);
-	// 	expect(body?.result?.fullname).toBe(input.fullname);
+	// 	expect(body?.result?.name).toBe(input.name);
 	// 	expect(body?.result?.status).toBe(false);
 	// 	expect(status).toBe(200);
 	// });
@@ -142,36 +142,34 @@ describe('success', () => {
 		expect(status).toBe(200);
 	});
 
-	// test('update by id with all fields', async () => {
-	// 	await userRepository.create(new User(input));
-	// 	const updateInput = { email: 'email_updated@email.com', username: 'username_updated', fullname: 'fullname_updated', password: 'password_updated' };
-	// 	const { status, body } = await request
-	// 		.put(`/api/v1/users/${input.id}`)
-	// 		.set('Authorization', token)
-	// 		.send(updateInput);
-	// 	expect(body.result?.id).toBe(input.id);
-	// 	expect(body.result?.username).toBe(updateInput.username);
-	// 	expect(body.result?.fullname).toBe(updateInput.fullname);
-	// 	expect(body.result?.email).toBe(updateInput.email);
-	// 	expect(body?.result?.status).toBe(input.status);
-	// 	expect(status).toBe(200);
-	// });
-	//
-	// test('update by id with without fullname', async () => {
-	// 	await userRepository.create(new User(input));
-	// 	const updateInput = { email: 'email_updated@email.com', username: 'username_updated' };
-	// 	const { status, body } = await request
-	// 		.put(`/api/v1/users/${input.id}`)
-	// 		.set('Authorization', token)
-	// 		.send(updateInput);
-	// 	expect(body.result?.id).toBe(input.id);
-	// 	expect(body.result?.username).toBe(updateInput.username);
-	// 	expect(body.result?.fullname).toBe(input.fullname);
-	// 	expect(body.result?.email).toBe(updateInput.email);
-	// 	expect(body?.result?.status).toBe(input.status);
-	// 	expect(status).toBe(200);
-	// });
-	//
+	test('update by id with all fields', async () => {
+		const { id } = await createHandler.execute({ ...input });
+		const updateInput = { email: 'email_updated@email.com', username: 'username_updated', name: 'name_updated', password: 'password_updated' };
+		const { status, body } = await request
+			.put(`/api/v1/users/${id}`)
+			.set('Authorization', token)
+			.send(updateInput);
+		expect(body.result?.id).toBe(id);
+		expect(body.result?.username).toBe(updateInput.username);
+		expect(body.result?.name).toBe(updateInput.name);
+		expect(body.result?.email).toBe(updateInput.email);
+		expect(status).toBe(200);
+	});
+
+	test('update by id with without name', async () => {
+		const { id } = await createHandler.execute({ ...input });
+		const updateInput = { email: 'email_updated@email.com', username: 'username_updated' };
+		const { status, body } = await request
+			.put(`/api/v1/users/${id}`)
+			.set('Authorization', token)
+			.send(updateInput);
+		expect(body.result?.id).toBe(id);
+		expect(body.result?.username).toBe(updateInput.username);
+		expect(body.result?.name).toBe(input.name);
+		expect(body.result?.email).toBe(updateInput.email);
+		expect(status).toBe(200);
+	});
+
 	// test('delete by id', async () => {
 	// 	await userRepository.create(new User(input));
 	// 	const { status, body } = await request
@@ -273,35 +271,35 @@ describe('fail', () => {
 		expect(status).toBe(404);
 	});
 
-	// test('fail on update with invalid email format', async () => {
-	// 	const user = await userRepository.create(new User(input));
-	// 	const { status, body } = await request
-	// 		.put(`/api/v1/users/${user.id}`)
-	// 		.set('Authorization', token)
-	// 		.send({ ...input, email: 'invalid' });
-	// 	expect(body?.result).toBe('invalid email format');
-	// 	expect(status).toBe(400);
-	// });
-	//
-	// test('fail on update with same email', async () => {
-	// 	await userRepository.create(new User(input));
-	// 	const user = await userRepository.create(new User({ ...input, id: 'id2', username: 'username2', email: 'email2@email.com' }));
-	// 	const { status, body } = await request
-	// 		.put(`/api/v1/users/${user.id}`)
-	// 		.set('Authorization', token)
-	// 		.send({ email: input.email });
-	// 	expect(body?.result).toBe('email must be unique');
-	// 	expect(status).toBe(400);
-	// });
-	//
-	// test('fail on update with same username', async () => {
-	// 	await userRepository.create(new User(input));
-	// 	const user = await userRepository.create(new User({ ...input, id: 'id2', username: 'username2', email: 'email2@email.com' }));
-	// 	const { status, body } = await request
-	// 		.put(`/api/v1/users/${user.id}`)
-	// 		.set('Authorization', token)
-	// 		.send({ username: input.username });
-	// 	expect(body?.result).toBe('username must be unique');
-	// 	expect(status).toBe(400);
-	// });
+	test('fail on update with invalid email format', async () => {
+		const { id } = await createHandler.execute({ ...input });
+		const { status, body } = await request
+			.put(`/api/v1/users/${id}`)
+			.set('Authorization', token)
+			.send({ ...input, email: 'invalid' });
+		expect(body?.result).toBe('invalid email format');
+		expect(status).toBe(400);
+	});
+
+	test('fail on update with same email', async () => {
+		await createHandler.execute({ ...input });
+		const { id } = await createHandler.execute({ ...input, username: 'username2', email: 'email2@email.com' });
+		const { status, body } = await request
+			.put(`/api/v1/users/${id}`)
+			.set('Authorization', token)
+			.send({ email: input.email });
+		expect(body?.result).toBe('email must be unique');
+		expect(status).toBe(400);
+	});
+
+	test('fail on update with same username', async () => {
+		await createHandler.execute({ ...input });
+		const { id } = await createHandler.execute({ ...input, username: 'username2', email: 'email2@email.com' });
+		const { status, body } = await request
+			.put(`/api/v1/users/${id}`)
+			.set('Authorization', token)
+			.send({ username: input.username });
+		expect(body?.result).toBe('username must be unique');
+		expect(status).toBe(400);
+	});
 });

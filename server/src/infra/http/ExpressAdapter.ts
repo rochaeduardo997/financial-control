@@ -62,9 +62,14 @@ class ExpressAdapter implements IHttp {
         const { statusCode, result } = await callback(req, res);
         return res.status(statusCode).json({ result });
       }catch(err: any){
-        return res
-          .status(400)
-          .json({ status: false, result: err?.message });
+        if(/failed on get/.test(err?.message))
+          return res
+            .status(404)
+            .json({ status: false, result: err?.message });
+        else
+          return res
+            .status(400)
+            .json({ status: false, result: err?.message });
       }
     });
   }
