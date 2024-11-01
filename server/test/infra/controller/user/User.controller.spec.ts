@@ -170,15 +170,15 @@ describe('success', () => {
 		expect(status).toBe(200);
 	});
 
-	// test('delete by id', async () => {
-	// 	await userRepository.create(new User(input));
-	// 	const { status, body } = await request
-	// 		.delete(`/api/v1/users/${input.id}`)
-	// 		.set('Authorization', token);
-	// 	expect(body.result).toBe(true);
-	// 	expect(status).toBe(200);
-	// 	expect(await userRepository.findAll()).toHaveLength(0);
-	// });
+	test('delete by id', async () => {
+		const { id } = await createHandler.execute({ ...input });
+		const { status, body } = await request
+			.delete(`/api/v1/users/${id}`)
+			.set('Authorization', token);
+		expect(body.result).toBe(true);
+		expect(status).toBe(200);
+		expect(await userRepository.getAll()).toHaveLength(0);
+	});
 });
 
 describe('fail', () => {

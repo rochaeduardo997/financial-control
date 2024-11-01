@@ -7,6 +7,7 @@ import CreateHandler from "../../../core/usecase/user/Create";
 import GetAll from "../../../core/usecase/user/GetAll";
 import GetByIdHandler from "../../../core/usecase/user/GetById";
 import Update from "../../../core/usecase/user/Update";
+import DeleteByIdHandler from "../../../core/usecase/user/DeleteById";
 
 type TRouteResponse = { statusCode: number, result: any }
 
@@ -22,7 +23,7 @@ class UserController {
 		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/all`,         this.FindAllRoute.bind(this));
 		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/:id`,         this.FindByIdRoute.bind(this));
 		httpAdapter.addRoute('put',    `${BASE_URL_PATH}/:id`,         this.UpdateByIdRoute.bind(this));
-		// httpAdapter.addRoute('delete', `${BASE_URL_PATH}/:id`,         this.DeleteByIdRoute.bind(this));
+		httpAdapter.addRoute('delete', `${BASE_URL_PATH}/:id`,         this.DeleteByIdRoute.bind(this));
 
 		console.log('user controller successful loaded');
 	}
@@ -117,17 +118,17 @@ class UserController {
 		}
 	}
 
-	// private async DeleteByIdRoute(req: any, res: any): Promise<TRouteResponse>{
-	// 	try{
-	// 		const { id } = req.params;
-	// 		const deleteById = new DeleteByIdHandler(this.userRepository);
-	// 		const result = await deleteById.execute({ id });
-	// 		return { statusCode: 200, result }
-	// 	}catch(err: any){
-	// 		console.error('failed on route: delete user by id', err);
-	// 		throw new Error(err.message);
-	// 	}
-	// }
+	private async DeleteByIdRoute(req: any, res: any): Promise<TRouteResponse>{
+		try{
+			const { id } = req.params;
+			const deleteById = new DeleteByIdHandler(this.userRepository);
+			const result = await deleteById.execute({ id });
+			return { statusCode: 200, result }
+		}catch(err: any){
+			console.error('failed on route: delete user by id', err);
+			throw new Error(err.message);
+		}
+	}
 }
 
 export default UserController;
