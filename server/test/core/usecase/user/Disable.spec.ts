@@ -6,6 +6,7 @@ import User from "../../../../src/core/entity/User";
 import CreateHandler from "../../../../src/core/usecase/user/Create";
 import RepositoryFactory from "../../../../src/infra/factory/sequelize/Repository.factory";
 import DisableHandler from "../../../../src/core/usecase/user/Disable";
+import CacheFake from "../../../../src/infra/cache/cache.fake";
 
 let sequelize:  Sequelize;
 let userRepository: IUserRepository;
@@ -16,8 +17,9 @@ let users: User[];
 beforeEach(async () => {
 	sequelize = await instanceSequelize();
 	const repositoryFactory = new RepositoryFactory(sequelize);
+	const cache = new CacheFake();
 	userRepository = repositoryFactory.user();
-	disableHandler = new DisableHandler(userRepository);
+	disableHandler = new DisableHandler(userRepository, cache);
 	createHandler = new CreateHandler(userRepository);
 	users = userSeed(2);
 });

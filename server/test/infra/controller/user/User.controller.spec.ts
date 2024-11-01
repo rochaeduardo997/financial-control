@@ -81,31 +81,27 @@ describe('success', () => {
 		expect(status).toBe(200);
 	});
 
-	// test('enable by id', async () => {
-	// 	const user = await userRepository.create(new User(input));
-	// 	const { status, body } = await request
-	// 		.get(`/api/v1/users/enable/${user.id}`)
-	// 		.set('Authorization', token);
-	// 	expect(body?.result?.id).toBe(input.id);
-	// 	expect(body?.result?.email).toBe(input.email);
-	// 	expect(body?.result?.username).toBe(input.username);
-	// 	expect(body?.result?.name).toBe(input.name);
-	// 	expect(body?.result?.status).toBe(true);
-	// 	expect(status).toBe(200);
-	// });
-	//
-	// test('disable by id', async () => {
-	// 	const user = await userRepository.create(new User(input));
-	// 	const { status, body } = await request
-	// 		.get(`/api/v1/users/disable/${user.id}`)
-	// 		.set('Authorization', token);
-	// 	expect(body?.result?.id).toBe(input.id);
-	// 	expect(body?.result?.email).toBe(input.email);
-	// 	expect(body?.result?.username).toBe(input.username);
-	// 	expect(body?.result?.name).toBe(input.name);
-	// 	expect(body?.result?.status).toBe(false);
-	// 	expect(status).toBe(200);
-	// });
+	test('enable by id', async () => {
+		const { id } = await createHandler.execute({ ...input });
+		const { status, body } = await request
+			.get(`/api/v1/users/enable/${id}`)
+			.set('Authorization', token);
+		expect(body?.result).toBeTruthy();
+		expect(status).toBe(200);
+		const { status: userStatus } = await userRepository.getBy(id);
+		expect(userStatus).toBeTruthy();
+	});
+
+	test('disable by id', async () => {
+		const { id } = await createHandler.execute({ ...input });
+		const { status, body } = await request
+			.get(`/api/v1/users/disable/${id}`)
+			.set('Authorization', token);
+		expect(body?.result).toBeTruthy();
+		expect(status).toBe(200);
+		const { status: userStatus } = await userRepository.getBy(id);
+		expect(userStatus).toBeFalsy();
+	});
 
 	test('create', async () => {
 		const { status, body } = await request

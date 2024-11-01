@@ -8,6 +8,8 @@ import GetAll from "../../../core/usecase/user/GetAll";
 import GetByIdHandler from "../../../core/usecase/user/GetById";
 import Update from "../../../core/usecase/user/Update";
 import DeleteByIdHandler from "../../../core/usecase/user/DeleteById";
+import EnableHandler from "../../../core/usecase/user/Enable";
+import Disable from "../../../core/usecase/user/Disable";
 
 type TRouteResponse = { statusCode: number, result: any }
 
@@ -17,8 +19,8 @@ class UserController {
 
 		// httpAdapter.addRoute('post',   '/logout',                      this.LogoutRoute.bind(this));
 		httpAdapter.addRoute('post',   '/login',                       this.LoginRoute.bind(this));
-		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/enable/:id`,  this.EnableByIdRoute.bind(this));
-		// httpAdapter.addRoute('get',    `${BASE_URL_PATH}/disable/:id`, this.DisableByIdRoute.bind(this));
+		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/enable/:id`,  this.EnableByIdRoute.bind(this));
+		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/disable/:id`, this.DisableByIdRoute.bind(this));
 		httpAdapter.addRoute('post',   `${BASE_URL_PATH}`,             this.CreateRoute.bind(this));
 		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/all`,         this.FindAllRoute.bind(this));
 		httpAdapter.addRoute('get',    `${BASE_URL_PATH}/:id`,         this.FindByIdRoute.bind(this));
@@ -50,27 +52,27 @@ class UserController {
 		}
 	}
 
-	// private async EnableByIdRoute(req: any, res: any): Promise<TRouteResponse>{
-	// 	try{
-	// 		const enableHandler = new EnableByIdHandler(this.userRepository);
-	// 		const result = await enableHandler.execute(req.params);
-	// 		return { statusCode: 200, result };
-	// 	}catch(err: any){
-	// 		console.error('failed on route: enable user, ', err);
-	// 		throw new Error(err.message);
-	// 	}
-	// }
-	//
-	// private async DisableByIdRoute(req: any, res: any): Promise<TRouteResponse>{
-	// 	try{
-	// 		const disableHandler = new DisableByIdHandler(this.userRepository, this.cache);
-	// 		const result = await disableHandler.execute(req.params);
-	// 		return { statusCode: 200, result };
-	// 	}catch(err: any){
-	// 		console.error('failed on route: disable user, ', err);
-	// 		throw new Error(err.message);
-	// 	}
-	// }
+	private async EnableByIdRoute(req: any, res: any): Promise<TRouteResponse>{
+		try{
+			const enableHandler = new EnableHandler(this.userRepository);
+			const result = await enableHandler.execute(req.params);
+			return { statusCode: 200, result };
+		}catch(err: any){
+			console.error('failed on route: enable user, ', err);
+			throw new Error(err.message);
+		}
+	}
+
+	private async DisableByIdRoute(req: any, res: any): Promise<TRouteResponse>{
+		try{
+			const disableHandler = new Disable(this.userRepository, this.cache);
+			const result = await disableHandler.execute(req.params);
+			return { statusCode: 200, result };
+		}catch(err: any){
+			console.error('failed on route: disable user, ', err);
+			throw new Error(err.message);
+		}
+	}
 
 	private async CreateRoute(req: any, res: any): Promise<TRouteResponse>{
 		try{
