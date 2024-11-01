@@ -8,4 +8,6 @@ export default interface IUserRepository extends IRepository<User> {
   getBy(id: string): Promise<User>;
   getAll(): Promise<User[]>;
   deleteBy(id: string): Promise<boolean>;
+  enableBy(id: string): Promise<boolean>;
+  disableBy(id: string): Promise<boolean>;
 }

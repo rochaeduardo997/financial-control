@@ -17,6 +17,23 @@ beforeEach(async () => {
 afterEach(async () => await sequelize.close());
 
 describe('success', () => {
+  test('disable user', async () => {
+    users[0].status = true;
+    await userRepository.create(users[0]);
+    const result = await userRepository.disableBy(users[0].id);
+    expect(result).toBeTruthy();
+    const { status } = await userRepository.getBy(users[0].id);
+    expect(status).toBeFalsy();
+  });
+
+  test('enable user', async () => {
+    await userRepository.create(users[0]);
+    const result = await userRepository.enableBy(users[0].id);
+    expect(result).toBeTruthy();
+    const { status } = await userRepository.getBy(users[0].id);
+    expect(status).toBeTruthy();
+  });
+  
   test('create new user', async () => {
     const result = await userRepository.create(users[0]);
     expect(result.id).toBe(users[0].id);
@@ -199,5 +216,16 @@ describe('fail', () => {
     const getAllResult = await userRepository.getAll();
     expect(getAllResult).toHaveLength(2);
   });
-});
 
+  test('enable user by invalid id', async () => {
+    await expect(() => userRepository.enableBy('invalid_id'))
+      .rejects
+      .toThrow('failed on enable user');
+  });
+  
+  test('disable user by invalid id', async () => {
+    await expect(() => userRepository.disableBy('invalid_id'))
+      .rejects
+      .toThrow('failed on disable user');
+  });
+});

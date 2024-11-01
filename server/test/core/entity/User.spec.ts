@@ -33,10 +33,12 @@ describe('success', () => {
     user.username = 'new_username';
     user.email    = 'new_email@email.com';
     user.password = 'new_password';
+    user.status   = true;
     expect(user.name).toBe('new_name');
     expect(user.username).toBe('new_username');
     expect(user.email).toBe('new_email@email.com');
     expect(user.password).toBe('new_password');
+    expect(user.status).toBeTruthy();
   });
 
   test('validate user instance without status as parameter', () => {

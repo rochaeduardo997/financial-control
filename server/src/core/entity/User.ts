@@ -55,6 +55,10 @@ export default class User {
     this.isValid();
   }
   get status() { return this._status; }
+  set status(x: boolean) {
+    this._status = x;
+    this.isValid();
+  }
   get role() { return this._role; }
   get createdAt() { return this._createdAt; }
   get updatedAt() { return this._updatedAt; }

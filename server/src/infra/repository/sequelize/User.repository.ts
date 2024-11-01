@@ -11,6 +11,30 @@ export default class UserRepository implements IUserRepository {
     this.USER_MODEL = UserModel;
   }
 
+  async disableBy(id: string): Promise<boolean> {
+    try{
+      const verifyIfUserExists = await this.getBy(id);
+      if(!verifyIfUserExists) throw new Error();
+      const result = await this.USER_MODEL.update({ status: false }, { where: { id }});
+      return result[0] > 0;
+    }catch(err: any){
+      console.error(err);
+      throw new Error(err?.errors?.[0]?.message || 'failed on disable user');
+    }
+  }
+
+  async enableBy(id: string): Promise<boolean> {
+    try{
+      const verifyIfUserExists = await this.getBy(id);
+      if(!verifyIfUserExists) throw new Error();
+      const result = await this.USER_MODEL.update({ status: true }, { where: { id }});
+      return result[0] > 0;
+    }catch(err: any){
+      console.error(err);
+      throw new Error(err?.errors?.[0]?.message || 'failed on enable user');
+    }
+  }
+
   async login(input: TLoginInput): Promise<User> {
     try{
       const user = await this.USER_MODEL
