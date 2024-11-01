@@ -1,10 +1,10 @@
 export default class Category {
-  private _id:          string;
-  private _name:        string;
-  private _description: string;
-  private _userId?:     string;
+  private _id:           string;
+  private _name:         string;
+  private _description?: string;
+  private _userId?:      string;
 
-  constructor(id: string, name: string, description: string, userId?: string){
+  constructor(id: string, name: string, description?: string, userId?: string){
     this._id          = id;
     this._name        = name;
     this._description = description;

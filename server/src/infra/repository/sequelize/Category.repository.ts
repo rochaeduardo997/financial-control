@@ -2,17 +2,20 @@ import { Sequelize } from 'sequelize-typescript';
 import Category from '../../../core/entity/Category';
 import CategoryModel from './models/Category.model';
 import ICategoryRepository from '../../../core/repository/CategoryRepository.interface';
-import { Op } from 'sequelize';
+import UserRepository from "./User.repository";
 
 export default class CategoryRepository implements ICategoryRepository {
   private CATEGORY_MODEL;
+  private userRepository: UserRepository;
 
   constructor(private sequelize: Sequelize){
     this.CATEGORY_MODEL = CategoryModel;
+    this.userRepository = new UserRepository(this.sequelize);
   }
 
   async create(input: Category): Promise<Category> {
     try{
+      await this.userRepository.getBy(input.userId || "");
       const result = (await this.CATEGORY_MODEL.create({
         id:          input.id,
         name:        input.name,
