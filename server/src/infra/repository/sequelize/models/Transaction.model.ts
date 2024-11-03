@@ -1,6 +1,17 @@
-import { HasMany, ForeignKey, BelongsTo, DataType, Table, Model, PrimaryKey, Column, Unique, Default } from "sequelize-typescript";
-import UserModel from './User.model';
-import TransactionCategoryRelationModel from './TransactionCategoryRelation.model';
+import {
+  HasMany,
+  ForeignKey,
+  BelongsTo,
+  DataType,
+  Table,
+  Model,
+  PrimaryKey,
+  Column,
+  Unique,
+  Default,
+} from "sequelize-typescript";
+import UserModel from "./User.model";
+import TransactionCategoryRelationModel from "./TransactionCategoryRelation.model";
 
 @Table({ tableName: "transactions", timestamps: true })
 class TransactionModel extends Model {
@@ -14,7 +25,7 @@ class TransactionModel extends Model {
   @Column({ allowNull: false, type: DataType.FLOAT })
   declare value: number;
 
-  @Column({ allowNull: false, type: DataType.ENUM('in', 'out') })
+  @Column({ allowNull: false, type: DataType.ENUM("in", "out") })
   declare direction: string;
 
   @Column({ allowNull: false })
@@ -23,8 +34,8 @@ class TransactionModel extends Model {
   @ForeignKey(() => UserModel)
   @Column({
     allowNull: false,
-    onDelete:  'CASCADE',
-    onUpdate:  'CASCADE'
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   })
   declare fk_user_id: string;
 
@@ -33,4 +44,3 @@ class TransactionModel extends Model {
 }
 
 export default TransactionModel;
-

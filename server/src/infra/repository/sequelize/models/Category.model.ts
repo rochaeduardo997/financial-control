@@ -1,7 +1,17 @@
-import { HasMany, ForeignKey, DataType, Table, Model, PrimaryKey, Column, Unique, Default } from "sequelize-typescript";
-import UserModel from './User.model';
-import TransactionModel from './Transaction.model';
-import TransactionCategoryRelationModel from './TransactionCategoryRelation.model';
+import {
+  HasMany,
+  ForeignKey,
+  DataType,
+  Table,
+  Model,
+  PrimaryKey,
+  Column,
+  Unique,
+  Default,
+} from "sequelize-typescript";
+import UserModel from "./User.model";
+import TransactionModel from "./Transaction.model";
+import TransactionCategoryRelationModel from "./TransactionCategoryRelation.model";
 
 @Table({ tableName: "categories", timestamps: true })
 class CategoryModel extends Model {
@@ -18,8 +28,8 @@ class CategoryModel extends Model {
   @ForeignKey(() => UserModel)
   @Column({
     allowNull: false,
-    onDelete:  'CASCADE',
-    onUpdate:  'CASCADE'
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
   })
   declare fk_user_id: string;
 
@@ -28,4 +38,3 @@ class CategoryModel extends Model {
 }
 
 export default CategoryModel;
-
