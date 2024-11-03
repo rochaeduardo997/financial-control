@@ -1,27 +1,27 @@
-import IUserRepository from '../../repository/UserRepository.interface';
+import IUserRepository from "../../repository/UserRepository.interface";
 
-type TInput = { id: string; };
+type TInput = { id: string };
 
 type TOutput = {
-  id:       string;
-  name:     string;
+  id: string;
+  name: string;
   username: string;
-  email:    string;
+  email: string;
 };
 
 class GetByIdHandler {
-  constructor(private uRepository: IUserRepository){}
+  constructor(private uRepository: IUserRepository) {}
 
-  async execute(input: TInput): Promise<TOutput>{
-    try{
+  async execute(input: TInput): Promise<TOutput> {
+    try {
       const result = await this.uRepository.getBy(input.id);
       return {
-        id:       result.id,
-        name:     result.name,
+        id: result.id,
+        name: result.name,
         username: result.username,
-        email:    result.email
+        email: result.email,
       };
-    }catch(err: any){
+    } catch (err: any) {
       throw new Error(err?.message);
     }
   }

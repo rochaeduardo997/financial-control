@@ -1,12 +1,12 @@
 import { Sequelize } from "sequelize-typescript";
-import User, { UserRole } from '../../../src/core/entity/User';
-import IUserRepository from '../../../src/core/repository/UserRepository.interface';
-import UserRepository from '../../../src/infra/repository/sequelize/User.repository';
-import userSeed from '../../seed/User.seed';
-import instanceSequelize from '../../../src/infra/database/sequelize/instance';
+import User, { UserRole } from "../../../src/core/entity/User";
+import IUserRepository from "../../../src/core/repository/UserRepository.interface";
+import UserRepository from "../../../src/infra/repository/sequelize/User.repository";
+import userSeed from "../../seed/User.seed";
+import instanceSequelize from "../../../src/infra/database/sequelize/instance";
 
 let users: User[] = [];
-let sequelize:  Sequelize;
+let sequelize: Sequelize;
 let userRepository: IUserRepository;
 
 beforeEach(async () => {
@@ -16,8 +16,8 @@ beforeEach(async () => {
 });
 afterEach(async () => await sequelize.close());
 
-describe('success', () => {
-  test('disable user', async () => {
+describe("success", () => {
+  test("disable user", async () => {
     users[0].status = true;
     await userRepository.create(users[0]);
     const result = await userRepository.disableBy(users[0].id);
@@ -26,15 +26,15 @@ describe('success', () => {
     expect(status).toBeFalsy();
   });
 
-  test('enable user', async () => {
+  test("enable user", async () => {
     await userRepository.create(users[0]);
     const result = await userRepository.enableBy(users[0].id);
     expect(result).toBeTruthy();
     const { status } = await userRepository.getBy(users[0].id);
     expect(status).toBeTruthy();
   });
-  
-  test('create new user', async () => {
+
+  test("create new user", async () => {
     const result = await userRepository.create(users[0]);
     expect(result.id).toBe(users[0].id);
     expect(result.name).toBe(users[0].name);
@@ -46,9 +46,12 @@ describe('success', () => {
     expect(result.updatedAt).toBeDefined();
   });
 
-  test('login with email', async () => {
-    const user   = await userRepository.create(users[0]);
-    const result = await userRepository.login({ login: user.email, password: user.password });
+  test("login with email", async () => {
+    const user = await userRepository.create(users[0]);
+    const result = await userRepository.login({
+      login: user.email,
+      password: user.password,
+    });
     expect(result.id).toBe(user.id);
     expect(result.name).toBe(user.name);
     expect(result.username).toBe(user.username);
@@ -59,9 +62,12 @@ describe('success', () => {
     expect(result.updatedAt).toBeDefined();
   });
 
-  test('login with username', async () => {
-    const user   = await userRepository.create(users[0]);
-    const result = await userRepository.login({ login: user.username, password: user.password });
+  test("login with username", async () => {
+    const user = await userRepository.create(users[0]);
+    const result = await userRepository.login({
+      login: user.username,
+      password: user.password,
+    });
     expect(result.id).toBe(user.id);
     expect(result.name).toBe(user.name);
     expect(result.username).toBe(user.username);
@@ -72,8 +78,8 @@ describe('success', () => {
     expect(result.updatedAt).toBeDefined();
   });
 
-  test('find by id', async () => {
-    const user   = await userRepository.create(users[0]);
+  test("find by id", async () => {
+    const user = await userRepository.create(users[0]);
     const result = await userRepository.getBy(user.id);
     expect(result.id).toBe(user.id);
     expect(result.name).toBe(user.name);
@@ -85,7 +91,7 @@ describe('success', () => {
     expect(result.updatedAt).toBeDefined();
   });
 
-  test('find all', async () => {
+  test("find all", async () => {
     await userRepository.create(users[0]);
     await userRepository.create(users[1]);
     const result = await userRepository.getAll();
@@ -107,13 +113,12 @@ describe('success', () => {
     expect(result[1].updatedAt).toBeDefined();
   });
 
-  test('empty array when find all without user registered', async () => {
+  test("empty array when find all without user registered", async () => {
     const result = await userRepository.getAll();
     expect(result).toHaveLength(0);
   });
 
-
-  test('update user', async () => {
+  test("update user", async () => {
     await userRepository.create(users[0]);
     const result = await userRepository.updateBy(users[0].id, users[1]);
     expect(result.id).toBe(users[0].id);
@@ -126,7 +131,7 @@ describe('success', () => {
     expect(result.updatedAt).toBeDefined();
   });
 
-  test('delete user by id', async () => {
+  test("delete user by id", async () => {
     await userRepository.create(users[0]);
     await userRepository.create(users[1]);
     const deleteResult = await userRepository.deleteBy(users[0].id);
@@ -136,8 +141,8 @@ describe('success', () => {
   });
 });
 
-describe('fail', () => {
-  test('create user with same username', async () => {
+describe("fail", () => {
+  test("create user with same username", async () => {
     await userRepository.create(users[0]);
     const userWithSameUsername = new User(
       users[1].id,
@@ -148,47 +153,47 @@ describe('fail', () => {
       users[0].status,
       users[0].role,
       users[0].createdAt,
-      users[0].updatedAt
+      users[0].updatedAt,
     );
-    await expect(() => userRepository.create(userWithSameUsername))
-      .rejects
-      .toThrow('username must be unique');
+    await expect(() =>
+      userRepository.create(userWithSameUsername),
+    ).rejects.toThrow("username must be unique");
   });
 
-  test('create user with same email', async () => {
+  test("create user with same email", async () => {
     await userRepository.create(users[0]);
-    await expect(() => userRepository.create(users[0]))
-      .rejects
-      .toThrow('email must be unique');
+    await expect(() => userRepository.create(users[0])).rejects.toThrow(
+      "email must be unique",
+    );
   });
 
-  test('login with invalid credentials', async () => {
-    await expect(() => userRepository.login({ login: 'login', password: 'password' }))
-      .rejects
-      .toThrow();
+  test("login with invalid credentials", async () => {
+    await expect(() =>
+      userRepository.login({ login: "login", password: "password" }),
+    ).rejects.toThrow();
   });
 
-  test('find by invalid id', async () => {
-    await expect(() => userRepository.getBy('invalid_id'))
-      .rejects
-      .toThrow('failed on get user by id');
+  test("find by invalid id", async () => {
+    await expect(() => userRepository.getBy("invalid_id")).rejects.toThrow(
+      "failed on get user by id",
+    );
   });
 
-  test('update user with invalid id', async () => {
-    await expect(() => userRepository.updateBy('invalid_id', users[0]))
-      .rejects
-      .toThrow('failed on update user');
+  test("update user with invalid id", async () => {
+    await expect(() =>
+      userRepository.updateBy("invalid_id", users[0]),
+    ).rejects.toThrow("failed on update user");
   });
 
-  test('update user with same email', async () => {
+  test("update user with same email", async () => {
     await userRepository.create(users[0]);
     await userRepository.create(users[1]);
-    await expect(() => userRepository.updateBy(users[0].id, users[1]))
-      .rejects
-      .toThrow('email must be unique');
+    await expect(() =>
+      userRepository.updateBy(users[0].id, users[1]),
+    ).rejects.toThrow("email must be unique");
   });
 
-  test('update user with same username', async () => {
+  test("update user with same username", async () => {
     await userRepository.create(users[0]);
     await userRepository.create(users[1]);
     const userWithSameUsername = new User(
@@ -200,32 +205,32 @@ describe('fail', () => {
       users[0].status,
       users[0].role,
       users[0].createdAt,
-      users[0].updatedAt
+      users[0].updatedAt,
     );
-    await expect(() => userRepository.updateBy(users[0].id, userWithSameUsername))
-      .rejects
-      .toThrow('username must be unique');
+    await expect(() =>
+      userRepository.updateBy(users[0].id, userWithSameUsername),
+    ).rejects.toThrow("username must be unique");
   });
 
-  test('delete user by invalid id', async () => {
+  test("delete user by invalid id", async () => {
     await userRepository.create(users[0]);
     await userRepository.create(users[1]);
-    await expect(() => userRepository.deleteBy('invalid_id'))
-      .rejects
-      .toThrow('failed on delete user by id');
+    await expect(() => userRepository.deleteBy("invalid_id")).rejects.toThrow(
+      "failed on delete user by id",
+    );
     const getAllResult = await userRepository.getAll();
     expect(getAllResult).toHaveLength(2);
   });
 
-  test('enable user by invalid id', async () => {
-    await expect(() => userRepository.enableBy('invalid_id'))
-      .rejects
-      .toThrow('failed on enable user');
+  test("enable user by invalid id", async () => {
+    await expect(() => userRepository.enableBy("invalid_id")).rejects.toThrow(
+      "failed on enable user",
+    );
   });
-  
-  test('disable user by invalid id', async () => {
-    await expect(() => userRepository.disableBy('invalid_id'))
-      .rejects
-      .toThrow('failed on disable user');
+
+  test("disable user by invalid id", async () => {
+    await expect(() => userRepository.disableBy("invalid_id")).rejects.toThrow(
+      "failed on disable user",
+    );
   });
 });

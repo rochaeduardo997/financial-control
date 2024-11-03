@@ -1,31 +1,31 @@
-import { createHash } from 'crypto';
-import IUserRepository from '../../repository/UserRepository.interface';
-import User, { UserRole } from '../../entity/User';
+import { createHash } from "crypto";
+import IUserRepository from "../../repository/UserRepository.interface";
+import User, { UserRole } from "../../entity/User";
 
-type TInput = { 
-  name:      string;
-  username:  string;
-  email:     string;
-  password:  string;
+type TInput = {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
 };
 
 type TOutput = {
-  id:       string;
-  name:     string;
+  id: string;
+  name: string;
   username: string;
-  email:    string;
+  email: string;
 };
 
 class CreateHandler {
-  constructor(private uRepository: IUserRepository){}
+  constructor(private uRepository: IUserRepository) {}
 
-  async execute(input: TInput): Promise<TOutput>{
-    try{
-      if(!input.password) throw new Error('password must be provided');
+  async execute(input: TInput): Promise<TOutput> {
+    try {
+      if (!input.password) throw new Error("password must be provided");
       const userId = crypto.randomUUID();
-      const password = createHash('sha512')
+      const password = createHash("sha512")
         .update(input.password)
-        .digest('hex');
+        .digest("hex");
       const user = new User(
         userId,
         input.name,
@@ -35,16 +35,16 @@ class CreateHandler {
         false,
         UserRole.USER,
         new Date(),
-        new Date()
+        new Date(),
       );
       const createdUser = await this.uRepository.create(user);
       return {
-        id:       createdUser.id,
-        name:     createdUser.name,
+        id: createdUser.id,
+        name: createdUser.name,
         username: createdUser.username,
-        email:    createdUser.email
+        email: createdUser.email,
       };
-    }catch(err: any){
+    } catch (err: any) {
       throw new Error(err?.message);
     }
   }

@@ -1,9 +1,9 @@
-import IUserRepository from '../../repository/UserRepository.interface';
+import IUserRepository from "../../repository/UserRepository.interface";
 import IJWT from "../../../infra/jwt/jwt.interface";
 import ICache from "../../../infra/cache/cache.interface";
 import { createHash } from "crypto";
 
-type TInput = { login: string; password: string; };
+type TInput = { login: string; password: string };
 
 type TOutput = {
   id: string;
@@ -11,23 +11,27 @@ type TOutput = {
   username: string;
   name: string;
   status: boolean;
-  token: string
+  token: string;
 };
 
 class LoginHandler {
-  constructor(private uRepository: IUserRepository, private jwt: IJWT, private cache: ICache){}
+  constructor(
+    private uRepository: IUserRepository,
+    private jwt: IJWT,
+    private cache: ICache,
+  ) {}
 
-  async execute(input: TInput): Promise<TOutput>{
-    try{
-      const password = createHash('sha512')
+  async execute(input: TInput): Promise<TOutput> {
+    try {
+      const password = createHash("sha512")
         .update(input.password)
-        .digest('hex');
+        .digest("hex");
       const user = await this.uRepository.login({ ...input, password });
       const toEncode = {
-        id:       user.id,
-        email:    user.email,
+        id: user.id,
+        email: user.email,
         username: user.username,
-        status:   user.status!
+        status: user.status!,
       };
       const token = this.jwt.sign(toEncode);
       await this.cache.listSet(`session:${user.id}`, token, 864e5);
@@ -37,9 +41,9 @@ class LoginHandler {
         username: user.username,
         name: user.name,
         status: user.status,
-        token
+        token,
       };
-    }catch(err: any){
+    } catch (err: any) {
       throw new Error(err?.message);
     }
   }
