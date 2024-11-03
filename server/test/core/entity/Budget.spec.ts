@@ -2,11 +2,7 @@ import Transaction, {
   TransactionDirection,
 } from "../../../src/core/entity/Transaction";
 import Category from "../../../src/core/entity/Category";
-import Budget
-
-
- ,
- from "../../../src/core/entity/Budget";
+import Budget from "../../../src/core/entity/Budget";
 
 let budget: Budget;
 const tr1 = new Transaction(
