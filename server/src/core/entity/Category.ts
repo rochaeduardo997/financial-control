@@ -17,8 +17,14 @@ export default class Category {
   get name() {
     return this._name;
   }
-  get description() {
+  set name(x: string) {
+    this._name = x;
+  }
+  get description(): string | undefined {
     return this._description;
+  }
+  set description(x: string) {
+    this._description = x;
   }
   get userId() {
     return this._userId;

@@ -22,7 +22,7 @@ class CategoryModel extends Model {
   @Column({ allowNull: false })
   declare name: string;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: true })
   declare description: string;
 
   @ForeignKey(() => UserModel)

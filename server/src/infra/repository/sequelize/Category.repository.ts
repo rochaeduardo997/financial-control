@@ -84,7 +84,7 @@ export default class CategoryRepository implements ICategoryRepository {
       const result = await this.CATEGORY_MODEL.update(
         {
           name: input.name,
-          description: input.description,
+          description: input.description ? input.description : null,
         },
         { where: { id } },
       );

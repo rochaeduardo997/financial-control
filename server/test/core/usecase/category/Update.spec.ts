@@ -7,12 +7,12 @@ import categorySeed from "../../../seed/Category.seed";
 import User from "../../../../src/core/entity/User";
 import IUserRepository from "../../../../src/core/repository/UserRepository.interface";
 import userSeed from "../../../seed/User.seed";
-import GetByIdHandler from "../../../../src/core/usecase/category/GetById";
+import UpdateHandler from "../../../../src/core/usecase/category/Update";
 
 let sequelize: Sequelize;
 let categoryRepository: ICategoryRepository;
 let userRepository: IUserRepository;
-let getByIdHandler: GetByIdHandler;
+let updateHandler: UpdateHandler;
 let categories: Category[];
 let users: User[];
 
@@ -21,7 +21,7 @@ beforeEach(async () => {
   const repositoryFactory = new RepositoryFactory(sequelize);
   categoryRepository = repositoryFactory.category();
   userRepository = repositoryFactory.user();
-  getByIdHandler = new GetByIdHandler(categoryRepository);
+  updateHandler = new UpdateHandler(categoryRepository);
   categories = categorySeed(2);
   users = userSeed(2);
   await userRepository.create(users[0]);
@@ -35,22 +35,34 @@ beforeEach(async () => {
 afterEach(async () => await sequelize.close());
 
 describe("success", () => {
-  test("get by id", async () => {
-    const result = await getByIdHandler.execute({
+  test("update", async () => {
+    const result = await updateHandler.execute({
       id: categories[0].id,
       userId: users[0].id,
+      name: "new_name",
+      description: "new_description",
     });
     expect(result.id).toBe(categories[0].id);
-    expect(result.name).toBe(categories[0].name);
-    expect(result.description).toBe(categories[0].description);
-    expect(result.userId).toBe(categories[0].userId);
+    expect(result.name).toBe("new_name");
+    expect(result.description).toBe("new_description");
+  });
+
+  test("update setting description as null", async () => {
+    const result = await updateHandler.execute({
+      id: categories[0].id,
+      userId: users[0].id,
+      name: "new_name",
+    });
+    expect(result.id).toBe(categories[0].id);
+    expect(result.name).toBe("new_name");
+    expect(result.description).toBeNull();
   });
 });
 
 describe("success", () => {
-  test("get another user's category", async () => {
+  test("update another user's category", async () => {
     await expect(
-      getByIdHandler.execute({
+      updateHandler.execute({
         id: categories[0].id,
         userId: users[1].id,
       }),
@@ -59,7 +71,7 @@ describe("success", () => {
 
   test("update category by invalid id", async () => {
     await expect(
-      getByIdHandler.execute({
+      updateHandler.execute({
         id: "invalid_id",
         userId: users[0].id,
       }),
