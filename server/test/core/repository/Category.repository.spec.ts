@@ -16,7 +16,7 @@ let categoryRepository: ICategoryRepository;
 let userRepository: IUserRepository;
 
 beforeEach(async () => {
-  categories = categorySeed(2);
+  categories = categorySeed(3);
   users = userSeed(2);
   sequelize = await instanceSequelize();
   categoryRepository = new CategoryRepository(sequelize);
@@ -25,6 +25,7 @@ beforeEach(async () => {
   await userRepository.create(users[1]);
   categories[0].associateUser(users[0].id);
   categories[1].associateUser(users[0].id);
+  categories[2].associateUser(users[1].id);
 });
 afterEach(async () => await sequelize.close());
 

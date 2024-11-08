@@ -62,7 +62,10 @@ export default class CategoryRepository implements ICategoryRepository {
   async getAllBy(userId: string): Promise<Category[]> {
     try {
       const result: Category[] = [];
-      const categories = await this.CATEGORY_MODEL.findAll({ raw: true });
+      const categories = await this.CATEGORY_MODEL.findAll({
+        where: { fk_user_id: userId },
+        raw: true,
+      });
       for (let u of categories) result.push(this.instanceCategoryFrom(u));
       return result;
     } catch (err: any) {
