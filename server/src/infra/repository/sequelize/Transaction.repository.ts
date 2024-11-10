@@ -177,13 +177,8 @@ export default class TransactionRepository implements ITransactionRepository {
       const result = await this.TRANSACTION_MODEL.destroy({
         where: { id, fk_user_id: userId },
       });
-      await this.reinsertAssociationWithCategoriesBy(
-        id,
-        userId,
-        verifyIfTransactionExists.categories,
-        tx,
-      );
-      return result === 1;
+      if (result !== 1) throw new Error();
+      return true;
     } catch (err: any) {
       console.error(err);
       throw new Error(
