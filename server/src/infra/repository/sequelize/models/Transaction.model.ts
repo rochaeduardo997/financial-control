@@ -1,14 +1,11 @@
 import {
   HasMany,
   ForeignKey,
-  BelongsTo,
   DataType,
   Table,
   Model,
   PrimaryKey,
   Column,
-  Unique,
-  Default,
 } from "sequelize-typescript";
 import UserModel from "./User.model";
 import TransactionCategoryRelationModel from "./TransactionCategoryRelation.model";
