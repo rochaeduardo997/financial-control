@@ -32,7 +32,7 @@ const input = {
 beforeEach(async () => {
   cache = new CacheFake();
   jwt = new JWTFake();
-  await cache.listSet(`session:id`, "token");
+  await cache.listSet(`session:id1`, "token");
   await cache.listSet(`session:id2`, "token");
   sequelize = await instanceSequelize();
   const repositoryFactory = new RepositoryFactory(sequelize);
