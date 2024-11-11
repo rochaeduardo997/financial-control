@@ -28,7 +28,7 @@ beforeEach(async () => {
 afterEach(async () => await sequelize.close());
 
 describe("success", () => {
-  test("delete category by id", async () => {
+  test("delete transaction by id", async () => {
     const result = await deleteByIdHandler.execute({
       id: transactions[0].id,
       userId: transactions[0].userId!,

@@ -107,6 +107,7 @@ export default class TransactionRepository implements ITransactionRepository {
     try {
       const result: Transaction[] = [];
       const transactions = await this.TRANSACTION_MODEL.findAll({
+        where: { fk_user_id: userId },
         offset,
         limit,
         include: { model: TransactionCategoryRelationModel },
@@ -150,7 +151,7 @@ export default class TransactionRepository implements ITransactionRepository {
         },
         { where: { id }, transaction: tx },
       );
-      const categories = await this.reinsertAssociationWithCategoriesBy(
+      await this.reinsertAssociationWithCategoriesBy(
         id,
         input.userId,
         input.categories,
