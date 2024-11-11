@@ -20,11 +20,11 @@ beforeEach(async () => {
   getAllHandler = new GetAllHandler(transactionRepository);
   const [user, user2] = userSeed(2);
   transactions = transactionSeed(3);
-  const { id: userId } = await userRepository.create(user);
-  const { id: user2Id } = await userRepository.create(user2);
-  transactions[0].associateUser(userId);
-  transactions[1].associateUser(userId);
-  transactions[2].associateUser(user2Id);
+  await userRepository.create(user);
+  await userRepository.create(user2);
+  transactions[0].associateUser(user.id);
+  transactions[1].associateUser(user.id);
+  transactions[2].associateUser(user2.id);
   await transactionRepository.create(transactions[0]);
   await transactionRepository.create(transactions[1]);
   await transactionRepository.create(transactions[2]);
