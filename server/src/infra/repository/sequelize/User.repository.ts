@@ -121,6 +121,7 @@ export default class UserRepository implements IUserRepository {
           password: input.password,
           status: input.status,
           role: input.role,
+          updated_at: new Date(),
         },
         { where: { id } },
       );

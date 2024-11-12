@@ -85,6 +85,7 @@ export default class CategoryRepository implements ICategoryRepository {
         {
           name: input.name,
           description: input.description ? input.description : null,
+          updated_at: new Date(),
         },
         { where: { id } },
       );

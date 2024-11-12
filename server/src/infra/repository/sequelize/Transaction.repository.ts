@@ -148,6 +148,7 @@ export default class TransactionRepository implements ITransactionRepository {
           direction: input.direction,
           when: input.when,
           fk_user_id: input.userId,
+          updated_at: new Date(),
         },
         { where: { id }, transaction: tx },
       );

@@ -31,6 +31,22 @@ beforeEach(() => {
 });
 
 describe("success", () => {
+  test("clear categories set", () => {
+    transaction.cleanupCategories();
+    expect(transaction.categories).toHaveLength(0);
+  });
+
+  test("update fields", () => {
+    transaction.name = "new_name";
+    transaction.value = 99.98;
+    transaction.direction = TransactionDirection.OUT;
+    transaction.when = new Date("2010-02-02");
+    expect(transaction.name).toBe("new_name");
+    expect(transaction.value).toBe(99.98);
+    expect(transaction.direction).toBe(TransactionDirection.OUT);
+    expect(transaction.when).toEqual(new Date("2010-02-02"));
+  });
+
   test("validate transaction instance", () => {
     expect(transaction.id).toBe(input.id);
     expect(transaction.name).toBe(input.name);

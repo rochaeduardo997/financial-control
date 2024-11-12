@@ -40,14 +40,26 @@ export default class Transaction {
   get name() {
     return this._name;
   }
+  set name(x: string) {
+    this._name = x;
+  }
   get value() {
     return this._value;
+  }
+  set value(x: number) {
+    this._value = x;
   }
   get direction() {
     return this._direction;
   }
+  set direction(x: TransactionDirection) {
+    this._direction = x;
+  }
   get when() {
     return this._when;
+  }
+  set when(x: Date) {
+    this._when = x;
   }
   get createdAt() {
     return this._createdAt;
@@ -67,6 +79,9 @@ export default class Transaction {
   }
   associateCategory(c: Category) {
     this._categories.add(c);
+  }
+  cleanupCategories() {
+    this._categories.clear();
   }
 
   private isValid() {
