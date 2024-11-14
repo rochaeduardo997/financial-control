@@ -56,7 +56,7 @@ export default class Transaction {
     this._direction = x;
   }
   get when() {
-    return this._when;
+    return new Date(this._when);
   }
   set when(x: Date) {
     this._when = x;
@@ -85,11 +85,14 @@ export default class Transaction {
   }
 
   private isValid() {
+    if (!this.name) throw new Error("name must be provided");
+    if (!this.value) throw new Error("value must be provided");
+    if (!this.direction) throw new Error("direction must be provided");
+    const validDirectionValue = /^in$|^out$/.test(this.direction);
+    if (!validDirectionValue) throw new Error("direction must be in/out");
+
     const valueLessThan0 = this.value < 0;
     if (valueLessThan0) throw new Error("value must be greater or equal 0");
-
-    const whenIsntBeforeNow = new Date().getTime() < this.when.getTime();
-    if (whenIsntBeforeNow) throw new Error("when date must be before now");
   }
 }
 

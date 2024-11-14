@@ -1,10 +1,8 @@
-import Category from "../../entity/Category";
 import Transaction, { TransactionDirection } from "../../entity/Transaction";
 import ICategoryRepository from "../../repository/CategoryRepository.interface";
 import ITransactionRepository from "../../repository/TransactionRepository.interface";
 
 type TBase = {
-  id: string;
   name: string;
   value: number;
   direction: TransactionDirection;
@@ -15,6 +13,7 @@ type TInput = TBase & {
   userId: string;
 };
 type TOutput = TBase & {
+  id: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -51,7 +50,7 @@ class CreateHandler {
         when: createdCategory.when,
         createdAt: createdCategory.createdAt,
         updatedAt: createdCategory.updatedAt,
-        categoriesId: (createdCategory.categories || []).map((c) => c.id),
+        categoriesId: (createdCategory.categories || []).map((c) => c.id) || [],
       };
     } catch (err: any) {
       throw new Error(err?.message);

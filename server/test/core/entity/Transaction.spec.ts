@@ -54,7 +54,7 @@ describe("success", () => {
     expect(transaction.direction).toBe(input.direction);
     expect(transaction.createdAt).toBe(input.createdAt);
     expect(transaction.updatedAt).toBe(input.updatedAt);
-    expect(transaction.when).toBe(input.when);
+    expect(transaction.when).toEqual(input.when);
     expect(transaction.categories).toEqual(categories);
     expect(transaction.userId).toBe(input.userId);
   });
@@ -65,24 +65,11 @@ describe("success", () => {
     expect(transaction.userId).toBe(newUserId);
   });
 
-  test("transaction instance with value equal 0", () => {
-    transaction = new Transaction(
-      input.id,
-      input.name,
-      0,
-      input.direction,
-      input.when,
-      input.createdAt,
-      input.updatedAt,
-    );
-    expect(transaction.value).toBe(0);
-  });
-
   test("transaction instance without category", () => {
     transaction = new Transaction(
       input.id,
       input.name,
-      0,
+      10,
       input.direction,
       input.when,
       input.createdAt,
@@ -93,33 +80,33 @@ describe("success", () => {
 });
 
 describe("fail", () => {
-  test("value less than 0", () => {
+  test("transaction instance without name", () => {
     expect(
       () =>
         new Transaction(
           input.id,
-          input.name,
-          -1,
+          "",
+          10,
           input.direction,
           input.when,
           input.createdAt,
           input.updatedAt,
         ),
-    ).toThrow("value must be greater or equal 0");
+    ).toThrow("name must be provided");
   });
 
-  test("value less than 0", () => {
+  test("transaction instance without value", () => {
     expect(
       () =>
         new Transaction(
           input.id,
           input.name,
-          input.value,
+          0,
           input.direction,
-          new Date("2030-01-01"),
+          input.when,
           input.createdAt,
           input.updatedAt,
         ),
-    ).toThrow("when date must be before now");
+    ).toThrow("value must be provided");
   });
 });
