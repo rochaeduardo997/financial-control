@@ -1,3 +1,6 @@
+.node_repl_history
+.next
+
 data
 lib-cov
 *.seed
