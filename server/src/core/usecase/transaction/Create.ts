@@ -14,8 +14,8 @@ type TInput = TBase & {
 };
 type TOutput = TBase & {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 class CreateHandler {

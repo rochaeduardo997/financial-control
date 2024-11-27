@@ -26,8 +26,8 @@ class GetByIdHandler {
         value: result.value,
         direction: result.direction,
         when: result.when,
-        createdAt: result.createdAt,
-        updatedAt: result.updatedAt,
+        createdAt: result.createdAt!,
+        updatedAt: result.updatedAt!,
         categoriesId: (result.categories || []).map((c) => c.id),
       };
     } catch (err: any) {

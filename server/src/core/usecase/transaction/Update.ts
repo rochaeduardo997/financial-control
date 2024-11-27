@@ -54,8 +54,8 @@ class UpdateHandler {
         value: updatedTransaction.value,
         direction: updatedTransaction.direction,
         when: updatedTransaction.when,
-        createdAt: updatedTransaction.createdAt,
-        updatedAt: updatedTransaction.updatedAt,
+        createdAt: updatedTransaction.createdAt!,
+        updatedAt: updatedTransaction.updatedAt!,
         categoriesId: (updatedTransaction.categories || []).map((c) => c.id),
       };
     } catch (err: any) {

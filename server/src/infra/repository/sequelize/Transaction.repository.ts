@@ -110,6 +110,7 @@ export default class TransactionRepository implements ITransactionRepository {
         where: { fk_user_id: userId },
         offset,
         limit,
+        order: [["when", "ASC"]],
         include: { model: TransactionCategoryRelationModel },
       });
       for (let t of transactions) {

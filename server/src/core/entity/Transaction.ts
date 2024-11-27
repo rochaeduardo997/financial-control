@@ -6,8 +6,8 @@ export default class Transaction {
   private _value: number;
   private _direction: TransactionDirection;
   private _when: Date;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  private _createdAt?: Date;
+  private _updatedAt?: Date;
   private _categories: Set<Category>;
   private _userId?: string;
 
@@ -17,8 +17,8 @@ export default class Transaction {
     value: number,
     direction: TransactionDirection,
     when: Date,
-    createdAt: Date,
-    updatedAt: Date,
+    createdAt?: Date,
+    updatedAt?: Date,
     userId?: string,
   ) {
     this._id = id;

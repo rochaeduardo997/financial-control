@@ -46,7 +46,7 @@ class ExpressAdapter implements IHttp {
       const token = req.headers.authorization?.split(" ") || [];
       if (!token?.[1]) throw new Error();
       const tokenVerified = this.jwt.verify(token[1]) as TReqUser;
-      if (!tokenVerified.status) throw new Error("disabled user");
+      // if (!tokenVerified.status) throw new Error("disabled user");
       await this.validateTokenBy(tokenVerified.id, token[1]);
       req.user = { ...tokenVerified, token: token[1] };
       return next();
