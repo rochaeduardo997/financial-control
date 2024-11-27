@@ -6,9 +6,28 @@ import BlankCard from "../../shared/BlankCard";
 import DayJS from "dayjs";
 import { IconTrash, IconPencil } from "@tabler/icons-react";
 import BlankTable from "../../shared/BlankTable";
+import { useEffect, useState } from "react";
+import Transaction from "../../../../../../../server/src/core/entity/Transaction";
+import TransactionService from "@/infra/service/Transaction.service";
 
 const Table = () => {
   const intl = useIntl();
+  const transactionService = new TransactionService();
+
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    getTransactions();
+  }, []);
+
+  const getTransactions = async () => {
+    try {
+      const result = await transactionService.findAll();
+      setTransactions(result);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -77,65 +96,6 @@ const Table = () => {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      name: "name1",
-      value: Math.random() * 100000,
-      direction: "in",
-      when: new Date("2024-11-10T09:31:53"),
-    },
-    {
-      id: 2,
-      name: "name2",
-      value: Math.random() * 100000,
-      direction: "out",
-      when: new Date("2024-11-10T09:31:53"),
-    },
-    {
-      id: 3,
-      name: "name3",
-      value: Math.random() * 100000,
-      direction: "out",
-      when: new Date("2024-11-10T09:31:53"),
-    },
-    {
-      id: 4,
-      name: "name4",
-      value: Math.random() * 100000,
-      direction: "in",
-      when: new Date("2024-11-10T09:31:53"),
-    },
-    {
-      id: 5,
-      name: "name5",
-      value: Math.random() * 100000,
-      direction: "out",
-      when: new Date("2024-11-10T09:31:53"),
-    },
-    {
-      id: 6,
-      name: "name6",
-      value: Math.random() * 100000,
-      direction: "in",
-      when: new Date("2024-11-10T09:31:53"),
-    },
-    {
-      id: 7,
-      name: "name7",
-      value: Math.random() * 100000,
-      direction: "in",
-      when: new Date("2024-11-10T09:31:53"),
-    },
-    {
-      id: 8,
-      name: "name8",
-      value: Math.random() * 100000,
-      direction: "in",
-      when: new Date("2024-11-10T09:31:53"),
-    },
-  ];
-
   const paginationModel = { page: 0, pageSize: 25 };
 
   return (
@@ -147,7 +107,7 @@ const Table = () => {
       >
         <BlankTable
           columns={columns}
-          rows={rows}
+          rows={transactions}
           paginationModel={paginationModel}
         />
       </BlankCard>

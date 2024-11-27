@@ -3,6 +3,7 @@
   "GENERAL.CRYPTO": "Cripto",
   "GENERAL.TABLE.OPTIONS": "Opções",
   "GENERAL.TABLE.LABEL.PAGINATION": "Itens por página",
+  "GENERAL.TABLE.LABEL.NO_DATA_FOUND": "Nenhum dado foi encontrado",
 
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.OVERVIEW": "Visão geral",
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT": "Relatório",

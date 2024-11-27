@@ -18,6 +18,11 @@ const BlankTable = ({ columns, rows, paginationModel }: Props) => {
       columns={columns}
       initialState={{ pagination: { paginationModel } }}
       pageSizeOptions={[25, 50, 100]}
+      localeText={{
+        noRowsLabel: intl.formatMessage({
+          id: "GENERAL.TABLE.LABEL.NO_DATA_FOUND",
+        }),
+      }}
       slotProps={{
         pagination: {
           labelRowsPerPage: intl.formatMessage({
