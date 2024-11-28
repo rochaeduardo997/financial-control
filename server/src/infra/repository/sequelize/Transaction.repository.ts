@@ -105,7 +105,7 @@ export default class TransactionRepository implements ITransactionRepository {
     page: number = 0,
     limit: number = 25,
   ): Promise<Transaction[]> {
-    limit = limit >= 25 ? 25 : limit;
+    limit = limit >= 100 ? 100 : limit;
 
     const offset = (page - 1) * limit;
 
