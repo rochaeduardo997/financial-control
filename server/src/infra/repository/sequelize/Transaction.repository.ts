@@ -100,8 +100,13 @@ export default class TransactionRepository implements ITransactionRepository {
     }
   }
 
-  async getAllBy(userId: string, page: number = 0): Promise<Transaction[]> {
-    const limit = 25;
+  async getAllBy(
+    userId: string,
+    page: number = 0,
+    limit: number = 25,
+  ): Promise<Transaction[]> {
+    limit = limit >= 25 ? 25 : limit;
+
     const offset = (page - 1) * limit;
 
     try {

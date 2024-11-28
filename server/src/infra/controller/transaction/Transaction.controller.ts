@@ -82,9 +82,9 @@ export default class TransactionController {
   private async FindAllRoute(req: any, res: any): Promise<TRouteResponse> {
     try {
       const { id: userId } = req.user;
-      const { page } = req.query;
+      const { page, limit } = req.query;
       const getAll = new GetAll(this.tRepository);
-      const result = await getAll.execute({ userId, page });
+      const result = await getAll.execute({ userId, page, limit });
       return { statusCode: 200, result };
     } catch (err: any) {
       console.error("failed on route: transaction find all, ", err);
