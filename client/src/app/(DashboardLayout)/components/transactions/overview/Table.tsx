@@ -14,16 +14,38 @@ const Table = () => {
   const intl = useIntl();
   const transactionService = new TransactionService();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [rowCount, setRowCount] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
 
   useEffect(() => {
-    getTransactions();
+    getTransactionsCount();
   }, []);
 
-  const getTransactions = async () => {
+  useEffect(() => {
+    getTransactions(paginationModel.page, paginationModel.pageSize);
+  }, [paginationModel]);
+
+  const getTransactions = async (page: number = 0, limit: number = 25) => {
     try {
-      const result = await transactionService.findAll();
+      setIsLoading(true);
+      const result = await transactionService.findAll(page + 1, limit);
       setTransactions(result);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getTransactionsCount = async () => {
+    try {
+      const result = await transactionService.findAllCount();
+      setRowCount(result);
     } catch (err) {
       console.error(err);
     }
@@ -96,8 +118,6 @@ const Table = () => {
     },
   ];
 
-  const paginationModel = { page: 0, pageSize: 25 };
-
   return (
     <Box>
       <BlankCard
@@ -109,6 +129,9 @@ const Table = () => {
           columns={columns}
           rows={transactions}
           paginationModel={paginationModel}
+          setPaginationModel={setPaginationModel}
+          rowCount={rowCount}
+          isLoading={isLoading}
         />
       </BlankCard>
     </Box>

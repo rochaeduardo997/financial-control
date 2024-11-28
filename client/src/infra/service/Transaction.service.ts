@@ -34,13 +34,25 @@ class TransactionService {
   //     }
   //   }
 
-  async findAll(): Promise<Transaction[]> {
+  async findAllCount(): Promise<number> {
     try {
-      const result = await this.httpRequest.get(
-        `${this.API_URL}/transactions/all`,
+      const { data } = await this.httpRequest.get(
+        `${this.API_URL}/transactions/count/all`,
+      );
+      return data.result;
+    } catch (err: any) {
+      console.error(err);
+      throw new Error();
+    }
+  }
+
+  async findAll(page: number = 0, limit: number = 25): Promise<Transaction[]> {
+    try {
+      const { data } = await this.httpRequest.get(
+        `${this.API_URL}/transactions/all?page=${page}&limit=${limit}`,
       );
       const transactions: Transaction[] = [];
-      for (const transaction of result.data.result)
+      for (const transaction of data.result)
         transactions.push(
           new Transaction(
             transaction.id,
