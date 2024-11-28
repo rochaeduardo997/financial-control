@@ -1,6 +1,7 @@
 import IHttp from "../../http/HTTP.interface";
 import CreateHandler from "../../../core/usecase/transaction/Create";
 import GetAll from "../../../core/usecase/transaction/GetAll";
+import GetAllCount from "../../../core/usecase/transaction/GetAllCount";
 import GetByIdHandler from "../../../core/usecase/transaction/GetById";
 import Update from "../../../core/usecase/transaction/Update";
 import DeleteByIdHandler from "../../../core/usecase/transaction/DeleteById";
@@ -21,6 +22,11 @@ export default class TransactionController {
       "post",
       `${BASE_URL_PATH}`,
       this.CreateRoute.bind(this),
+    );
+    httpAdapter.addRoute(
+      "get",
+      `${BASE_URL_PATH}/count/all`,
+      this.FindAllCountRoute.bind(this),
     );
     httpAdapter.addRoute(
       "get",
@@ -61,11 +67,24 @@ export default class TransactionController {
     }
   }
 
+  private async FindAllCountRoute(req: any, res: any): Promise<TRouteResponse> {
+    try {
+      const { id: userId } = req.user;
+      const getAllCount = new GetAllCount(this.tRepository);
+      const result = await getAllCount.execute({ userId });
+      return { statusCode: 200, result };
+    } catch (err: any) {
+      console.error("failed on route: transaction find all count, ", err);
+      throw new Error(err.message);
+    }
+  }
+
   private async FindAllRoute(req: any, res: any): Promise<TRouteResponse> {
     try {
       const { id: userId } = req.user;
+      const { page } = req.query;
       const getAll = new GetAll(this.tRepository);
-      const result = await getAll.execute({ userId });
+      const result = await getAll.execute({ userId, page });
       return { statusCode: 200, result };
     } catch (err: any) {
       console.error("failed on route: transaction find all, ", err);

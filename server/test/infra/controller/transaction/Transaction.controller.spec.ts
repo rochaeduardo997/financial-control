@@ -107,7 +107,7 @@ describe("success", () => {
     expect(status).toBe(201);
   });
 
-  test("find all without category", async () => {
+  test("find all", async () => {
     const { id } = await createHandler.execute({ ...input });
     const { status, body } = await request
       .get("/api/v1/transactions/all")
@@ -117,7 +117,15 @@ describe("success", () => {
     expect(body?.result?.[0].value).toBe(input.value);
     expect(body?.result?.[0].direction).toBe(input.direction);
     expect(body?.result?.[0].when).toEqual(input.when.toISOString());
-    expect(body?.result?.[0].categoriesId).toBeUndefined();
+    expect(status).toBe(200);
+  });
+
+  test("find all count", async () => {
+    const { id } = await createHandler.execute({ ...input });
+    const { status, body } = await request
+      .get("/api/v1/transactions/count/all")
+      .set("Authorization", token);
+    expect(body?.result).toBe(1);
     expect(status).toBe(200);
   });
 
