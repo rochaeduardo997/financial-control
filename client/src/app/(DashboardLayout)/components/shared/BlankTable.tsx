@@ -1,7 +1,9 @@
 "use client";
 import { useIntl } from "react-intl";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
 import { Dispatch, SetStateAction } from "react";
+import { Box, Button } from "@mui/material";
+import { IconPlus } from "@tabler/icons-react";
 
 type Props = {
   columns: GridColDef[];
@@ -26,6 +28,19 @@ const BlankTable = ({
   isLoading,
 }: Props) => {
   const intl = useIntl();
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <Box sx={{ flexGrow: 1 }} />
+        <Button variant="outlined" color="success" startIcon={<IconPlus />}>
+          {intl.formatMessage({
+            id: "GENERAL.NEW",
+          })}
+        </Button>{" "}
+      </GridToolbarContainer>
+    );
+  }
 
   return (
     <DataGrid
@@ -53,6 +68,7 @@ const BlankTable = ({
       paginationMode="server"
       onPaginationModelChange={setPaginationModel}
       loading={isLoading}
+      slots={{ toolbar: CustomToolbar }}
     />
   );
 };
