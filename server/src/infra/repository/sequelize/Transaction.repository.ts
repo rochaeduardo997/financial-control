@@ -110,7 +110,7 @@ export default class TransactionRepository implements ITransactionRepository {
         where: { fk_user_id: userId },
         offset,
         limit,
-        order: [["when", "ASC"]],
+        order: [["createdAt", "ASC"]],
       });
       for (let t of transactions) result.push(this.instanceTransactionFrom(t));
       return result;
