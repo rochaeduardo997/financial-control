@@ -1,7 +1,7 @@
 import { TransactionDirection } from "../../entity/Transaction";
 import ITransactionRepository from "../../repository/TransactionRepository.interface";
 
-type TInput = { userId: string; page?: number };
+type TInput = { userId: string; page?: number; limit?: number };
 
 type TOutput = {
   id: string;
@@ -20,6 +20,7 @@ class GetAllHandler {
       const transactions = await this.tRepository.getAllBy(
         input.userId,
         input.page,
+        input.limit,
       );
       for (const t of transactions)
         result.push({

@@ -37,6 +37,7 @@ describe("success", () => {
     const result = await getAllHandler.execute({
       userId: transactions[0].userId!,
       page: 1,
+      limit: 25,
     });
     expect(result).toHaveLength(2);
     expect(result[0].id).toBe(transactions[0].id);

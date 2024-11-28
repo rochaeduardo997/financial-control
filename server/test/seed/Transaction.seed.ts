@@ -5,7 +5,8 @@ import Transaction, {
 export default (howMany: number = 1) => {
   const result: Transaction[] = [];
   for (let i = 1; i <= howMany; i++) {
-    const day = i <= 10 ? `0${i}` : i;
+    const rnd = Math.floor(Math.random() * 30) || 10;
+    const day = rnd < 10 ? `0${rnd}` : rnd;
     const input = {
       id: `id${i}`,
       name: `name${i}`,

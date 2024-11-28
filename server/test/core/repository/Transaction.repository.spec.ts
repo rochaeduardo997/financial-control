@@ -100,7 +100,7 @@ describe("success", () => {
   test("find all", async () => {
     const tr1 = await transactionRepository.create(transactions[0]);
     const tr2 = await transactionRepository.create(transactions[1]);
-    const result = await transactionRepository.getAllBy(users[0].id, 1);
+    const result = await transactionRepository.getAllBy(users[0].id, 1, 25);
     expect(result[0]).toEqual(tr1);
     expect(result[1]).toEqual(tr2);
   });
