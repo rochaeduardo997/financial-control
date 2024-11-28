@@ -111,19 +111,8 @@ export default class TransactionRepository implements ITransactionRepository {
         offset,
         limit,
         order: [["when", "ASC"]],
-        include: { model: TransactionCategoryRelationModel },
       });
-      for (let t of transactions) {
-        const _t = this.instanceTransactionFrom(t);
-        for (const c of t.categories) {
-          const category = await this.categoryRepository.getBy(
-            c.fk_category_id,
-            userId,
-          );
-          _t.associateCategory(category);
-        }
-        result.push(_t);
-      }
+      for (let t of transactions) result.push(this.instanceTransactionFrom(t));
       return result;
     } catch (err: any) {
       console.error(err);

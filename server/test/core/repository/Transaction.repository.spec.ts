@@ -97,18 +97,7 @@ describe("success", () => {
     expect(result).toBe(2);
   });
 
-  test("find all with categories", async () => {
-    transactions[0].associateCategory(categories[0]);
-    transactions[0].associateCategory(categories[1]);
-    const tr1 = await transactionRepository.create(transactions[0]);
-    transactions[1].associateCategory(categories[0]);
-    const tr2 = await transactionRepository.create(transactions[1]);
-    const result = await transactionRepository.getAllBy(users[0].id, 1);
-    expect(result[0]).toEqual(tr1);
-    expect(result[1]).toEqual(tr2);
-  });
-
-  test("find all without categories", async () => {
+  test("find all", async () => {
     const tr1 = await transactionRepository.create(transactions[0]);
     const tr2 = await transactionRepository.create(transactions[1]);
     const result = await transactionRepository.getAllBy(users[0].id, 1);
