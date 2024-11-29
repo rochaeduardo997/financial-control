@@ -26,7 +26,7 @@ const DialogFields = () => {
   return (
     <Fragment>
       <Grid container spacing={2}>
-        <Grid size={{ xs: 6, md: 4 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Box mt="15px">
             <FormControl fullWidth>
               <InputLabel id="direction_input_label">
@@ -56,7 +56,7 @@ const DialogFields = () => {
             </FormControl>
           </Box>
         </Grid>
-        <Grid size={{ xs: 6, md: 8 }}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Box mt="15px">
             <CustomTextField
               required
@@ -73,7 +73,7 @@ const DialogFields = () => {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        <Grid size={{ xs: 6, md: 8 }}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Box mt="15px">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
@@ -88,7 +88,7 @@ const DialogFields = () => {
             </LocalizationProvider>
           </Box>
         </Grid>
-        <Grid size={{ xs: 6, md: 4 }}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Box mt="15px">
             <TextField
               required
