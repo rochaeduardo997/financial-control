@@ -1,14 +1,15 @@
 "use client";
-import { Box, IconButton } from "@mui/material";
-import { useIntl } from "react-intl";
-import { GridColDef } from "@mui/x-data-grid";
-import BlankCard from "../../shared/BlankCard";
-import DayJS from "dayjs";
-import { IconTrash, IconPencil } from "@tabler/icons-react";
-import BlankTable from "../../shared/BlankTable";
-import { useEffect, useState } from "react";
-import Transaction from "../../../../../../../server/src/core/entity/Transaction";
 import TransactionService from "@/infra/service/Transaction.service";
+import { Box, IconButton } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
+import DayJS from "dayjs";
+import { useEffect, useState } from "react";
+import { useIntl } from "react-intl";
+import Transaction from "../../../../../../../server/src/core/entity/Transaction";
+import BlankCard from "../../shared/BlankCard";
+import BlankTable from "../../shared/BlankTable";
+import NewButton from "./NewButton";
 
 const Table = () => {
   const intl = useIntl();
@@ -66,6 +67,7 @@ const Table = () => {
         }),
       sortable: false,
       flex: 1,
+      minWidth: 150,
     },
     {
       field: "name",
@@ -75,6 +77,7 @@ const Table = () => {
       }),
       sortable: false,
       flex: 1,
+      minWidth: 150,
     },
     {
       field: "value",
@@ -85,6 +88,7 @@ const Table = () => {
       valueGetter: (value) => `R$ ${parseFloat(value).toFixed(2)}`,
       sortable: false,
       flex: 1,
+      minWidth: 150,
     },
     {
       field: "when",
@@ -97,6 +101,7 @@ const Table = () => {
       valueGetter: (value) => DayJS(value).format("HH:mm:ss DD/MM/YY"),
       sortable: false,
       flex: 1,
+      minWidth: 150,
     },
     {
       field: "options",
@@ -115,6 +120,7 @@ const Table = () => {
       ),
       sortable: false,
       flex: 1,
+      minWidth: 150,
     },
   ];
 
@@ -132,6 +138,7 @@ const Table = () => {
           setPaginationModel={setPaginationModel}
           rowCount={rowCount}
           isLoading={isLoading}
+          NewButton={NewButton}
         />
       </BlankCard>
     </Box>
