@@ -138,7 +138,14 @@ const Table = () => {
           setPaginationModel={setPaginationModel}
           rowCount={rowCount}
           isLoading={isLoading}
-          NewButton={NewButton}
+          NewButton={
+            <NewButton
+              onClose={() => {
+                getTransactionsCount();
+                getTransactions(paginationModel.page, paginationModel.pageSize);
+              }}
+            />
+          }
         />
       </BlankCard>
     </Box>

@@ -5,7 +5,9 @@ import { useState } from "react";
 import { useIntl } from "react-intl";
 import TransactionDialog from "./TransactionDialog";
 
-const NewButton = () => {
+type Props = { onClose: Function };
+
+const NewButton = ({ onClose }: Props) => {
   const intl = useIntl();
 
   const [open, setOpen] = useState(false);
@@ -16,7 +18,10 @@ const NewButton = () => {
         <TransactionDialog
           title={intl.formatMessage({ id: "GENERAL.NEW" })}
           open={open}
-          onClose={() => setOpen(false)}
+          onClose={() => {
+            setOpen(false);
+            onClose();
+          }}
         />
       ) : (
         <></>

@@ -16,7 +16,7 @@ type Props = {
   >;
   rowCount: number;
   isLoading: boolean;
-  NewButton: ElementType;
+  NewButton: JSX.Element;
 };
 
 const BlankTable = ({
@@ -34,7 +34,7 @@ const BlankTable = ({
     return (
       <GridToolbarContainer>
         <Box sx={{ flexGrow: 1 }} />
-        <NewButton />
+        {NewButton}
       </GridToolbarContainer>
     );
   }
