@@ -33,10 +33,12 @@ const DeleteButton = ({ id, name, value, onClose }: Props) => {
           content={
             <Fragment>
               <p>
-                Nome identificador da transação: <strong>{name}</strong>
+                {intl.formatMessage({ id: "TRANSACTION.DELETE.NAME" })}:{" "}
+                <strong>{name}</strong>
               </p>
               <p>
-                Valor da transação: <strong>{value}</strong>
+                {intl.formatMessage({ id: "TRANSACTION.DELETE.VALUE" })}:{" "}
+                <strong>{`R$ ${value.toFixed(2)}`}</strong>
               </p>
             </Fragment>
           }
