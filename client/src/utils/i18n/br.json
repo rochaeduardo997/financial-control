@@ -8,6 +8,7 @@
   "GENERAL.NEW": "Novo",
   "GENERAL.SAVE": "Salvar",
   "GENERAL.CANCEL": "Cancelar",
+  "GENERAL.ERROR.REQUIRED": "Campo obrigatório",
 
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.OVERVIEW": "Visão geral",
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT": "Relatório",

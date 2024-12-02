@@ -64,11 +64,17 @@ const TransactionDialog = ({ title, open, onClose }: Props) => {
   };
 
   const nameFieldHasError = nameHasError
-    ? { error: true, helperText: "NOME PRECISA SER INFORMADO." }
+    ? {
+        error: true,
+        helperText: intl.formatMessage({ id: "GENERAL.ERROR.REQUIRED" }),
+      }
     : {};
 
   const valueFieldHasError = valueHasError
-    ? { error: true, helperText: "VALOR PRECISA SER MAIOR QUE ZERO." }
+    ? {
+        error: true,
+        helperText: intl.formatMessage({ id: "GENERAL.ERROR.REQUIRED" }),
+      }
     : {};
 
   return (
