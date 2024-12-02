@@ -11,28 +11,32 @@ class TransactionService {
     this.httpRequest = HTTP;
   }
 
-  //   async create(input: Transaction): Promise<Transaction> {
-  //     try {
-  //       const productsId: string[] = (input.products || []).map(
-  //         (p) => p.productId,
-  //       );
-  //       const body = {
-  //         name: input.name,
-  //         email: input.email,
-  //         token: input.token,
-  //         cpfcnpj: input.cpfcnpj,
-  //         productsId,
-  //       };
-  //       const { data } = await this.httpRequest.post(
-  //         `${this.API_URL}/transactions`,
-  //         body,
-  //       );
-  //       return new Transaction({ ...data.result });
-  //     } catch (err: any) {
-  //       console.error(err);
-  //       throw new Error();
-  //     }
-  //   }
+  async create(input: Transaction): Promise<Transaction> {
+    try {
+      const body = {
+        name: input.name,
+        value: input.value,
+        direction: input.direction,
+        when: input.when,
+      };
+      const { data } = await this.httpRequest.post(
+        `${this.API_URL}/transactions`,
+        body,
+      );
+      return new Transaction(
+        data.result.id,
+        data.result.name,
+        data.result.value,
+        data.result.direction,
+        data.result.when,
+        data.result.createdAt,
+        data.result.updatedAt,
+      );
+    } catch (err: any) {
+      console.error(err);
+      throw new Error();
+    }
+  }
 
   async findAllCount(): Promise<number> {
     try {
