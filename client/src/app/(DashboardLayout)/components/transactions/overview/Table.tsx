@@ -10,6 +10,7 @@ import Transaction from "../../../../../../../server/src/core/entity/Transaction
 import BlankCard from "../../shared/BlankCard";
 import BlankTable from "../../shared/BlankTable";
 import NewButton from "./NewButton";
+import DeleteButton from "./DeleteButton";
 
 const Table = () => {
   const intl = useIntl();
@@ -108,14 +109,20 @@ const Table = () => {
       headerName: intl.formatMessage({
         id: "GENERAL.TABLE.OPTIONS",
       }),
-      renderCell: () => (
+      renderCell: ({ row }) => (
         <>
           <IconButton aria-label="edit" color="warning">
             <IconPencil />
           </IconButton>{" "}
-          <IconButton aria-label="delete" color="error">
-            <IconTrash />
-          </IconButton>
+          <DeleteButton
+            id={row.id}
+            name={row.name}
+            value={row.value}
+            onClose={() => {
+              getTransactionsCount();
+              getTransactions(paginationModel.page, paginationModel.pageSize);
+            }}
+          />
         </>
       ),
       sortable: false,

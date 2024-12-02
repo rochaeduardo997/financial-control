@@ -112,17 +112,17 @@ class TransactionService {
   //     }
   //   }
 
-  //   async deleteBy(id: string): Promise<boolean> {
-  //     try {
-  //       const { data } = await this.httpRequest.delete(
-  //         `${this.API_URL}/transactions/${id}`,
-  //       );
-  //       return data.result;
-  //     } catch (err: any) {
-  //       console.error(err);
-  //       throw new Error();
-  //     }
-  //   }
+  async deleteBy(id: string): Promise<boolean> {
+    try {
+      const { data } = await this.httpRequest.delete(
+        `${this.API_URL}/transactions/${id}`,
+      );
+      return data.result;
+    } catch (err: any) {
+      console.error(err);
+      throw new Error();
+    }
+  }
 }
 
 export default TransactionService;

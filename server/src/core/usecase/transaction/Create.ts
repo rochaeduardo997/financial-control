@@ -7,7 +7,7 @@ type TBase = {
   value: number;
   direction: TransactionDirection;
   when: Date;
-  categoriesId: string[];
+  categoriesId?: string[];
 };
 type TInput = TBase & {
   userId: string;
@@ -38,7 +38,7 @@ class CreateHandler {
       );
       await this.associateCategoriesTo(
         transaction,
-        input.categoriesId,
+        input.categoriesId || [],
         input.userId,
       );
       const createdCategory = await this.tRepository.create(transaction);

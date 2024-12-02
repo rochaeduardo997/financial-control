@@ -167,7 +167,6 @@ export default class TransactionRepository implements ITransactionRepository {
   }
 
   async deleteBy(id: string, userId: string): Promise<boolean> {
-    const tx = await this.sequelize.transaction();
     try {
       const verifyIfTransactionExists = await this.findBy(id);
       if (!verifyIfTransactionExists) throw new Error();
