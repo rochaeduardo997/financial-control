@@ -10,6 +10,7 @@ type TInput = {
   when?: Date;
   categoriesId?: string[];
   userId: string;
+  description?: string;
 };
 
 type TOutput = {
@@ -20,7 +21,8 @@ type TOutput = {
   when: Date;
   createdAt: Date;
   updatedAt: Date;
-  categoriesId: string[];
+  categoriesId?: string[];
+  description?: string;
 };
 
 class UpdateHandler {
@@ -36,6 +38,7 @@ class UpdateHandler {
       if (input.value) transaction.value = input.value;
       if (input.direction) transaction.direction = input.direction;
       if (input.when) transaction.when = input.when;
+      if (input.description) transaction.description = input.description;
       if (input.categoriesId) {
         transaction.cleanupCategories();
         for (const cId of input.categoriesId) {
@@ -57,6 +60,7 @@ class UpdateHandler {
         createdAt: updatedTransaction.createdAt!,
         updatedAt: updatedTransaction.updatedAt!,
         categoriesId: (updatedTransaction.categories || []).map((c) => c.id),
+        description: updatedTransaction.description,
       };
     } catch (err: any) {
       throw new Error(err?.message);

@@ -19,6 +19,7 @@ const input = {
   when: new Date("2022-02-02"),
   userId: "userId",
   categoriesId: [] as string[],
+  description: "description",
 };
 
 beforeEach(async () => {
@@ -51,6 +52,7 @@ describe("success", () => {
     expect(result.createdAt).toBeDefined();
     expect(result.updatedAt).toBeDefined();
     expect(result.categoriesId).toHaveLength(0);
+    expect(result.description).toBe(input.description);
   });
 
   test("create transaction with category", async () => {

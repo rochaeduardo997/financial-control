@@ -8,6 +8,7 @@ type TBase = {
   direction: TransactionDirection;
   when: Date;
   categoriesId?: string[];
+  description?: string;
 };
 type TInput = TBase & {
   userId: string;
@@ -35,22 +36,25 @@ class CreateHandler {
         new Date(),
         new Date(),
         input.userId,
+        input.description,
       );
       await this.associateCategoriesTo(
         transaction,
         input.categoriesId || [],
         input.userId,
       );
-      const createdCategory = await this.tRepository.create(transaction);
+      const createdTransaction = await this.tRepository.create(transaction);
       return {
-        id: createdCategory.id,
-        name: createdCategory.name,
-        value: createdCategory.value,
-        direction: createdCategory.direction,
-        when: createdCategory.when,
-        createdAt: createdCategory.createdAt,
-        updatedAt: createdCategory.updatedAt,
-        categoriesId: (createdCategory.categories || []).map((c) => c.id) || [],
+        id: createdTransaction.id,
+        name: createdTransaction.name,
+        value: createdTransaction.value,
+        direction: createdTransaction.direction,
+        when: createdTransaction.when,
+        createdAt: createdTransaction.createdAt,
+        updatedAt: createdTransaction.updatedAt,
+        categoriesId:
+          (createdTransaction.categories || []).map((c) => c.id) || [],
+        description: createdTransaction.description,
       };
     } catch (err: any) {
       throw new Error(err?.message);

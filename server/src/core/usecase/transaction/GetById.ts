@@ -11,7 +11,8 @@ type TOutput = {
   when: Date;
   createdAt: Date;
   updatedAt: Date;
-  categoriesId: string[];
+  categoriesId?: string[];
+  description?: string;
 };
 
 class GetByIdHandler {
@@ -29,6 +30,7 @@ class GetByIdHandler {
         createdAt: result.createdAt!,
         updatedAt: result.updatedAt!,
         categoriesId: (result.categories || []).map((c) => c.id),
+        description: result.description,
       };
     } catch (err: any) {
       throw new Error(err?.message);

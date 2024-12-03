@@ -59,6 +59,7 @@ describe("success", () => {
     expect(result.categoriesId).toEqual(
       transactions[0].categories.map((c) => c.id),
     );
+    expect(result.description).toEqual(transactions[0].description);
   });
 
   test("get transaction by id without category", async () => {
