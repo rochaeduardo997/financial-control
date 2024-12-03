@@ -28,6 +28,9 @@ class TransactionModel extends Model {
   @Column({ allowNull: false })
   declare when: Date;
 
+  @Column
+  declare description: string;
+
   @ForeignKey(() => UserModel)
   @Column({
     allowNull: false,

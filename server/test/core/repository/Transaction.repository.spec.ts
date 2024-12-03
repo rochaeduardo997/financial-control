@@ -1,15 +1,15 @@
 import { Sequelize } from "sequelize-typescript";
-import User from "../../../src/core/entity/User";
-import IUserRepository from "../../../src/core/repository/UserRepository.interface";
-import userSeed from "../../seed/User.seed";
 import Category from "../../../src/core/entity/Category";
-import ICategoryRepository from "../../../src/core/repository/CategoryRepository.interface";
-import categorySeed from "../../seed/Category.seed";
 import Transaction from "../../../src/core/entity/Transaction";
+import User from "../../../src/core/entity/User";
+import ICategoryRepository from "../../../src/core/repository/CategoryRepository.interface";
 import ITransactionRepository from "../../../src/core/repository/TransactionRepository.interface";
-import transactionSeed from "../../seed/Transaction.seed";
+import IUserRepository from "../../../src/core/repository/UserRepository.interface";
 import instanceSequelize from "../../../src/infra/database/sequelize/instance";
 import RepositoryFactory from "../../../src/infra/factory/sequelize/Repository.factory";
+import categorySeed from "../../seed/Category.seed";
+import transactionSeed from "../../seed/Transaction.seed";
+import userSeed from "../../seed/User.seed";
 
 let users: User[] = [];
 let categories: Category[] = [];
@@ -59,6 +59,7 @@ describe("success", () => {
     expect(result.updatedAt).toBeDefined();
     expect(result.categories).toHaveLength(0);
     expect(result.userId).toBe(transactions[0].userId);
+    expect(result.description).toBe(transactions[0].description);
   });
 
   test("create new transaction with associated categories", async () => {
@@ -77,6 +78,7 @@ describe("success", () => {
     expect(result.categories[0]).toEqual(categories[0]);
     expect(result.categories[1]).toEqual(categories[1]);
     expect(result.userId).toBe(transactions[0].userId);
+    expect(result.description).toBe(transactions[0].description);
   });
 
   test("find by id", async () => {
@@ -126,6 +128,7 @@ describe("success", () => {
     expect(result.updatedAt).toBeDefined();
     expect(result.categories).toHaveLength(0);
     expect(result.userId).toBe(transactions[1].userId);
+    expect(result.description).toBe(transactions[1].description);
   });
 
   test("update transaction changing categories", async () => {

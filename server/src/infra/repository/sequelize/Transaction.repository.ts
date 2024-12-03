@@ -2,12 +2,11 @@ import { Transaction as TX } from "sequelize";
 import { Sequelize } from "sequelize-typescript";
 import Category from "../../../core/entity/Category";
 import Transaction from "../../../core/entity/Transaction";
+import ICategoryRepository from "../../../core/repository/CategoryRepository.interface";
 import ITransactionRepository from "../../../core/repository/TransactionRepository.interface";
+import CategoryRepository from "./Category.repository";
 import TransactionModel from "./models/Transaction.model";
 import TransactionCategoryRelationModel from "./models/TransactionCategoryRelation.model";
-import ICategoryRepository from "../../../core/repository/CategoryRepository.interface";
-import CategoryRepository from "./Category.repository";
-import { Op } from "sequelize";
 
 export default class TransactionRepository implements ITransactionRepository {
   private TRANSACTION_MODEL;
@@ -32,6 +31,7 @@ export default class TransactionRepository implements ITransactionRepository {
             value: input.value,
             direction: input.direction,
             when: input.when,
+            description: input.description,
             fk_user_id: input.userId,
           },
           { raw: true, transaction },
@@ -142,6 +142,7 @@ export default class TransactionRepository implements ITransactionRepository {
           value: input.value,
           direction: input.direction,
           when: input.when,
+          description: input.description,
           fk_user_id: input.userId,
           updated_at: new Date(),
         },
@@ -242,6 +243,7 @@ export default class TransactionRepository implements ITransactionRepository {
       new Date(sequelizeResponse.createdAt),
       new Date(sequelizeResponse.updatedAt),
       sequelizeResponse.fk_user_id,
+      sequelizeResponse.description,
     );
   }
 }

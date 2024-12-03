@@ -15,6 +15,7 @@ export default (howMany: number = 1) => {
       when: new Date(`2022-02-${day}T00:00:00`),
       createdAt: new Date(`2022-02-${day}T00:00:00`),
       updatedAt: new Date(`2022-02-${day}T00:00:00`),
+      description: `description${i}`,
     };
     result.push(
       new Transaction(
@@ -25,6 +26,8 @@ export default (howMany: number = 1) => {
         input.when,
         input.createdAt,
         input.updatedAt,
+        undefined,
+        input.description,
       ),
     );
   }
