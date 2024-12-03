@@ -1,49 +1,55 @@
 "use client";
-import { useIntl } from "react-intl";
-import { Fragment, useState } from "react";
+import TransactionService from "@/infra/service/Transaction.service";
 import {
-  Grid2 as Grid,
   Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  Grid2 as Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
 } from "@mui/material";
-import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import CustomTextField from "../../forms/theme-elements/CustomTextField";
-import DayJS from "dayjs";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import TransactionService from "@/infra/service/Transaction.service";
+import DayJS from "dayjs";
+import { Fragment, useState } from "react";
+import { useIntl } from "react-intl";
 import Transaction, {
   TransactionDirection,
 } from "../../../../../../../server/src/core/entity/Transaction";
+import CustomTextField from "../../forms/theme-elements/CustomTextField";
 
-type Props = { title: string; open: boolean; onClose: Function };
+type Props = {
+  title: string;
+  transaction?: Transaction;
+  open: boolean;
+  onClose: Function;
+};
 
-const TransactionDialog = ({ title, open, onClose }: Props) => {
+const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
   const intl = useIntl();
 
   const transactionService = new TransactionService();
 
-  const [name, setName] = useState("");
+  const [id, _] = useState(transaction?.id || "");
+  const [name, setName] = useState(transaction?.name || "");
   const [nameHasError, setNameHasError] = useState(false);
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState<number | undefined>(transaction?.value);
   const [valueHasError, setValueHasError] = useState(false);
   const [direction, setDirection] = useState<TransactionDirection>(
-    TransactionDirection.IN,
+    transaction?.direction || TransactionDirection.IN,
   );
-  const [when, setWhen] = useState(new Date());
+  const [when, setWhen] = useState(transaction?.when || new Date());
 
   const canSubmit = () => {
     const nameHas = name.length <= 0;
-    const valueHas = value <= 0;
+    const valueHas = (value || 0) <= 0;
 
     setNameHasError(nameHas);
     setValueHasError(valueHas);
@@ -54,8 +60,10 @@ const TransactionDialog = ({ title, open, onClose }: Props) => {
   const onSubmit = async () => {
     try {
       if (!canSubmit()) return;
-      const transaction = new Transaction("id", name, value, direction, when);
-      await transactionService.create(transaction);
+      const transaction = new Transaction(id, name, value, direction, when);
+      id
+        ? await transactionService.updateBy(id, transaction)
+        : await transactionService.create(transaction);
       onClose();
     } catch (err) {
       console.error(err);
@@ -139,7 +147,7 @@ const TransactionDialog = ({ title, open, onClose }: Props) => {
             </Grid>
           </Grid>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 8 }}>
+            <Grid size={{ xs: 12, md: 7 }}>
               <Box mt="15px">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
@@ -154,7 +162,7 @@ const TransactionDialog = ({ title, open, onClose }: Props) => {
                 </LocalizationProvider>
               </Box>
             </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
+            <Grid size={{ xs: 12, md: 5 }}>
               <Box mt="15px">
                 <TextField
                   required
@@ -165,9 +173,10 @@ const TransactionDialog = ({ title, open, onClose }: Props) => {
                   variant="outlined"
                   fullWidth
                   value={value}
+                  type="number"
                   onChange={(e: any) => {
                     if (/[a-zA-Z]/gi.test(e.target?.value)) return;
-                    setValue(e.target.value);
+                    setValue(+parseFloat(e.target?.value).toFixed(2));
                   }}
                   {...valueFieldHasError}
                 />

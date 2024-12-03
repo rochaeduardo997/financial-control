@@ -73,44 +73,52 @@ class TransactionService {
     }
   }
 
-  //   async findBy(id: string): Promise<Transaction> {
-  //     try {
-  //       const { data } = await this.httpRequest.get(
-  //         `${this.API_URL}/transactions/${id}`,
-  //       );
-  //       const products: TransactionProduct[] = (data?.result?.products || []).map(
-  //         (p: any) => new TransactionProduct({ id: p.id, productId: p.productId }),
-  //       );
-  //       const apiUser = new Transaction({ ...data.result });
-  //       apiUser.changeProducts(products);
-  //       return apiUser;
-  //     } catch (err: any) {
-  //       console.error(err);
-  //       throw new Error();
-  //     }
-  //   }
+  async findBy(id: string): Promise<Transaction> {
+    try {
+      const { data } = await this.httpRequest.get(
+        `${this.API_URL}/transactions/${id}`,
+      );
+      return new Transaction(
+        data.result.id,
+        data.result.name,
+        data.result.value,
+        data.result.direction,
+        data.result.when,
+        data.result.createdAt,
+        data.result.updatedAt,
+      );
+    } catch (err: any) {
+      console.error(err);
+      throw new Error();
+    }
+  }
 
-  //   async updateBy(id: string, input: Transaction): Promise<Transaction> {
-  //     try {
-  //       const productsId: string[] = (input.products || []).map(
-  //         (p) => p.productId,
-  //       );
-  //       const body = {
-  //         name: input.name,
-  //         email: input.email,
-  //         token: input.token,
-  //         productsId,
-  //       };
-  //       const { data } = await this.httpRequest.put(
-  //         `${this.API_URL}/transactions/${id}`,
-  //         body,
-  //       );
-  //       return new Transaction({ ...data.result });
-  //     } catch (err: any) {
-  //       console.error(err);
-  //       throw new Error();
-  //     }
-  //   }
+  async updateBy(id: string, input: Transaction): Promise<Transaction> {
+    try {
+      const body = {
+        name: input.name,
+        value: input.value,
+        direction: input.direction,
+        when: input.when,
+      };
+      const { data } = await this.httpRequest.put(
+        `${this.API_URL}/transactions/${id}`,
+        body,
+      );
+      return new Transaction(
+        data.result.id,
+        data.result.name,
+        data.result.value,
+        data.result.direction,
+        data.result.when,
+        data.result.createdAt,
+        data.result.updatedAt,
+      );
+    } catch (err: any) {
+      console.error(err);
+      throw new Error();
+    }
+  }
 
   async deleteBy(id: string): Promise<boolean> {
     try {

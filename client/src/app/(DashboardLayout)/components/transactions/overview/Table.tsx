@@ -11,6 +11,7 @@ import BlankCard from "../../shared/BlankCard";
 import BlankTable from "../../shared/BlankTable";
 import NewButton from "./NewButton";
 import DeleteButton from "./DeleteButton";
+import EditButton from "./EditButton";
 
 const Table = () => {
   const intl = useIntl();
@@ -111,9 +112,13 @@ const Table = () => {
       }),
       renderCell: ({ row }) => (
         <>
-          <IconButton aria-label="edit" color="warning">
-            <IconPencil />
-          </IconButton>{" "}
+          <EditButton
+            id={row.id}
+            onClose={() => {
+              getTransactionsCount();
+              getTransactions(paginationModel.page, paginationModel.pageSize);
+            }}
+          />{" "}
           <DeleteButton
             id={row.id}
             name={row.name}
