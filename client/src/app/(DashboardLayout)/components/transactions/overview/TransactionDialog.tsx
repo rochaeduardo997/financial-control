@@ -46,6 +46,7 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
     transaction?.direction || TransactionDirection.IN,
   );
   const [when, setWhen] = useState(transaction?.when || new Date());
+  const [description, setDescription] = useState(transaction?.description);
 
   const canSubmit = () => {
     const nameHas = name.length <= 0;
@@ -60,7 +61,17 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
   const onSubmit = async () => {
     try {
       if (!canSubmit()) return;
-      const transaction = new Transaction(id, name, value, direction, when);
+      const transaction = new Transaction(
+        id,
+        name,
+        value!,
+        direction,
+        when,
+        undefined,
+        undefined,
+        undefined,
+        description,
+      );
       id
         ? await transactionService.updateBy(id, transaction)
         : await transactionService.create(transaction);
@@ -165,11 +176,11 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
             <Grid size={{ xs: 12, md: 5 }}>
               <Box mt="15px">
                 <TextField
-                  required
                   id="value_input"
                   label={intl.formatMessage({
                     id: "TRANSACTION.TABLE.VALUE.HEADER",
                   })}
+                  required
                   variant="outlined"
                   fullWidth
                   value={value}
@@ -179,6 +190,24 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
                     setValue(+parseFloat(e.target?.value).toFixed(2));
                   }}
                   {...valueFieldHasError}
+                />
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid size={{ xs: 12, md: 12 }}>
+              <Box mt="15px">
+                <TextField
+                  id="description_input"
+                  label={intl.formatMessage({
+                    id: "TRANSACTION.DIALOG.DESCRIPTION",
+                  })}
+                  variant="outlined"
+                  fullWidth
+                  value={description}
+                  multiline
+                  rows={3}
+                  onChange={(e: any) => setDescription(e.target.value)}
                 />
               </Box>
             </Grid>

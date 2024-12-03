@@ -18,6 +18,7 @@ class TransactionService {
         value: input.value,
         direction: input.direction,
         when: input.when,
+        description: input.description,
       };
       const { data } = await this.httpRequest.post(
         `${this.API_URL}/transactions`,
@@ -31,6 +32,8 @@ class TransactionService {
         data.result.when,
         data.result.createdAt,
         data.result.updatedAt,
+        undefined,
+        data.result.description,
       );
     } catch (err: any) {
       console.error(err);
@@ -86,6 +89,8 @@ class TransactionService {
         data.result.when,
         data.result.createdAt,
         data.result.updatedAt,
+        undefined,
+        data.result.description,
       );
     } catch (err: any) {
       console.error(err);
@@ -100,6 +105,7 @@ class TransactionService {
         value: input.value,
         direction: input.direction,
         when: input.when,
+        description: input.description,
       };
       const { data } = await this.httpRequest.put(
         `${this.API_URL}/transactions/${id}`,
@@ -113,6 +119,8 @@ class TransactionService {
         data.result.when,
         data.result.createdAt,
         data.result.updatedAt,
+        undefined,
+        data.result.description,
       );
     } catch (err: any) {
       console.error(err);

@@ -19,10 +19,6 @@ const EditButton = ({ id, onClose }: Props) => {
   const [open, setOpen] = useState(false);
   const [transaction, setTransaction] = useState<Transaction>();
 
-  useEffect(() => {
-    getTransaction();
-  }, []);
-
   const getTransaction = async () => {
     try {
       const result = await transactionService.findBy(id);
@@ -48,7 +44,10 @@ const EditButton = ({ id, onClose }: Props) => {
         <></>
       )}
       <IconButton
-        onClick={() => setOpen(!open)}
+        onClick={async () => {
+          await getTransaction();
+          setOpen(!open);
+        }}
         aria-label="edit"
         color="warning"
       >
