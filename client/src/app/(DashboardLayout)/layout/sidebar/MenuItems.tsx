@@ -1,4 +1,9 @@
-import { IconLayoutDashboard, IconCash, IconReport } from "@tabler/icons-react";
+import {
+  IconCash,
+  IconCategory,
+  IconChartHistogram,
+  IconReport,
+} from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
 import { FormattedMessage } from "react-intl";
@@ -7,7 +12,7 @@ const Menuitems = [
   {
     id: uniqueId(),
     title: "Dashboard",
-    icon: IconLayoutDashboard,
+    icon: IconChartHistogram,
     href: "/",
   },
 
@@ -24,6 +29,14 @@ const Menuitems = [
     title: <FormattedMessage id="NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT" />,
     icon: IconReport,
     href: "/transactions/report",
+  },
+
+  { navlabel: true, subheader: <FormattedMessage id="GENERAL.GENERAL" /> },
+  {
+    id: uniqueId(),
+    title: <FormattedMessage id="NAVBAR.ITEM.CATEGORIES.TITLE" />,
+    icon: IconCategory,
+    href: "/general/categories",
   },
 
   /* CRYPTO SECTION */

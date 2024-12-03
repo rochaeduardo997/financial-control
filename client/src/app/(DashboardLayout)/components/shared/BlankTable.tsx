@@ -14,6 +14,7 @@ type Props = {
       pageSize: number;
     }>
   >;
+  paginationMode?: string;
   rowCount: number;
   isLoading: boolean;
   NewButton: JSX.Element;
@@ -24,6 +25,7 @@ const BlankTable = ({
   rows,
   paginationModel,
   setPaginationModel,
+  paginationMode = "server",
   rowCount,
   isLoading,
   NewButton,
@@ -65,7 +67,7 @@ const BlankTable = ({
           rowCount={rowCount}
           pageSizeOptions={[10, 25, 50, 100]}
           paginationModel={paginationModel}
-          paginationMode="server"
+          paginationMode={paginationMode}
           onPaginationModelChange={setPaginationModel}
           loading={isLoading}
           slots={{ toolbar: CustomToolbar }}

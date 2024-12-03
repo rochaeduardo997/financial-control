@@ -11,9 +11,15 @@
   "GENERAL.SAVE": "Salvar",
   "GENERAL.CANCEL": "Cancelar",
   "GENERAL.ERROR.REQUIRED": "Campo obrigatório",
+  "GENERAL.GENERAL": "Geral",
 
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.OVERVIEW": "Visão geral",
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT": "Relatório",
+  "NAVBAR.ITEM.CATEGORIES.TITLE": "Categorias",
+
+  "CATEGORY.TABLE.NAME.HEADER": "Nome",
+  "CATEGORY.TABLE.NAME.DESCRIPTION": "Nome da categoria",
+  "CATEGORY.DELETE.NAME": "Nome identificador da categoria",
 
   "TRANSACTION.TABLE.NAME.HEADER": "Nome",
   "TRANSACTION.TABLE.NAME.DESCRIPTION": "Nome da transação",
