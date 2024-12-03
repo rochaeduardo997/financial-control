@@ -10,6 +10,7 @@ export default class Transaction {
   private _updatedAt?: Date;
   private _categories: Set<Category>;
   private _userId?: string;
+  private _description?: string;
 
   constructor(
     id: string,
@@ -20,6 +21,7 @@ export default class Transaction {
     createdAt?: Date,
     updatedAt?: Date,
     userId?: string,
+    description?: string,
   ) {
     this._id = id;
     this._name = name;
@@ -30,6 +32,7 @@ export default class Transaction {
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
     this._userId = userId;
+    this._description = description;
 
     this.isValid();
   }
@@ -72,6 +75,12 @@ export default class Transaction {
   }
   get userId() {
     return this._userId;
+  }
+  get description() {
+    return this._description || "";
+  }
+  set description(x: string) {
+    this._description = x;
   }
 
   associateUser(id: string) {

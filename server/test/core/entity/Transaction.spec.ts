@@ -14,6 +14,7 @@ const input = {
   createdAt: new Date("2022-05-05T00:00:00"),
   updatedAt: new Date("2022-05-06T00:00:00"),
   userId: "userId",
+  description: "description",
 };
 
 beforeEach(() => {
@@ -26,6 +27,7 @@ beforeEach(() => {
     input.createdAt,
     input.updatedAt,
     input.userId,
+    input.description,
   );
   for (const c of categories) transaction.associateCategory(c);
 });
@@ -41,10 +43,12 @@ describe("success", () => {
     transaction.value = 99.98;
     transaction.direction = TransactionDirection.OUT;
     transaction.when = new Date("2010-02-02");
+    transaction.description = "updated_description";
     expect(transaction.name).toBe("new_name");
     expect(transaction.value).toBe(99.98);
     expect(transaction.direction).toBe(TransactionDirection.OUT);
     expect(transaction.when).toEqual(new Date("2010-02-02"));
+    expect(transaction.description).toBe("updated_description");
   });
 
   test("validate transaction instance", () => {
@@ -57,6 +61,7 @@ describe("success", () => {
     expect(transaction.when).toEqual(input.when);
     expect(transaction.categories).toEqual(categories);
     expect(transaction.userId).toBe(input.userId);
+    expect(transaction.description).toBe(transaction.description);
   });
 
   test("associate user to transaction", () => {
