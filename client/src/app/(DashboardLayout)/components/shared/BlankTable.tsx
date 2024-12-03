@@ -1,6 +1,11 @@
 "use client";
 import { Box } from "@mui/material";
-import { DataGrid, GridColDef, GridToolbarContainer } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridFeatureMode,
+  GridToolbarContainer,
+} from "@mui/x-data-grid";
 import { Dispatch, ElementType, SetStateAction } from "react";
 import { useIntl } from "react-intl";
 
@@ -14,7 +19,7 @@ type Props = {
       pageSize: number;
     }>
   >;
-  paginationMode?: string;
+  paginationMode?: GridFeatureMode;
   rowCount: number;
   isLoading: boolean;
   NewButton: JSX.Element;

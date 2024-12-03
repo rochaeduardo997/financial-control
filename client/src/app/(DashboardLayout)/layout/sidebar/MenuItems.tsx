@@ -6,7 +6,7 @@ import {
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const Menuitems = [
   {
@@ -17,7 +17,10 @@ const Menuitems = [
   },
 
   /* TRANSACTION SECTION */
-  { navlabel: true, subheader: <FormattedMessage id="GENERAL.TRANSACTIONS" /> },
+  {
+    navlabel: true,
+    subheader: "GENERAL.TRANSACTIONS",
+  },
   {
     id: uniqueId(),
     title: <FormattedMessage id="NAVBAR.ITEM.TRANSACTIONS.TITLE.OVERVIEW" />,
@@ -29,14 +32,6 @@ const Menuitems = [
     title: <FormattedMessage id="NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT" />,
     icon: IconReport,
     href: "/transactions/report",
-  },
-
-  { navlabel: true, subheader: <FormattedMessage id="GENERAL.GENERAL" /> },
-  {
-    id: uniqueId(),
-    title: <FormattedMessage id="NAVBAR.ITEM.CATEGORIES.TITLE" />,
-    icon: IconCategory,
-    href: "/general/categories",
   },
 
   /* CRYPTO SECTION */
@@ -53,6 +48,18 @@ const Menuitems = [
   //   icon: IconReport,
   //   href: "/crypto/report",
   // },
+
+  /* GENERAL SECTION */
+  {
+    navlabel: true,
+    subheader: "GENERAL.GENERAL",
+  },
+  {
+    id: uniqueId(),
+    title: <FormattedMessage id="NAVBAR.ITEM.CATEGORIES.TITLE" />,
+    icon: IconCategory,
+    href: "/general/categories",
+  },
 ];
 
 export default Menuitems;
