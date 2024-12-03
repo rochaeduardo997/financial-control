@@ -36,6 +36,7 @@ const input = {
   when: new Date("2022-02-02"),
   userId: "userId",
   categoriesId: [] as string[],
+  description: "description",
 };
 
 beforeEach(async () => {
@@ -86,6 +87,7 @@ describe("success", () => {
     expect(body?.result?.createdAt).toBeDefined();
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toHaveLength(0);
+    expect(body?.result?.description).toBe(input.description);
     expect(status).toBe(201);
   });
 
@@ -104,6 +106,7 @@ describe("success", () => {
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toHaveLength(1);
     expect(body?.result?.categoriesId[0]).toBe(input.categoriesId[0]);
+    expect(body?.result?.description).toBe(input.description);
     expect(status).toBe(201);
   });
 
@@ -142,6 +145,7 @@ describe("success", () => {
     expect(body?.result?.createdAt).toBeDefined();
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toHaveLength(0);
+    expect(body?.result?.description).toBe(input.description);
     expect(status).toBe(200);
   });
 
@@ -160,6 +164,7 @@ describe("success", () => {
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toHaveLength(1);
     expect(body?.result?.categoriesId[0]).toBe(categoryId1);
+    expect(body?.result?.description).toBe(input.description);
     expect(status).toBe(200);
   });
 
@@ -172,6 +177,7 @@ describe("success", () => {
       direction: TransactionDirection.OUT,
       when: new Date("2010-02-02"),
       categoriesId: [categoryId2],
+      description: "description_updated",
     };
     const { status, body } = await request
       .put(`/api/v1/transactions/${id}`)
@@ -186,6 +192,7 @@ describe("success", () => {
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toHaveLength(1);
     expect(body?.result?.categoriesId[0]).toBe(categoryId2);
+    expect(body?.result?.description).toBe(updateInput.description);
     expect(status).toBe(200);
   });
 
@@ -204,6 +211,7 @@ describe("success", () => {
     expect(body?.result?.createdAt).toBeDefined();
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toEqual([categoryId1, categoryId2]);
+    expect(body?.result?.description).toBe(input.description);
     expect(status).toBe(200);
   });
 
@@ -222,6 +230,7 @@ describe("success", () => {
     expect(body?.result?.createdAt).toBeDefined();
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toHaveLength(0);
+    expect(body?.result?.description).toBe(input.description);
     expect(status).toBe(200);
   });
 
