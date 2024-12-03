@@ -3,14 +3,17 @@ import TransactionService from "@/infra/service/Transaction.service";
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControl,
   Grid2 as Grid,
   InputLabel,
   MenuItem,
+  OutlinedInput,
   Select,
   TextField,
 } from "@mui/material";
@@ -18,12 +21,14 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import DayJS from "dayjs";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import Transaction, {
   TransactionDirection,
 } from "../../../../../../../server/src/core/entity/Transaction";
 import CustomTextField from "../../forms/theme-elements/CustomTextField";
+import Category from "../../../../../../../server/src/core/entity/Category";
+import CategoryService from "@/infra/service/Category.service";
 
 type Props = {
   title: string;
@@ -36,6 +41,7 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
   const intl = useIntl();
 
   const transactionService = new TransactionService();
+  const categoryService = new CategoryService();
 
   const [id, _] = useState(transaction?.id || "");
   const [name, setName] = useState(transaction?.name || "");
@@ -47,6 +53,12 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
   );
   const [when, setWhen] = useState(transaction?.when || new Date());
   const [description, setDescription] = useState(transaction?.description);
+  const [categoriesId, setCategoriesId] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const canSubmit = () => {
     const nameHas = name.length <= 0;
@@ -72,13 +84,30 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
         undefined,
         description,
       );
+      for (const categoryId of categoriesId) {
+        transaction.associateCategory(new Category(categoryId, "name"));
+      }
       id
         ? await transactionService.updateBy(id, transaction)
         : await transactionService.create(transaction);
       onClose();
     } catch (err) {
       console.error(err);
-    } finally {
+    }
+  };
+
+  const getCategories = async () => {
+    try {
+      const result = await categoryService.findAll();
+      const cs: Category[] = [];
+      for (const c of result)
+        cs.push(new Category(c.id, c.name, c.description));
+      setCategories(cs);
+
+      const csId = (transaction?.categories || []).map((c) => c.id);
+      setCategoriesId(csId);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -212,13 +241,32 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
               </Box>
             </Grid>
           </Grid>
-          {/* <Box mt="15px">
-            <Divider textAlign="left">
-              {intl.formatMessage({
-                id: "GENERAL.CATEGORIES",
-              })}
-            </Divider>
-          </Box> */}
+          <Box mt="15px">
+            <FormControl fullWidth>
+              <InputLabel id="categories_label_id">
+                {intl.formatMessage({
+                  id: "GENERAL.CATEGORIES",
+                })}
+              </InputLabel>
+              <Select
+                multiple
+                labelId="categories_label_id"
+                id="demo-simple-select"
+                value={categoriesId}
+                multiline
+                label={intl.formatMessage({
+                  id: "GENERAL.CATEGORIES",
+                })}
+                onChange={(e) => setCategoriesId(e.target.value as [])}
+              >
+                {(categories || []).map((c) => (
+                  <MenuItem key={c.id} value={c.id}>
+                    {c.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
         </DialogContent>
 
         <DialogActions>

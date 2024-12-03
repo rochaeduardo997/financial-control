@@ -1,6 +1,7 @@
 import IHTTP from "../http/HTTP.interface";
 import HTTP from "../http/HTTP.provider";
 import Transaction from "../../../../server/src/core/entity/Transaction";
+import Category from "../../../../server/src/core/entity/Category";
 
 class TransactionService {
   private API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -19,6 +20,7 @@ class TransactionService {
         direction: input.direction,
         when: input.when,
         description: input.description,
+        categoriesId: (input.categories || []).map((c) => c.id),
       };
       const { data } = await this.httpRequest.post(
         `${this.API_URL}/transactions`,
@@ -81,7 +83,7 @@ class TransactionService {
       const { data } = await this.httpRequest.get(
         `${this.API_URL}/transactions/${id}`,
       );
-      return new Transaction(
+      const transaction = new Transaction(
         data.result.id,
         data.result.name,
         data.result.value,
@@ -92,6 +94,9 @@ class TransactionService {
         undefined,
         data.result.description,
       );
+      for (const cId of data.result.categoriesId)
+        transaction.associateCategory(new Category(cId, "name"));
+      return transaction;
     } catch (err: any) {
       console.error(err);
       throw new Error();
@@ -106,6 +111,7 @@ class TransactionService {
         direction: input.direction,
         when: input.when,
         description: input.description,
+        categoriesId: (input.categories || []).map((c) => c.id),
       };
       const { data } = await this.httpRequest.put(
         `${this.API_URL}/transactions/${id}`,

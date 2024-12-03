@@ -113,7 +113,6 @@ const Table = () => {
       renderCell: ({ row }) => (
         <>
           <EditButton
-            key={`${row.id}${Math.random()}`}
             id={row.id}
             onClose={() => {
               getTransactionsCount();
@@ -121,7 +120,6 @@ const Table = () => {
             }}
           />{" "}
           <DeleteButton
-            key={`${row.id}${Math.random()}`}
             id={row.id}
             name={row.name}
             value={row.value}

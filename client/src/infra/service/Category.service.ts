@@ -21,7 +21,11 @@ class CategoryService {
         `${this.API_URL}/categories`,
         body,
       );
-      return new Category(data.result.id, data.result.description);
+      return new Category(
+        data.result.id,
+        data.result.name,
+        data.result.description,
+      );
     } catch (err: any) {
       console.error(err);
       throw new Error();
