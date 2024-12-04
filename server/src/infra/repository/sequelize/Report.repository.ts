@@ -48,13 +48,17 @@ export default class ReportRepository implements IReportRepository {
       AND tcr.fk_user_id = '${userId}'
     `;
 
-    if (filters.categoriesId?.length) {
-      const toFilters = filters.categoriesId.map((id) => `'${id}'`);
-      where = where.concat(` AND (c.id = ${toFilters[0]} `);
-      for (let i = 1; i < toFilters.length; i++)
-        where = where.concat(`OR c.id = ${toFilters[i]}`);
-      where = where.concat(")");
+    if (filters.categoriesId?.length)
+      where = this.makeSimpleArrayFilter(where, filters.categoriesId, "c.id");
+
+    if (filters.valueBetween?.length) {
+      const v1 = filters.valueBetween[0] || 0;
+      const v2 = filters.valueBetween[1] || v1 + 1;
+      where = where.concat(`AND t.value BETWEEN ${v1} AND ${v2}`);
     }
+
+    if (filters.names?.length)
+      where = this.makeLikeArrayFilter(where, filters.names, "t.name");
 
     try {
       const [transactions] = await this.getTransactions(
@@ -82,6 +86,30 @@ export default class ReportRepository implements IReportRepository {
           "failed on get transactions report",
       );
     }
+  }
+
+  private makeSimpleArrayFilter(
+    where: string,
+    filters: string[],
+    column: string,
+  ) {
+    const toFilters = filters.map((x) => `'${x}'`);
+    where = where.concat(` AND (${column} = ${toFilters[0]} `);
+    for (let i = 1; i < toFilters.length; i++)
+      where = where.concat(`OR ${column} = ${toFilters[i]}`);
+    return where.concat(")");
+  }
+
+  private makeLikeArrayFilter(
+    where: string,
+    filters: string[],
+    column: string,
+  ) {
+    const toFilter = (filters || []).map(
+      (n) => `LOWER(${column}) LIKE LOWER('%${n}%')`,
+    );
+    where = where.concat("AND");
+    return `${where} (${toFilter.join(" OR ")})`;
   }
 
   private async getTransactions(

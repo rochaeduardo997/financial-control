@@ -4,7 +4,7 @@ export type TFilters = {
   start: Date;
   end: Date;
   categoriesId?: string[];
-  name?: string;
+  names?: string[];
   valueBetween?: number[];
 };
 
