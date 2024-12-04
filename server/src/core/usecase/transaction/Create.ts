@@ -3,21 +3,19 @@ import ICategoryRepository from "../../repository/CategoryRepository.interface";
 import ITransactionRepository from "../../repository/TransactionRepository.interface";
 
 type TBase = {
+  id: string;
   name: string;
   value: number;
   direction: TransactionDirection;
   when: Date;
   categoriesId?: string[];
   description?: string;
-};
-type TInput = TBase & {
   userId: string;
-};
-type TOutput = TBase & {
-  id: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
+type TInput = Omit<TBase, "id" | "createdAt" | "updatedAt">;
+type TOutput = Omit<TBase, "userId">;
 
 class CreateHandler {
   constructor(

@@ -30,11 +30,11 @@ export default class ReportRepository implements IReportRepository {
   async getAllBy(
     userId: string,
     filters: TFilters,
-    page: number = 0,
-    limit: number = 25,
+    // page: number = 0,
+    // limit: number = 25,
   ): Promise<Transaction[]> {
-    limit = limit >= 100 ? 100 : limit;
-    const offset = (page - 1) * limit;
+    // limit = limit >= 100 ? 100 : limit;
+    // const offset = (page - 1) * limit;
 
     const TABLE_JOINS = `FROM transaction_category_relation tcr
       JOIN transactions t ON tcr.fk_transaction_id = t.id
@@ -52,8 +52,8 @@ export default class ReportRepository implements IReportRepository {
       const [transactions] = await this.getTransactions(
         TABLE_JOINS,
         where,
-        limit,
-        offset,
+        // limit,
+        // offset,
       );
       const [categoriesId] = await this.getCategoriesId(TABLE_JOINS);
 
@@ -118,16 +118,16 @@ export default class ReportRepository implements IReportRepository {
   private async getTransactions(
     TABLE_JOINS: string,
     where: string,
-    limit: number,
-    offset: number,
+    // limit: number,
+    // offset: number,
   ) {
     return this.sequelize.query({
       query: `
         SELECT DISTINCT(t.id), t.*
         ${TABLE_JOINS} ${where}
-        LIMIT ? OFFSET ?
       `,
-      values: [limit, offset],
+      // values: [limit, offset],
+      values: [],
     });
   }
 
