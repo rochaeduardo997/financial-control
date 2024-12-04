@@ -9,14 +9,26 @@ import Category from "../../../core/entity/Category";
 
 export default class ReportRepository implements IReportRepository {
   private categoryRepository: ICategoryRepository;
+  private TABLE_JOINS: string;
 
   constructor(private sequelize: Sequelize) {
     this.categoryRepository = new CategoryRepository(this.sequelize);
+    this.TABLE_JOINS = `FROM transaction_category_relation tcr
+      JOIN transactions t ON tcr.fk_transaction_id = t.id
+      JOIN categories c ON tcr.fk_category_id = c.id
+    `;
   }
 
   async getAllCountBy(userId: string, filters: TFilters): Promise<number> {
     try {
-      return 0;
+      const [[total]]: any = await this.getTransactions(
+        0,
+        0,
+        filters,
+        userId,
+        true,
+      );
+      return +total?.total || 0;
     } catch (err: any) {
       console.error(err);
       throw new Error(
@@ -30,32 +42,20 @@ export default class ReportRepository implements IReportRepository {
   async getAllBy(
     userId: string,
     filters: TFilters,
-    // page: number = 0,
-    // limit: number = 25,
+    page: number = 0,
+    limit: number = 25,
   ): Promise<Transaction[]> {
-    // limit = limit >= 100 ? 100 : limit;
-    // const offset = (page - 1) * limit;
-
-    const TABLE_JOINS = `FROM transaction_category_relation tcr
-      JOIN transactions t ON tcr.fk_transaction_id = t.id
-      JOIN categories c ON tcr.fk_category_id = c.id
-    `;
-
-    let where = `WHERE
-      "when" BETWEEN '${new Date(filters.start).toISOString()}' AND '${new Date(filters.end).toISOString()}'
-      AND tcr.fk_user_id = '${userId}'
-    `;
-
-    where = this.makeFilters(where, filters);
+    limit = limit >= 100 ? 100 : limit;
+    const offset = (page - 1) * limit;
 
     try {
       const [transactions] = await this.getTransactions(
-        TABLE_JOINS,
-        where,
-        // limit,
-        // offset,
+        limit,
+        offset,
+        filters,
+        userId,
       );
-      const [categoriesId] = await this.getCategoriesId(TABLE_JOINS);
+      const [categoriesId] = await this.getCategoriesId();
 
       const categories = await this.categoryRepository.getAllBy(userId);
       const result: Transaction[] = await this.getTransactionsInstance(
@@ -116,24 +116,41 @@ export default class ReportRepository implements IReportRepository {
   }
 
   private async getTransactions(
-    TABLE_JOINS: string,
-    where: string,
-    // limit: number,
-    // offset: number,
+    limit: number,
+    offset: number,
+    filters: TFilters,
+    userId: string,
+    isCount: boolean = false,
   ) {
-    return this.sequelize.query({
-      query: `
+    let where = `WHERE
+      "when" BETWEEN '${new Date(filters.start).toISOString()}' AND '${new Date(filters.end).toISOString()}'
+      AND tcr.fk_user_id = '${userId}'
+    `;
+
+    where = this.makeFilters(where, filters);
+
+    if (isCount)
+      return this.sequelize.query({
+        query: `
+          SELECT COUNT(DISTINCT(t.id)) AS 'total'
+          ${this.TABLE_JOINS} ${where}
+        `,
+        values: [],
+      });
+    else
+      return this.sequelize.query({
+        query: `
         SELECT DISTINCT(t.id), t.*
-        ${TABLE_JOINS} ${where}
+        ${this.TABLE_JOINS} ${where}
+        LIMIT ? OFFSET ?
       `,
-      // values: [limit, offset],
-      values: [],
-    });
+        values: [limit, offset],
+      });
   }
 
-  private async getCategoriesId(TABLE_JOINS: string) {
+  private async getCategoriesId() {
     return this.sequelize.query({
-      query: `SELECT t.id, tcr.fk_category_id ${TABLE_JOINS}`,
+      query: `SELECT t.id, tcr.fk_category_id ${this.TABLE_JOINS}`,
       values: [],
     });
   }

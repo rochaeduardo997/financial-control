@@ -64,6 +64,15 @@ describe("success", () => {
       start: new Date("2021-01-01"),
       end: new Date("2023-01-01"),
     };
+    const result = await reportRepository.getAllCountBy(users[0].id, filters);
+    expect(result).toBe(3);
+  });
+
+  test("find all transactions filtering only by date(start and end)", async () => {
+    const filters: TFilters = {
+      start: new Date("2021-01-01"),
+      end: new Date("2023-01-01"),
+    };
     const result = await reportRepository.getAllBy(users[0].id, filters);
     expect(result).toHaveLength(3);
     expect(result[0].id).toBe(transactions[0].id);
