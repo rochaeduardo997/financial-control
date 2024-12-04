@@ -81,6 +81,19 @@ async function createTransactions(rFactory: RepositoryFactory) {
 }
 
 describe("success", () => {
+  test("find all count transactions filtering only by date(start and end)", async () => {
+    const { status, body } = await request
+      .post("/api/v1/transactions/report/count/all")
+      .set("Authorization", token)
+      .send({
+        ...input,
+        start: new Date("2021-01-01"),
+        end: new Date("2023-01-01"),
+      });
+    expect(body?.result).toHaveLength(3);
+    expect(status).toBe(200);
+  });
+
   test("find all transactions filtering only by date(start and end)", async () => {
     const { status, body } = await request
       .post("/api/v1/transactions/report")

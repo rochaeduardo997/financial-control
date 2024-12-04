@@ -17,6 +17,12 @@ export default class ReportController {
       this.ReportRoute.bind(this),
     );
 
+    httpAdapter.addRoute(
+      "post",
+      `${BASE_URL_PATH}/count/all`,
+      this.ReportAllCountRoute.bind(this),
+    );
+
     console.log("transaction report controller successful loaded");
   }
 
@@ -28,6 +34,21 @@ export default class ReportController {
       return { statusCode: 200, result };
     } catch (err: any) {
       console.error("failed on route: transaction report, ", err);
+      throw new Error(err.message);
+    }
+  }
+
+  private async ReportAllCountRoute(
+    req: any,
+    res: any,
+  ): Promise<TRouteResponse> {
+    try {
+      const { id: userId } = req.user;
+      const reportHandler = new ReportHandler(this.rRepository);
+      const result = await reportHandler.execute({ ...req.body, userId });
+      return { statusCode: 200, result };
+    } catch (err: any) {
+      console.error("failed on route: transaction all count report, ", err);
       throw new Error(err.message);
     }
   }
