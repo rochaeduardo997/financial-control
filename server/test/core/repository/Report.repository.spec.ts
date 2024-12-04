@@ -122,6 +122,16 @@ describe("success", () => {
     expect(result).toHaveLength(1);
     expect(result[0].id).toBe(transactions[0].id);
   });
+
+  test("find empty registers when filtering by dates that doesnt has register", async () => {
+    const filters: TFilters = {
+      start: new Date(),
+      end: new Date(),
+      names: ["NAME1"],
+    };
+    const result = await reportRepository.getAllBy(users[0].id, filters);
+    expect(result).toHaveLength(0);
+  });
 });
 
 describe("fail", () => {});

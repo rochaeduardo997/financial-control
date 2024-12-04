@@ -37,10 +37,8 @@ export default class ReportRepository implements IReportRepository {
     const offset = (page - 1) * limit;
 
     const TABLE_JOINS = `FROM transaction_category_relation tcr
-      JOIN transactions t
-        ON tcr.fk_transaction_id = t.id
-      JOIN categories c
-        ON tcr.fk_category_id = c.id
+      JOIN transactions t ON tcr.fk_transaction_id = t.id
+      JOIN categories c ON tcr.fk_category_id = c.id
     `;
 
     let where = `WHERE
@@ -48,17 +46,7 @@ export default class ReportRepository implements IReportRepository {
       AND tcr.fk_user_id = '${userId}'
     `;
 
-    if (filters.categoriesId?.length)
-      where = this.makeSimpleArrayFilter(where, filters.categoriesId, "c.id");
-
-    if (filters.valueBetween?.length) {
-      const v1 = filters.valueBetween[0] || 0;
-      const v2 = filters.valueBetween[1] || v1 + 1;
-      where = where.concat(`AND t.value BETWEEN ${v1} AND ${v2}`);
-    }
-
-    if (filters.names?.length)
-      where = this.makeLikeArrayFilter(where, filters.names, "t.name");
+    where = this.makeFilters(where, filters);
 
     try {
       const [transactions] = await this.getTransactions(
@@ -86,6 +74,21 @@ export default class ReportRepository implements IReportRepository {
           "failed on get transactions report",
       );
     }
+  }
+
+  private makeFilters(where: string, filters: TFilters) {
+    if (filters.categoriesId?.length)
+      where = this.makeSimpleArrayFilter(where, filters.categoriesId, "c.id");
+
+    if (filters.valueBetween?.length) {
+      const v1 = filters.valueBetween[0] || 0;
+      const v2 = filters.valueBetween[1] || v1 + 1;
+      where = where.concat(`AND t.value BETWEEN ${v1} AND ${v2}`);
+    }
+
+    if (filters.names?.length)
+      where = this.makeLikeArrayFilter(where, filters.names, "t.name");
+    return where;
   }
 
   private makeSimpleArrayFilter(
