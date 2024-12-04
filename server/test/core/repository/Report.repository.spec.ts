@@ -88,6 +88,30 @@ describe("success", () => {
     expect(result[2].categories).toEqual(transactions[2].categories);
     expect(result[2].description).toBe(transactions[2].description);
   });
+
+  test("find all transactions filtering by category", async () => {
+    const filters: TFilters = {
+      start: new Date("2021-01-01"),
+      end: new Date("2023-01-01"),
+      categoriesId: [categories[0].id],
+    };
+    const result = await reportRepository.getAllBy(users[0].id, filters);
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe(transactions[0].id);
+    expect(result[0].name).toBe(transactions[0].name);
+    expect(result[0].value).toBe(transactions[0].value);
+    expect(result[0].direction).toBe(transactions[0].direction);
+    expect(result[0].when).toEqual(transactions[0].when);
+    expect(result[0].categories).toEqual(transactions[0].categories);
+    expect(result[0].description).toBe(transactions[0].description);
+    expect(result[1].id).toBe(transactions[1].id);
+    expect(result[1].name).toBe(transactions[1].name);
+    expect(result[1].value).toBe(transactions[1].value);
+    expect(result[1].direction).toBe(transactions[1].direction);
+    expect(result[1].when).toEqual(transactions[1].when);
+    expect(result[1].categories).toEqual(transactions[1].categories);
+    expect(result[1].description).toBe(transactions[1].description);
+  });
 });
 
 describe("fail", () => {});

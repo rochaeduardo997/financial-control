@@ -48,6 +48,14 @@ export default class ReportRepository implements IReportRepository {
       AND tcr.fk_user_id = '${userId}'
     `;
 
+    if (filters.categoriesId?.length) {
+      const toFilters = filters.categoriesId.map((id) => `'${id}'`);
+      where = where.concat(` AND (c.id = ${toFilters[0]} `);
+      for (let i = 1; i < toFilters.length; i++)
+        where = where.concat(`OR c.id = ${toFilters[i]}`);
+      where = where.concat(")");
+    }
+
     try {
       const [transactions] = await this.getTransactions(
         TABLE_JOINS,
