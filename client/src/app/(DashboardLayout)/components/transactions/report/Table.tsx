@@ -1,18 +1,15 @@
 "use client";
 import ReportService from "@/infra/service/Report.service";
-import { Box, Button, Grid2 as Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { IconCheck } from "@tabler/icons-react";
 import DayJS from "dayjs";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import Transaction from "../../../../../../../server/src/core/entity/Transaction";
+import { TFilters } from "../../../../../../../server/src/core/repository/ReportRepository.interface";
 import BlankCard from "../../shared/BlankCard";
 import BlankTable from "../../shared/BlankTable";
 import TableCustomToolbar from "./TableCustomToolbar";
-import { TFilters } from "../../../../../../../server/src/core/repository/ReportRepository.interface";
 
 const Table = () => {
   const intl = useIntl();
@@ -123,7 +120,7 @@ const Table = () => {
         )}`}
       >
         <BlankTable
-          key="transaction_overview_table"
+          key="transaction_report_table"
           columns={columns}
           rows={transactions}
           paginationModel={paginationModel}
