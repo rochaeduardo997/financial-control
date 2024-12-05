@@ -3,7 +3,7 @@ import IReportRepository, {
   TFilters,
 } from "../../../repository/ReportRepository.interface";
 
-type TInput = TFilters & { userId: string };
+type TInput = TFilters & { userId: string; page?: number; limit?: number };
 type TOutput = {
   id: string;
   name: string;
@@ -18,9 +18,12 @@ class ReportHandler {
 
   async execute(input: TInput): Promise<TOutput[]> {
     try {
-      const transactions = await this.rRepository.getAllBy(input.userId, {
-        ...input,
-      });
+      const transactions = await this.rRepository.getAllBy(
+        input.userId,
+        { ...input },
+        input.page,
+        input.limit,
+      );
 
       const result: TOutput[] = [];
       for (const t of transactions) {

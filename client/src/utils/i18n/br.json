@@ -5,6 +5,7 @@
   "GENERAL.TABLE.OPTIONS": "Opções",
   "GENERAL.TABLE.LABEL.PAGINATION": "Itens por página",
   "GENERAL.TABLE.LABEL.NO_DATA_FOUND": "Nenhum dado foi encontrado",
+  "GENERAL.FILTER": "Filtrar",
   "GENERAL.NEW": "Novo",
   "GENERAL.EDIT": "Editar",
   "GENERAL.DELETE": "Deletar",
@@ -34,6 +35,9 @@
   "TRANSACTION.DIALOG.DESCRIPTION": "Descrição",
   "TRANSACTION.DELETE.NAME": "Nome identificador da transação",
   "TRANSACTION.DELETE.VALUE": "Valor da transação",
+
+  "TRANSACTION.REPORT.FILTER.DATE.START": "Início",
+  "TRANSACTION.REPORT.FILTER.DATE.END": "Fim",
 
   "NAVBAR.ITEM.CRYPTO.TITLE.OVERVIEW": "Visão geral",
   "NAVBAR.ITEM.CRYPTO.TITLE.REPORT": "Relatório"

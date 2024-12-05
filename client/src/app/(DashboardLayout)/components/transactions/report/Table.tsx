@@ -1,21 +1,22 @@
 "use client";
-import TransactionService from "@/infra/service/Transaction.service";
-import { Box, IconButton } from "@mui/material";
+import ReportService from "@/infra/service/Report.service";
+import { Box, Button, Grid2 as Grid } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { IconCheck } from "@tabler/icons-react";
 import DayJS from "dayjs";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import Transaction from "../../../../../../../server/src/core/entity/Transaction";
 import BlankCard from "../../shared/BlankCard";
 import BlankTable from "../../shared/BlankTable";
-import NewButton from "./NewButton";
-import DeleteButton from "./DeleteButton";
-import EditButton from "./EditButton";
+import TableCustomToolbar from "./TableCustomToolbar";
+import { TFilters } from "../../../../../../../server/src/core/repository/ReportRepository.interface";
 
 const Table = () => {
   const intl = useIntl();
-  const transactionService = new TransactionService();
+  const reportService = new ReportService();
 
   const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -25,18 +26,24 @@ const Table = () => {
     pageSize: 10,
   });
 
-  useEffect(() => {
-    getTransactionsCount();
-  }, []);
+  const [filters, setFilters] = useState<TFilters | undefined>();
 
   useEffect(() => {
-    getTransactions(paginationModel.page, paginationModel.pageSize);
+    getReportCount();
+    getReport(paginationModel.page, paginationModel.pageSize);
+  }, [filters]);
+
+  useEffect(() => {
+    getReport(paginationModel.page, paginationModel.pageSize);
   }, [paginationModel]);
 
-  const getTransactions = async (page: number = 0, limit: number = 25) => {
+  const getReport = async (page: number = 0, limit: number = 25) => {
     try {
       setIsLoading(true);
-      const result = await transactionService.findAll(page + 1, limit);
+      if (!filters) return;
+      const result = await reportService.findAll(page + 1, limit, {
+        ...filters,
+      });
       setTransactions(result);
     } catch (err) {
       console.error(err);
@@ -45,9 +52,10 @@ const Table = () => {
     }
   };
 
-  const getTransactionsCount = async () => {
+  const getReportCount = async () => {
     try {
-      const result = await transactionService.findAllCount();
+      if (!filters) return;
+      const result = await reportService.findAllCount({ ...filters });
       setRowCount(result);
     } catch (err) {
       console.error(err);
@@ -105,42 +113,13 @@ const Table = () => {
       flex: 1,
       minWidth: 150,
     },
-    {
-      field: "options",
-      headerName: intl.formatMessage({
-        id: "GENERAL.TABLE.OPTIONS",
-      }),
-      renderCell: ({ row }) => (
-        <>
-          <EditButton
-            id={row.id}
-            onClose={() => {
-              getTransactionsCount();
-              getTransactions(paginationModel.page, paginationModel.pageSize);
-            }}
-          />{" "}
-          <DeleteButton
-            id={row.id}
-            name={row.name}
-            value={row.value}
-            onClose={() => {
-              getTransactionsCount();
-              getTransactions(paginationModel.page, paginationModel.pageSize);
-            }}
-          />
-        </>
-      ),
-      sortable: false,
-      flex: 1,
-      minWidth: 150,
-    },
   ];
 
   return (
     <Box>
       <BlankCard
         title={`${intl.formatMessage({ id: "GENERAL.TRANSACTIONS" })}/${intl.formatMessage(
-          { id: "NAVBAR.ITEM.TRANSACTIONS.TITLE.OVERVIEW" },
+          { id: "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT" },
         )}`}
       >
         <BlankTable
@@ -152,10 +131,9 @@ const Table = () => {
           rowCount={rowCount}
           isLoading={isLoading}
           CustomToolbarContent={
-            <NewButton
-              onClose={() => {
-                getTransactionsCount();
-                getTransactions(paginationModel.page, paginationModel.pageSize);
+            <TableCustomToolbar
+              onFilter={(filters: TFilters) => {
+                setFilters(filters);
               }}
             />
           }

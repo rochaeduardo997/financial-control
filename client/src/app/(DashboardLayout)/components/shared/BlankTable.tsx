@@ -22,7 +22,7 @@ type Props = {
   paginationMode?: GridFeatureMode;
   rowCount: number;
   isLoading: boolean;
-  NewButton: JSX.Element;
+  CustomToolbarContent?: JSX.Element;
 };
 
 const BlankTable = ({
@@ -33,17 +33,17 @@ const BlankTable = ({
   paginationMode = "server",
   rowCount,
   isLoading,
-  NewButton,
+  CustomToolbarContent,
 }: Props) => {
   const intl = useIntl();
 
   function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <Box sx={{ flexGrow: 1 }} />
-        {NewButton}
-      </GridToolbarContainer>
-    );
+    if (CustomToolbarContent)
+      return (
+        <GridToolbarContainer>{CustomToolbarContent}</GridToolbarContainer>
+      );
+
+    return <></>;
   }
 
   return (

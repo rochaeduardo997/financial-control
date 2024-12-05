@@ -1,6 +1,7 @@
 import IHttp from "../../http/HTTP.interface";
 import ReportHandler from "../../../core/usecase/transaction/report/Report";
 import IReportRepository from "../../../core/repository/ReportRepository.interface";
+import ReportAllCountHandler from "../../../core/usecase/transaction/report/ReportAllCount";
 
 type TRouteResponse = { statusCode: number; result: any };
 
@@ -29,8 +30,14 @@ export default class ReportController {
   private async ReportRoute(req: any, res: any): Promise<TRouteResponse> {
     try {
       const { id: userId } = req.user;
+      const { page, limit } = req.query;
       const reportHandler = new ReportHandler(this.rRepository);
-      const result = await reportHandler.execute({ ...req.body, userId });
+      const result = await reportHandler.execute({
+        ...req.body,
+        userId,
+        page,
+        limit,
+      });
       return { statusCode: 200, result };
     } catch (err: any) {
       console.error("failed on route: transaction report, ", err);
@@ -44,8 +51,11 @@ export default class ReportController {
   ): Promise<TRouteResponse> {
     try {
       const { id: userId } = req.user;
-      const reportHandler = new ReportHandler(this.rRepository);
-      const result = await reportHandler.execute({ ...req.body, userId });
+      const reportAllCountHandler = new ReportAllCountHandler(this.rRepository);
+      const result = await reportAllCountHandler.execute({
+        ...req.body,
+        userId,
+      });
       return { statusCode: 200, result };
     } catch (err: any) {
       console.error("failed on route: transaction all count report, ", err);

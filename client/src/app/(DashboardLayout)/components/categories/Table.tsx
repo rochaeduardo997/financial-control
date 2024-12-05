@@ -93,7 +93,7 @@ const Table = () => {
           rowCount={rowCount}
           isLoading={isLoading}
           paginationMode="client"
-          NewButton={
+          CustomToolbarContent={
             <NewButton
               onClose={() => {
                 getCategories();

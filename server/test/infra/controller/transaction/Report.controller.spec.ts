@@ -90,7 +90,7 @@ describe("success", () => {
         start: new Date("2021-01-01"),
         end: new Date("2023-01-01"),
       });
-    expect(body?.result).toHaveLength(3);
+    expect(body?.result).toBe(3);
     expect(status).toBe(200);
   });
 

@@ -2,8 +2,9 @@
 import { Box } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import { useIntl } from "react-intl";
+import Table from "../../components/transactions/report/Table";
 
-const Dashboard = () => {
+const Report = () => {
   const intl = useIntl();
 
   return (
@@ -12,9 +13,11 @@ const Dashboard = () => {
         id: "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT",
       })}
     >
-      <Box>REPORT</Box>
+      <Box>
+        <Table />
+      </Box>
     </PageContainer>
   );
 };
 
-export default Dashboard;
+export default Report;
