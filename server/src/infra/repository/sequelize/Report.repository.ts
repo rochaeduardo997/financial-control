@@ -150,6 +150,7 @@ export default class ReportRepository implements IReportRepository {
         query: `
         SELECT DISTINCT(t.id), t.*
         ${this.TABLE_JOINS} ${where}
+        ORDER BY t.createdAt ASC
         LIMIT ? OFFSET ?
       `,
         values: [limit, offset],

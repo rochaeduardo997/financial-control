@@ -112,6 +112,16 @@ const Table = () => {
       minWidth: 150,
     },
     {
+      field: "description",
+      headerName: intl.formatMessage({
+        id: "TRANSACTION.TABLE.DESCRIPTION.HEADER",
+      }),
+      valueGetter: (value) => value,
+      sortable: false,
+      flex: 1,
+      minWidth: 150,
+    },
+    {
       field: "options",
       headerName: intl.formatMessage({
         id: "GENERAL.TABLE.OPTIONS",

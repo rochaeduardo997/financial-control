@@ -44,6 +44,10 @@ class ReportService {
             transaction.value,
             transaction.direction,
             transaction.when,
+            undefined,
+            undefined,
+            undefined,
+            transaction.description,
           ),
         );
       return transactions;

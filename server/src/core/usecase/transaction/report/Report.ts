@@ -11,6 +11,7 @@ type TOutput = {
   direction: TransactionDirection;
   when: Date;
   categoriesId?: string[];
+  description?: string;
 };
 
 class ReportHandler {
@@ -34,6 +35,7 @@ class ReportHandler {
           direction: t.direction,
           when: t.when,
           categoriesId: (t.categories || []).map((c) => c.id),
+          description: t.description,
         });
       }
 

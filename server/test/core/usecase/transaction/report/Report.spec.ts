@@ -81,18 +81,21 @@ describe("success", () => {
       transactions[0].categories[0].id,
       transactions[0].categories[1].id,
     ]);
+    expect(result[0].description).toEqual(transactions[0].description);
     expect(result[1].id).toBe(transactions[1].id);
     expect(result[1].name).toBe(transactions[1].name);
     expect(result[1].value).toBe(transactions[1].value);
     expect(result[1].direction).toBe(transactions[1].direction);
     expect(result[1].when).toEqual(transactions[1].when);
     expect(result[1].categoriesId).toEqual([transactions[1].categories[0].id]);
+    expect(result[1].description).toEqual(transactions[1].description);
     expect(result[2].id).toBe(transactions[2].id);
     expect(result[2].name).toBe(transactions[2].name);
     expect(result[2].value).toBe(transactions[2].value);
     expect(result[2].direction).toBe(transactions[2].direction);
     expect(result[2].when).toEqual(transactions[2].when);
     expect(result[2].categoriesId).toEqual([transactions[2].categories[0].id]);
+    expect(result[2].description).toEqual(transactions[2].description);
   });
 
   test("find all transactions filtering by category", async () => {
