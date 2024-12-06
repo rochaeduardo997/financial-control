@@ -45,11 +45,15 @@ describe("success", () => {
     expect(result[0].value).toBe(transactions[0].value);
     expect(result[0].direction).toBe(transactions[0].direction);
     expect(result[0].when).toEqual(transactions[0].when);
+    expect(result[0].currency).toEqual(transactions[0].currency);
+    expect(result[0].quantity).toEqual(transactions[0].quantity);
     expect(result[1].id).toBe(transactions[1].id);
     expect(result[1].name).toBe(transactions[1].name);
     expect(result[1].value).toBe(transactions[1].value);
     expect(result[1].direction).toBe(transactions[1].direction);
     expect(result[1].when).toEqual(transactions[1].when);
+    expect(result[1].currency).toEqual(transactions[1].currency);
+    expect(result[1].quantity).toEqual(transactions[1].quantity);
   });
 
   test("get empty list with invalid user id", async () => {

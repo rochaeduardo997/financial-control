@@ -1,4 +1,7 @@
-import { TransactionDirection } from "../../entity/Transaction";
+import {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../../entity/Transaction";
 import ITransactionRepository from "../../repository/TransactionRepository.interface";
 
 type TInput = { userId: string; page?: number; limit?: number };
@@ -9,6 +12,8 @@ type TOutput = {
   value: number;
   direction: TransactionDirection;
   when: Date;
+  currency?: TransactionCurrency;
+  quantity?: number;
 };
 
 class GetAllHandler {
@@ -29,6 +34,8 @@ class GetAllHandler {
           value: t.value,
           direction: t.direction,
           when: t.when,
+          currency: t.currency as TransactionCurrency,
+          quantity: t.quantity,
         });
       return result;
     } catch (err: any) {

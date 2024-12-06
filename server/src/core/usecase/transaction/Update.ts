@@ -1,4 +1,7 @@
-import { TransactionDirection } from "../../entity/Transaction";
+import {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../../entity/Transaction";
 import ICategoryRepository from "../../repository/CategoryRepository.interface";
 import ITransactionRepository from "../../repository/TransactionRepository.interface";
 
@@ -11,6 +14,8 @@ type TInput = {
   categoriesId?: string[];
   userId: string;
   description?: string;
+  currency?: TransactionCurrency;
+  quantity?: number;
 };
 
 type TOutput = {
@@ -23,6 +28,8 @@ type TOutput = {
   updatedAt: Date;
   categoriesId?: string[];
   description?: string;
+  currency?: TransactionCurrency;
+  quantity?: number;
 };
 
 class UpdateHandler {
@@ -39,6 +46,8 @@ class UpdateHandler {
       if (input.direction) transaction.direction = input.direction;
       if (input.when) transaction.when = input.when;
       if (input.description) transaction.description = input.description;
+      if (input.currency) transaction.currency = input.currency;
+      if (input.quantity) transaction.quantity = input.quantity;
       if (input.categoriesId) {
         transaction.cleanupCategories();
         for (const cId of input.categoriesId) {
@@ -61,6 +70,8 @@ class UpdateHandler {
         updatedAt: updatedTransaction.updatedAt!,
         categoriesId: (updatedTransaction.categories || []).map((c) => c.id),
         description: updatedTransaction.description,
+        currency: updatedTransaction.currency as TransactionCurrency,
+        quantity: updatedTransaction.quantity,
       };
     } catch (err: any) {
       throw new Error(err?.message);

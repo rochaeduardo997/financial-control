@@ -1,4 +1,7 @@
-import Transaction, { TransactionDirection } from "../../entity/Transaction";
+import Transaction, {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../../entity/Transaction";
 import ICategoryRepository from "../../repository/CategoryRepository.interface";
 import ITransactionRepository from "../../repository/TransactionRepository.interface";
 
@@ -10,6 +13,8 @@ type TBase = {
   when: Date;
   categoriesId?: string[];
   description?: string;
+  currency?: TransactionCurrency;
+  quantity?: number;
   userId: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -35,6 +40,8 @@ class CreateHandler {
         new Date(),
         input.userId,
         input.description,
+        input.currency,
+        input.quantity,
       );
       await this.associateCategoriesTo(
         transaction,
@@ -53,6 +60,8 @@ class CreateHandler {
         categoriesId:
           (createdTransaction.categories || []).map((c) => c.id) || [],
         description: createdTransaction.description,
+        currency: createdTransaction.currency as TransactionCurrency,
+        quantity: createdTransaction.quantity,
       };
     } catch (err: any) {
       throw new Error(err?.message);

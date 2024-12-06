@@ -1,4 +1,7 @@
-import { TransactionDirection } from "../../entity/Transaction";
+import {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../../entity/Transaction";
 import ITransactionRepository from "../../repository/TransactionRepository.interface";
 
 type TInput = { id: string; userId: string };
@@ -13,6 +16,8 @@ type TOutput = {
   updatedAt: Date;
   categoriesId?: string[];
   description?: string;
+  currency?: TransactionCurrency;
+  quantity?: number;
 };
 
 class GetByIdHandler {
@@ -31,6 +36,8 @@ class GetByIdHandler {
         updatedAt: result.updatedAt!,
         categoriesId: (result.categories || []).map((c) => c.id),
         description: result.description,
+        currency: result.currency as TransactionCurrency,
+        quantity: result.quantity,
       };
     } catch (err: any) {
       throw new Error(err?.message);

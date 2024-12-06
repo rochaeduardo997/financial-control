@@ -5,7 +5,10 @@ import RepositoryFactory from "../../../../src/infra/factory/sequelize/Repositor
 import userSeed from "../../../seed/User.seed";
 import ITransactionRepository from "../../../../src/core/repository/TransactionRepository.interface";
 import categorySeed from "../../../seed/Category.seed";
-import { TransactionDirection } from "../../../../src/core/entity/Transaction";
+import {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../../../../src/core/entity/Transaction";
 
 let sequelize: Sequelize;
 let createHandler: CreateHandler;
@@ -20,6 +23,8 @@ const input = {
   userId: "userId",
   categoriesId: [] as string[],
   description: "description",
+  currency: TransactionCurrency.GPB,
+  quantity: 50,
 };
 
 beforeEach(async () => {
@@ -53,6 +58,8 @@ describe("success", () => {
     expect(result.updatedAt).toBeDefined();
     expect(result.categoriesId).toHaveLength(0);
     expect(result.description).toBe(input.description);
+    expect(result.currency).toBe(input.currency);
+    expect(result.quantity).toBe(input.quantity);
   });
 
   test("create transaction with category", async () => {

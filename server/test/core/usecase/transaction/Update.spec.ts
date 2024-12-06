@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
 import Transaction, {
+  TransactionCurrency,
   TransactionDirection,
 } from "../../../../src/core/entity/Transaction";
 import ITransactionRepository from "../../../../src/core/repository/TransactionRepository.interface";
@@ -53,12 +54,16 @@ describe("success", () => {
       direction: TransactionDirection.IN,
       when: new Date("2000-02-02"),
       categoriesId: [categories[1].id],
+      currency: TransactionCurrency.USD,
+      quantity: 50,
     });
     expect(result.id).toBe(transactions[0].id);
     expect(result.name).toBe("new_name");
     expect(result.value).toBe(99.89);
     expect(result.direction).toBe(TransactionDirection.IN);
     expect(result.when).toEqual(new Date("2000-02-02"));
+    expect(result.currency).toBe(TransactionCurrency.USD);
+    expect(result.quantity).toBe(50);
     expect(result.createdAt).toBeDefined();
     expect(result.updatedAt).toBeDefined();
     expect(result.categoriesId).toEqual([categories[1].id]);

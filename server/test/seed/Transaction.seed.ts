@@ -17,7 +17,7 @@ export default (howMany: number = 1) => {
       createdAt: new Date(`2022-02-${day}T00:00:00`),
       updatedAt: new Date(`2022-02-${day}T00:00:00`),
       description: `description${i}`,
-      currency: TransactionCurrency.BRL,
+      currency: TransactionCurrency.EUR,
       quantity: i,
     };
     result.push(
