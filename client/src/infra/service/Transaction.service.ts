@@ -22,6 +22,7 @@ class TransactionService {
         description: input.description,
         categoriesId: (input.categories || []).map((c) => c.id),
         currency: input.currency,
+        quantity: input.quantity,
       };
       const { data } = await this.httpRequest.post(
         `${this.API_URL}/transactions`,
@@ -38,6 +39,7 @@ class TransactionService {
         undefined,
         data.result.description,
         data.result.currency,
+        data.result.quantity,
       );
     } catch (err: any) {
       console.error(err);
@@ -76,6 +78,7 @@ class TransactionService {
             undefined,
             undefined,
             transaction.currency,
+            transaction.quantity,
           ),
         );
       return transactions;
@@ -101,6 +104,7 @@ class TransactionService {
         undefined,
         data.result.description,
         data.result.currency,
+        data.result.quantity,
       );
       console.log(transaction);
       for (const cId of data.result.categoriesId)
@@ -122,6 +126,7 @@ class TransactionService {
         description: input.description,
         categoriesId: (input.categories || []).map((c) => c.id),
         currency: input.currency,
+        quantity: input.quantity,
       };
       const { data } = await this.httpRequest.put(
         `${this.API_URL}/transactions/${id}`,
@@ -138,6 +143,7 @@ class TransactionService {
         undefined,
         data.result.description,
         data.result.currency,
+        data.result.quantity,
       );
     } catch (err: any) {
       console.error(err);

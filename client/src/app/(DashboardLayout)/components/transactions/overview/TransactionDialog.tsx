@@ -71,6 +71,9 @@ const TransactionDialog = ({
   const [selectedCurrency, setSelectedCurrency] = useState<TransactionCurrency>(
     transaction?.currency || TransactionCurrency.BRL,
   );
+  const [quantity, setQuantity] = useState<number | undefined>(
+    transaction?.quantity,
+  );
 
   useEffect(() => {
     getCategories();
@@ -100,6 +103,7 @@ const TransactionDialog = ({
         undefined,
         description,
         selectedCurrency,
+        quantity,
       );
       console.log(transaction);
       for (const categoryId of categoriesId) {
@@ -169,7 +173,9 @@ const TransactionDialog = ({
                     id="direction_input"
                     value={direction}
                     required
-                    label="Age"
+                    label={intl.formatMessage({
+                      id: "TRANSACTION.TABLE.DIRECTION.HEADER",
+                    })}
                     onChange={(e) =>
                       setDirection(e.target.value as TransactionDirection)
                     }
@@ -188,7 +194,7 @@ const TransactionDialog = ({
                 </FormControl>
               </Box>
             </Grid>
-            <Grid size={{ xs: 12, md: 8 }}>
+            <Grid size={{ xs: 12, md: 5 }}>
               <Box mt="15px">
                 <TextField
                   disabled={onlyRead}
@@ -202,6 +208,26 @@ const TransactionDialog = ({
                   value={name}
                   onChange={(e: any) => setName(e.target.value)}
                   {...nameFieldHasError}
+                />
+              </Box>
+            </Grid>
+            <Grid size={{ xs: 8, md: 3 }}>
+              <Box mt="15px">
+                <TextField
+                  disabled={onlyRead}
+                  id="value_input"
+                  label={intl.formatMessage({
+                    id: "TRANSACTION.TABLE.QUANTITY.HEADER",
+                  })}
+                  variant="outlined"
+                  fullWidth
+                  value={quantity}
+                  type="number"
+                  onChange={(e: any) => {
+                    if (/[a-zA-Z]/gi.test(e.target?.value)) return;
+                    if (+e.target?.value <= 0) return setQuantity(1);
+                    setQuantity(+parseFloat(e.target?.value).toFixed(2));
+                  }}
                 />
               </Box>
             </Grid>
@@ -267,6 +293,7 @@ const TransactionDialog = ({
                   type="number"
                   onChange={(e: any) => {
                     if (/[a-zA-Z]/gi.test(e.target?.value)) return;
+                    if (+e.target?.value <= 0) return setValue(1);
                     setValue(+parseFloat(e.target?.value).toFixed(2));
                   }}
                   {...valueFieldHasError}
