@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import Category from "../../../../../../../server/src/core/entity/Category";
 import { TFilters } from "../../../../../../../server/src/core/repository/ReportRepository.interface";
+import { TransactionDirection } from "../../../../../../../server/src/core/entity/Transaction";
 
 type Props = {
   onFilter: (filters: TFilters) => void;
@@ -35,6 +36,7 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date());
 
+  const [direction, setDirection] = useState<TransactionDirection>();
   const [names, setNames] = useState<string[]>([]);
   const [valueBetween, setValueBetween] = useState<number[]>([0, 0]);
   const [categoriesId, setCategoriesId] = useState<string[]>([]);
@@ -72,6 +74,7 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
               categoriesId,
               names,
               valueBetween: _valueBetween,
+              direction,
             });
           }}
         >
@@ -124,70 +127,100 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
                 })}
               </AccordionSummary>
               <AccordionDetails>
-                <Box>
-                  <Grid container spacing={2}>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <Grid container spacing={1}>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                          <TextField
-                            id="value_input"
-                            label={intl.formatMessage({
-                              id: "TRANSACTION.REPORT.FILTER.VALUE_START",
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <Grid container spacing={1}>
+                      <FormControl fullWidth>
+                        <InputLabel id="direction_input_label">
+                          {intl.formatMessage({
+                            id: "TRANSACTION.TABLE.DIRECTION.HEADER",
+                          })}
+                        </InputLabel>
+                        <Select
+                          labelId="direction_input_label"
+                          id="direction_input"
+                          value={direction}
+                          required
+                          label="Age"
+                          onChange={(e) =>
+                            setDirection(e.target.value as TransactionDirection)
+                          }
+                        >
+                          <MenuItem value={TransactionDirection.IN}>
+                            {intl.formatMessage({
+                              id: "TRANSACTION.TABLE.DIRECTION.VALUE.IN",
                             })}
-                            required
-                            variant="outlined"
-                            fullWidth
-                            value={valueBetween[0]}
-                            type="number"
-                            onChange={(e: any) => {
-                              if (/[a-zA-Z]/gi.test(e.target?.value)) return;
-                              setValueBetween((prev) => {
-                                const cp = [...prev];
-                                const newValue = +parseFloat(
-                                  e.target?.value,
-                                ).toFixed(2);
-                                cp[0] = newValue;
-                                if (cp[1] < newValue) {
-                                  cp[1] = newValue;
-                                  cp[0] = newValue;
-                                }
-                                return cp;
-                              });
-                            }}
-                          />
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                          <TextField
-                            id="value_input"
-                            label={intl.formatMessage({
-                              id: "TRANSACTION.REPORT.FILTER.VALUE_END",
+                          </MenuItem>
+                          <MenuItem value={TransactionDirection.OUT}>
+                            {intl.formatMessage({
+                              id: "TRANSACTION.TABLE.DIRECTION.VALUE.OUT",
                             })}
-                            required
-                            variant="outlined"
-                            fullWidth
-                            value={valueBetween[1]}
-                            type="number"
-                            onChange={(e: any) => {
-                              if (/[a-zA-Z]/gi.test(e.target?.value)) return;
-                              setValueBetween((prev) => {
-                                const cp = [...prev];
-                                const newValue = +parseFloat(
-                                  e.target?.value,
-                                ).toFixed(2);
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <Grid container spacing={1}>
+                      <Grid size={{ xs: 12, md: 6 }}>
+                        <TextField
+                          id="value_input"
+                          label={intl.formatMessage({
+                            id: "TRANSACTION.REPORT.FILTER.VALUE_START",
+                          })}
+                          required
+                          variant="outlined"
+                          fullWidth
+                          value={valueBetween[0]}
+                          type="number"
+                          onChange={(e: any) => {
+                            if (/[a-zA-Z]/gi.test(e.target?.value)) return;
+                            setValueBetween((prev) => {
+                              const cp = [...prev];
+                              const newValue = +parseFloat(
+                                e.target?.value,
+                              ).toFixed(2);
+                              cp[0] = newValue;
+                              if (cp[1] < newValue) {
                                 cp[1] = newValue;
-                                if (cp[0] > newValue) {
-                                  cp[1] = newValue;
-                                  cp[0] = newValue;
-                                }
-                                return cp;
-                              });
-                            }}
-                          />
-                        </Grid>
+                                cp[0] = newValue;
+                              }
+                              return cp;
+                            });
+                          }}
+                        />
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 6 }}>
+                        <TextField
+                          id="value_input"
+                          label={intl.formatMessage({
+                            id: "TRANSACTION.REPORT.FILTER.VALUE_END",
+                          })}
+                          required
+                          variant="outlined"
+                          fullWidth
+                          value={valueBetween[1]}
+                          type="number"
+                          onChange={(e: any) => {
+                            if (/[a-zA-Z]/gi.test(e.target?.value)) return;
+                            setValueBetween((prev) => {
+                              const cp = [...prev];
+                              const newValue = +parseFloat(
+                                e.target?.value,
+                              ).toFixed(2);
+                              cp[1] = newValue;
+                              if (cp[0] > newValue) {
+                                cp[1] = newValue;
+                                cp[0] = newValue;
+                              }
+                              return cp;
+                            });
+                          }}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
-                </Box>
+                </Grid>
 
                 <Box mt="20px" mb="20px">
                   <Grid container spacing={2}>
@@ -204,7 +237,6 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
                             labelId="categories_label_id"
                             id="demo-simple-select"
                             value={categoriesId}
-                            multiline
                             label={intl.formatMessage({
                               id: "GENERAL.CATEGORIES",
                             })}
