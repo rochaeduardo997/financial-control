@@ -14,7 +14,10 @@ import IJWT from "../../../../src/infra/jwt/jwt.interface";
 import userSeed from "../../../seed/User.seed";
 import TransactionController from "../../../../src/infra/controller/transaction/Transaction.controller";
 import ITransactionRepository from "../../../../src/core/repository/TransactionRepository.interface";
-import { TransactionDirection } from "../../../../src/core/entity/Transaction";
+import {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../../../../src/core/entity/Transaction";
 import Category from "../../../../src/core/entity/Category";
 import categorySeed from "../../../seed/Category.seed";
 dotenv.config();
@@ -37,6 +40,8 @@ const input = {
   userId: "userId",
   categoriesId: [] as string[],
   description: "description",
+  currency: TransactionCurrency.GPB,
+  quantity: 99,
 };
 
 beforeEach(async () => {
@@ -107,6 +112,8 @@ describe("success", () => {
     expect(body?.result?.categoriesId).toHaveLength(1);
     expect(body?.result?.categoriesId[0]).toBe(input.categoriesId[0]);
     expect(body?.result?.description).toBe(input.description);
+    expect(body?.result?.currency).toBe(input.currency);
+    expect(body?.result?.quantity).toBe(input.quantity);
     expect(status).toBe(201);
   });
 
@@ -120,6 +127,8 @@ describe("success", () => {
     expect(body?.result?.[0].value).toBe(input.value);
     expect(body?.result?.[0].direction).toBe(input.direction);
     expect(body?.result?.[0].when).toEqual(input.when.toISOString());
+    expect(body?.result?.[0].currency).toBe(input.currency);
+    expect(body?.result?.[0].quantity).toBe(input.quantity);
     expect(status).toBe(200);
   });
 
@@ -146,6 +155,8 @@ describe("success", () => {
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toHaveLength(0);
     expect(body?.result?.description).toBe(input.description);
+    expect(body?.result?.currency).toBe(input.currency);
+    expect(body?.result?.quantity).toBe(input.quantity);
     expect(status).toBe(200);
   });
 
@@ -165,6 +176,8 @@ describe("success", () => {
     expect(body?.result?.categoriesId).toHaveLength(1);
     expect(body?.result?.categoriesId[0]).toBe(categoryId1);
     expect(body?.result?.description).toBe(input.description);
+    expect(body?.result?.currency).toBe(input.currency);
+    expect(body?.result?.quantity).toBe(input.quantity);
     expect(status).toBe(200);
   });
 
@@ -178,6 +191,8 @@ describe("success", () => {
       when: new Date("2010-02-02"),
       categoriesId: [categoryId2],
       description: "description_updated",
+      currency: TransactionCurrency.BRL,
+      quantity: 10,
     };
     const { status, body } = await request
       .put(`/api/v1/transactions/${id}`)
@@ -193,6 +208,8 @@ describe("success", () => {
     expect(body?.result?.categoriesId).toHaveLength(1);
     expect(body?.result?.categoriesId[0]).toBe(categoryId2);
     expect(body?.result?.description).toBe(updateInput.description);
+    expect(body?.result?.currency).toBe(updateInput.currency);
+    expect(body?.result?.quantity).toBe(updateInput.quantity);
     expect(status).toBe(200);
   });
 
@@ -212,6 +229,8 @@ describe("success", () => {
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toEqual([categoryId1, categoryId2]);
     expect(body?.result?.description).toBe(input.description);
+    expect(body?.result?.currency).toBe(input.currency);
+    expect(body?.result?.quantity).toBe(input.quantity);
     expect(status).toBe(200);
   });
 
@@ -231,6 +250,8 @@ describe("success", () => {
     expect(body?.result?.updatedAt).toBeDefined();
     expect(body?.result?.categoriesId).toHaveLength(0);
     expect(body?.result?.description).toBe(input.description);
+    expect(body?.result?.currency).toBe(input.currency);
+    expect(body?.result?.quantity).toBe(input.quantity);
     expect(status).toBe(200);
   });
 
