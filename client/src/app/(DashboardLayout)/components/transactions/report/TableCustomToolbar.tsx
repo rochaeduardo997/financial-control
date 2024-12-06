@@ -4,13 +4,16 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Autocomplete,
   Box,
   Button,
+  Chip,
   FormControl,
   Grid2 as Grid,
   InputLabel,
   MenuItem,
   Select,
+  TextField,
 } from "@mui/material";
 import { GridExpandMoreIcon } from "@mui/x-data-grid";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -33,6 +36,7 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date());
 
+  const [names, setNames] = useState<string[]>([]);
   const [categoriesId, setCategoriesId] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -61,7 +65,7 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
           color="success"
           startIcon={<IconCheck />}
           onClick={() => {
-            onFilter({ start, end, categoriesId });
+            onFilter({ start, end, categoriesId, names });
           }}
         >
           {intl.formatMessage({ id: "GENERAL.FILTER" })}
@@ -141,6 +145,29 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
                             </MenuItem>
                           ))}
                         </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <Box>
+                      <FormControl fullWidth>
+                        <Autocomplete
+                          multiple
+                          id="tags-outlined"
+                          options={[]}
+                          freeSolo
+                          filterSelectedOptions
+                          value={names}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label={intl.formatMessage({
+                                id: "GENERAL.NAMES",
+                              })}
+                            />
+                          )}
+                          onChange={(_, value) => setNames(value)}
+                        />
                       </FormControl>
                     </Box>
                   </Grid>
