@@ -131,5 +131,6 @@ export enum TransactionDirection {
 export enum TransactionCurrency {
   BRL = "R$",
   USD = "$",
-  EUR = "£",
+  GPB = "£",
+  EUR = "€",
 }

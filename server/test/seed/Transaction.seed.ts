@@ -1,4 +1,5 @@
 import Transaction, {
+  TransactionCurrency,
   TransactionDirection,
 } from "../../src/core/entity/Transaction";
 
@@ -16,6 +17,8 @@ export default (howMany: number = 1) => {
       createdAt: new Date(`2022-02-${day}T00:00:00`),
       updatedAt: new Date(`2022-02-${day}T00:00:00`),
       description: `description${i}`,
+      currency: TransactionCurrency.BRL,
+      quantity: i,
     };
     result.push(
       new Transaction(
@@ -28,6 +31,8 @@ export default (howMany: number = 1) => {
         input.updatedAt,
         undefined,
         input.description,
+        input.currency,
+        input.quantity,
       ),
     );
   }

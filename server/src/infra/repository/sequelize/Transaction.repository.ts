@@ -32,6 +32,8 @@ export default class TransactionRepository implements ITransactionRepository {
             direction: input.direction,
             when: input.when,
             description: input.description,
+            currency: input.currency,
+            quantity: input.quantity,
             fk_user_id: input.userId,
           },
           { raw: true, transaction },
@@ -143,6 +145,8 @@ export default class TransactionRepository implements ITransactionRepository {
           direction: input.direction,
           when: input.when,
           description: input.description,
+          currency: input.currency,
+          quantity: input.quantity,
           fk_user_id: input.userId,
           updated_at: new Date(),
         },
@@ -244,6 +248,8 @@ export default class TransactionRepository implements ITransactionRepository {
       new Date(sequelizeResponse.updatedAt),
       sequelizeResponse.fk_user_id,
       sequelizeResponse.description,
+      sequelizeResponse.currency,
+      sequelizeResponse.quantity,
     );
   }
 }

@@ -60,6 +60,8 @@ describe("success", () => {
     expect(result.categories).toHaveLength(0);
     expect(result.userId).toBe(transactions[0].userId);
     expect(result.description).toBe(transactions[0].description);
+    expect(result.currency).toBe(transactions[0].currency);
+    expect(result.quantity).toBe(transactions[0].quantity);
   });
 
   test("create new transaction with associated categories", async () => {
@@ -79,6 +81,8 @@ describe("success", () => {
     expect(result.categories[1]).toEqual(categories[1]);
     expect(result.userId).toBe(transactions[0].userId);
     expect(result.description).toBe(transactions[0].description);
+    expect(result.currency).toBe(transactions[0].currency);
+    expect(result.quantity).toBe(transactions[0].quantity);
   });
 
   test("find by id", async () => {
@@ -129,6 +133,8 @@ describe("success", () => {
     expect(result.categories).toHaveLength(0);
     expect(result.userId).toBe(transactions[1].userId);
     expect(result.description).toBe(transactions[1].description);
+    expect(result.currency).toBe(transactions[1].currency);
+    expect(result.quantity).toBe(transactions[1].quantity);
   });
 
   test("update transaction changing categories", async () => {

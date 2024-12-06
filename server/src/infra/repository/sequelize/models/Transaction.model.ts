@@ -6,6 +6,7 @@ import {
   Model,
   PrimaryKey,
   Column,
+  Default,
 } from "sequelize-typescript";
 import UserModel from "./User.model";
 import TransactionCategoryRelationModel from "./TransactionCategoryRelation.model";
@@ -30,6 +31,14 @@ class TransactionModel extends Model {
 
   @Column
   declare description: string;
+
+  @Default("r$")
+  @Column({ allowNull: false, type: DataType.ENUM("r$", "$", "£", "€") })
+  declare currency: string;
+
+  @Default(1)
+  @Column
+  declare quantity: number;
 
   @ForeignKey(() => UserModel)
   @Column({
