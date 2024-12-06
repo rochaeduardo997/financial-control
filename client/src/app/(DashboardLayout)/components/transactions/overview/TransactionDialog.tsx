@@ -24,9 +24,9 @@ import DayJS from "dayjs";
 import { Fragment, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import Transaction, {
+  TransactionCurrency,
   TransactionDirection,
 } from "../../../../../../../server/src/core/entity/Transaction";
-import CustomTextField from "../../forms/theme-elements/CustomTextField";
 import Category from "../../../../../../../server/src/core/entity/Category";
 import CategoryService from "@/infra/service/Category.service";
 
@@ -62,6 +62,15 @@ const TransactionDialog = ({
   const [description, setDescription] = useState(transaction?.description);
   const [categoriesId, setCategoriesId] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [currencies] = useState<TransactionCurrency[]>([
+    TransactionCurrency.BRL,
+    TransactionCurrency.EUR,
+    TransactionCurrency.GPB,
+    TransactionCurrency.USD,
+  ]);
+  const [selectedCurrency, setSelectedCurrency] = useState<TransactionCurrency>(
+    transaction?.currency || TransactionCurrency.BRL,
+  );
 
   useEffect(() => {
     getCategories();
@@ -90,7 +99,9 @@ const TransactionDialog = ({
         undefined,
         undefined,
         description,
+        selectedCurrency,
       );
+      console.log(transaction);
       for (const categoryId of categoriesId) {
         transaction.associateCategory(new Category(categoryId, "name"));
       }
@@ -196,7 +207,7 @@ const TransactionDialog = ({
             </Grid>
           </Grid>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 7 }}>
+            <Grid size={{ xs: 12, md: 5 }}>
               <Box mt="15px">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
@@ -212,7 +223,36 @@ const TransactionDialog = ({
                 </LocalizationProvider>
               </Box>
             </Grid>
-            <Grid size={{ xs: 12, md: 5 }}>
+            <Grid size={{ xs: 4, md: 2 }}>
+              <Box mt="15px">
+                <FormControl fullWidth>
+                  <InputLabel id="currency_label_id">
+                    {intl.formatMessage({
+                      id: "TRANSACTION.TABLE.CURRENCY.HEADER",
+                    })}
+                  </InputLabel>
+                  <Select
+                    disabled={onlyRead}
+                    labelId="categories_label_id"
+                    id="demo-simple-select"
+                    value={selectedCurrency}
+                    label={intl.formatMessage({
+                      id: "TRANSACTION.TABLE.CURRENCY.HEADER",
+                    })}
+                    onChange={(e) =>
+                      setSelectedCurrency(e.target.value as TransactionCurrency)
+                    }
+                  >
+                    {(currencies || []).map((c) => (
+                      <MenuItem key={c} value={c}>
+                        {c}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+            <Grid size={{ xs: 8, md: 5 }}>
               <Box mt="15px">
                 <TextField
                   disabled={onlyRead}
@@ -266,7 +306,6 @@ const TransactionDialog = ({
                 labelId="categories_label_id"
                 id="demo-simple-select"
                 value={categoriesId}
-                multiline
                 label={intl.formatMessage({
                   id: "GENERAL.CATEGORIES",
                 })}

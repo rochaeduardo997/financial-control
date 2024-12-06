@@ -35,6 +35,7 @@
   "TRANSACTION.TABLE.WHEN.HEADER": "Quando",
   "TRANSACTION.TABLE.WHEN.DESCRIPTION": "Data em que a transação foi realizada",
   "TRANSACTION.TABLE.DESCRIPTION.HEADER": "Descrição",
+  "TRANSACTION.TABLE.CURRENCY.HEADER": "Moeda",
   "TRANSACTION.DIALOG.DESCRIPTION": "Descrição",
   "TRANSACTION.DELETE.NAME": "Nome identificador da transação",
   "TRANSACTION.DELETE.VALUE": "Valor da transação",

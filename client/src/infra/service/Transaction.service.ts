@@ -21,6 +21,7 @@ class TransactionService {
         when: input.when,
         description: input.description,
         categoriesId: (input.categories || []).map((c) => c.id),
+        currency: input.currency,
       };
       const { data } = await this.httpRequest.post(
         `${this.API_URL}/transactions`,
@@ -36,6 +37,7 @@ class TransactionService {
         data.result.updatedAt,
         undefined,
         data.result.description,
+        data.result.currency,
       );
     } catch (err: any) {
       console.error(err);
@@ -69,6 +71,11 @@ class TransactionService {
             transaction.value,
             transaction.direction,
             transaction.when,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            transaction.currency,
           ),
         );
       return transactions;
@@ -93,7 +100,9 @@ class TransactionService {
         data.result.updatedAt,
         undefined,
         data.result.description,
+        data.result.currency,
       );
+      console.log(transaction);
       for (const cId of data.result.categoriesId)
         transaction.associateCategory(new Category(cId, "name"));
       return transaction;
@@ -112,6 +121,7 @@ class TransactionService {
         when: input.when,
         description: input.description,
         categoriesId: (input.categories || []).map((c) => c.id),
+        currency: input.currency,
       };
       const { data } = await this.httpRequest.put(
         `${this.API_URL}/transactions/${id}`,
@@ -127,6 +137,7 @@ class TransactionService {
         data.result.updatedAt,
         undefined,
         data.result.description,
+        data.result.currency,
       );
     } catch (err: any) {
       console.error(err);

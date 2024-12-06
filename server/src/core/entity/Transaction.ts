@@ -11,7 +11,7 @@ export default class Transaction {
   private _categories: Set<Category>;
   private _userId?: string;
   private _description?: string;
-  private _currency?: string;
+  private _currency?: TransactionCurrency;
   private _quantity?: number;
 
   constructor(
@@ -89,9 +89,9 @@ export default class Transaction {
     this._description = x;
   }
   get currency() {
-    return this._currency || "";
+    return this._currency || TransactionCurrency.BRL;
   }
-  set currency(x: string) {
+  set currency(x: TransactionCurrency) {
     this._currency = x;
   }
   get quantity() {

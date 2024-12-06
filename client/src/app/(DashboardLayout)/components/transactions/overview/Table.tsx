@@ -87,7 +87,11 @@ const Table = () => {
       description: intl.formatMessage({
         id: "TRANSACTION.TABLE.VALUE.DESCRIPTION",
       }),
-      valueGetter: (value) => `R$ ${parseFloat(value).toFixed(2)}`,
+      renderCell: ({ row }) => (
+        <>
+          {row.currency} {parseFloat(row.value).toFixed(2)}
+        </>
+      ),
       sortable: false,
       flex: 1,
       minWidth: 150,
