@@ -35,9 +35,16 @@ type Props = {
   transaction?: Transaction;
   open: boolean;
   onClose: Function;
+  onlyRead?: boolean;
 };
 
-const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
+const TransactionDialog = ({
+  title,
+  transaction,
+  open,
+  onClose,
+  onlyRead = false,
+}: Props) => {
   const intl = useIntl();
 
   const transactionService = new TransactionService();
@@ -146,6 +153,7 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
                     })}
                   </InputLabel>
                   <Select
+                    disabled={onlyRead}
                     labelId="direction_input_label"
                     id="direction_input"
                     value={direction}
@@ -171,7 +179,8 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
             </Grid>
             <Grid size={{ xs: 12, md: 8 }}>
               <Box mt="15px">
-                <CustomTextField
+                <TextField
+                  disabled={onlyRead}
                   id="name_input"
                   required
                   label={intl.formatMessage({
@@ -191,6 +200,7 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
               <Box mt="15px">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
+                    disabled={onlyRead}
                     sx={{ width: "100% " }}
                     label={intl.formatMessage({
                       id: "TRANSACTION.TABLE.WHEN.HEADER",
@@ -205,6 +215,7 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
             <Grid size={{ xs: 12, md: 5 }}>
               <Box mt="15px">
                 <TextField
+                  disabled={onlyRead}
                   id="value_input"
                   label={intl.formatMessage({
                     id: "TRANSACTION.TABLE.VALUE.HEADER",
@@ -227,6 +238,7 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
             <Grid size={{ xs: 12, md: 12 }}>
               <Box mt="15px">
                 <TextField
+                  disabled={onlyRead}
                   id="description_input"
                   label={intl.formatMessage({
                     id: "TRANSACTION.DIALOG.DESCRIPTION",
@@ -249,6 +261,7 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
                 })}
               </InputLabel>
               <Select
+                disabled={onlyRead}
                 multiple
                 labelId="categories_label_id"
                 id="demo-simple-select"
@@ -270,13 +283,17 @@ const TransactionDialog = ({ title, transaction, open, onClose }: Props) => {
         </DialogContent>
 
         <DialogActions>
-          <Button
-            startIcon={<IconCheck />}
-            onClick={() => onSubmit()}
-            color="success"
-          >
-            {intl.formatMessage({ id: "GENERAL.SAVE" })}
-          </Button>
+          {!onlyRead ? (
+            <Button
+              startIcon={<IconCheck />}
+              onClick={() => onSubmit()}
+              color="success"
+            >
+              {intl.formatMessage({ id: "GENERAL.SAVE" })}
+            </Button>
+          ) : (
+            <></>
+          )}
           <Button startIcon={<IconX />} onClick={() => onClose()} color="error">
             {intl.formatMessage({ id: "GENERAL.CANCEL" })}
           </Button>

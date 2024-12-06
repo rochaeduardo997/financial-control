@@ -10,6 +10,7 @@ import { TFilters } from "../../../../../../../server/src/core/repository/Report
 import BlankCard from "../../shared/BlankCard";
 import BlankTable from "../../shared/BlankTable";
 import TableCustomToolbar from "./TableCustomToolbar";
+import MoreInformations from "./MoreInformations";
 
 const Table = () => {
   const intl = useIntl();
@@ -106,6 +107,17 @@ const Table = () => {
         id: "TRANSACTION.TABLE.WHEN.DESCRIPTION",
       }),
       valueGetter: (value) => DayJS(value).format("HH:mm:ss DD/MM/YY"),
+      sortable: false,
+      flex: 1,
+      minWidth: 150,
+    },
+    {
+      field: "options",
+      headerName: intl.formatMessage({
+        id: "GENERAL.TABLE.OPTIONS",
+      }),
+      align: "center",
+      renderCell: ({ row }) => <MoreInformations id={row.id} />,
       sortable: false,
       flex: 1,
       minWidth: 150,
