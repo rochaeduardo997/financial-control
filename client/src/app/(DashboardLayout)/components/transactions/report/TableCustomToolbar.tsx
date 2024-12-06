@@ -7,7 +7,6 @@ import {
   Autocomplete,
   Box,
   Button,
-  Chip,
   FormControl,
   Grid2 as Grid,
   InputLabel,
@@ -37,6 +36,7 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
   const [end, setEnd] = useState(new Date());
 
   const [names, setNames] = useState<string[]>([]);
+  const [valueBetween, setValueBetween] = useState<number[]>([0, 0]);
   const [categoriesId, setCategoriesId] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -65,7 +65,14 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
           color="success"
           startIcon={<IconCheck />}
           onClick={() => {
-            onFilter({ start, end, categoriesId, names });
+            const _valueBetween = valueBetween[1] ? valueBetween : undefined;
+            onFilter({
+              start,
+              end,
+              categoriesId,
+              names,
+              valueBetween: _valueBetween,
+            });
           }}
         >
           {intl.formatMessage({ id: "GENERAL.FILTER" })}
@@ -117,61 +124,128 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
                 })}
               </AccordionSummary>
               <AccordionDetails>
-                <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <Box>
-                      <FormControl fullWidth>
-                        <InputLabel id="categories_label_id">
-                          {intl.formatMessage({
-                            id: "GENERAL.CATEGORIES",
-                          })}
-                        </InputLabel>
-                        <Select
-                          multiple
-                          labelId="categories_label_id"
-                          id="demo-simple-select"
-                          value={categoriesId}
-                          multiline
-                          label={intl.formatMessage({
-                            id: "GENERAL.CATEGORIES",
-                          })}
-                          onChange={(e) =>
-                            setCategoriesId(e.target.value as [])
-                          }
-                        >
-                          {(categories || []).map((c) => (
-                            <MenuItem key={c.id} value={c.id}>
-                              {c.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Box>
+                <Box>
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <Grid container spacing={1}>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                          <TextField
+                            id="value_input"
+                            label={intl.formatMessage({
+                              id: "TRANSACTION.REPORT.FILTER.VALUE_START",
+                            })}
+                            required
+                            variant="outlined"
+                            fullWidth
+                            value={valueBetween[0]}
+                            type="number"
+                            onChange={(e: any) => {
+                              if (/[a-zA-Z]/gi.test(e.target?.value)) return;
+                              setValueBetween((prev) => {
+                                const cp = [...prev];
+                                const newValue = +parseFloat(
+                                  e.target?.value,
+                                ).toFixed(2);
+                                cp[0] = newValue;
+                                if (cp[1] < newValue) {
+                                  cp[1] = newValue;
+                                  cp[0] = newValue;
+                                }
+                                return cp;
+                              });
+                            }}
+                          />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                          <TextField
+                            id="value_input"
+                            label={intl.formatMessage({
+                              id: "TRANSACTION.REPORT.FILTER.VALUE_END",
+                            })}
+                            required
+                            variant="outlined"
+                            fullWidth
+                            value={valueBetween[1]}
+                            type="number"
+                            onChange={(e: any) => {
+                              if (/[a-zA-Z]/gi.test(e.target?.value)) return;
+                              setValueBetween((prev) => {
+                                const cp = [...prev];
+                                const newValue = +parseFloat(
+                                  e.target?.value,
+                                ).toFixed(2);
+                                cp[1] = newValue;
+                                if (cp[0] > newValue) {
+                                  cp[1] = newValue;
+                                  cp[0] = newValue;
+                                }
+                                return cp;
+                              });
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <Box>
-                      <FormControl fullWidth>
-                        <Autocomplete
-                          multiple
-                          id="tags-outlined"
-                          options={[]}
-                          freeSolo
-                          filterSelectedOptions
-                          value={names}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label={intl.formatMessage({
-                                id: "GENERAL.NAMES",
-                              })}
-                            />
-                          )}
-                          onChange={(_, value) => setNames(value)}
-                        />
-                      </FormControl>
-                    </Box>
+                </Box>
+
+                <Box mt="20px" mb="20px">
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <Box>
+                        <FormControl fullWidth>
+                          <InputLabel id="categories_label_id">
+                            {intl.formatMessage({
+                              id: "GENERAL.CATEGORIES",
+                            })}
+                          </InputLabel>
+                          <Select
+                            multiple
+                            labelId="categories_label_id"
+                            id="demo-simple-select"
+                            value={categoriesId}
+                            multiline
+                            label={intl.formatMessage({
+                              id: "GENERAL.CATEGORIES",
+                            })}
+                            onChange={(e) =>
+                              setCategoriesId(e.target.value as [])
+                            }
+                          >
+                            {(categories || []).map((c) => (
+                              <MenuItem key={c.id} value={c.id}>
+                                {c.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Box>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <Box>
+                        <FormControl fullWidth>
+                          <Autocomplete
+                            multiple
+                            id="tags-outlined"
+                            options={[]}
+                            freeSolo
+                            filterSelectedOptions
+                            value={names}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label={intl.formatMessage({
+                                  id: "GENERAL.NAMES",
+                                })}
+                              />
+                            )}
+                            onChange={(_, value) => setNames(value)}
+                          />
+                        </FormControl>
+                      </Box>
+                    </Grid>
                   </Grid>
-                </Grid>
+                </Box>
               </AccordionDetails>
             </Accordion>
           </Box>
