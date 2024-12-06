@@ -1,4 +1,5 @@
 import Transaction, {
+  TransactionCurrency,
   TransactionDirection,
 } from "../../../src/core/entity/Transaction";
 import Category from "../../../src/core/entity/Category";
@@ -15,6 +16,8 @@ const input = {
   updatedAt: new Date("2022-05-06T00:00:00"),
   userId: "userId",
   description: "description",
+  currency: TransactionCurrency.EUR,
+  quantity: 10,
 };
 
 beforeEach(() => {
@@ -28,6 +31,8 @@ beforeEach(() => {
     input.updatedAt,
     input.userId,
     input.description,
+    input.currency,
+    input.quantity,
   );
   for (const c of categories) transaction.associateCategory(c);
 });
@@ -44,11 +49,15 @@ describe("success", () => {
     transaction.direction = TransactionDirection.OUT;
     transaction.when = new Date("2010-02-02");
     transaction.description = "updated_description";
+    transaction.currency = TransactionCurrency.BRL;
+    transaction.quantity = 1;
     expect(transaction.name).toBe("new_name");
     expect(transaction.value).toBe(99.98);
     expect(transaction.direction).toBe(TransactionDirection.OUT);
     expect(transaction.when).toEqual(new Date("2010-02-02"));
     expect(transaction.description).toBe("updated_description");
+    expect(transaction.currency).toBe(TransactionCurrency.BRL);
+    expect(transaction.quantity).toBe(1);
   });
 
   test("validate transaction instance", () => {
@@ -61,7 +70,9 @@ describe("success", () => {
     expect(transaction.when).toEqual(input.when);
     expect(transaction.categories).toEqual(categories);
     expect(transaction.userId).toBe(input.userId);
-    expect(transaction.description).toBe(transaction.description);
+    expect(transaction.description).toBe(input.description);
+    expect(transaction.currency).toBe(input.currency);
+    expect(transaction.quantity).toBe(input.quantity);
   });
 
   test("associate user to transaction", () => {

@@ -11,6 +11,8 @@ export default class Transaction {
   private _categories: Set<Category>;
   private _userId?: string;
   private _description?: string;
+  private _currency?: string;
+  private _quantity?: number;
 
   constructor(
     id: string,
@@ -22,6 +24,8 @@ export default class Transaction {
     updatedAt?: Date,
     userId?: string,
     description?: string,
+    currency: TransactionCurrency = TransactionCurrency.BRL,
+    quantity: number = 1,
   ) {
     this._id = id;
     this._name = name;
@@ -33,6 +37,8 @@ export default class Transaction {
     this._updatedAt = updatedAt;
     this._userId = userId;
     this._description = description;
+    this._currency = currency;
+    this._quantity = quantity;
 
     this.isValid();
   }
@@ -82,6 +88,18 @@ export default class Transaction {
   set description(x: string) {
     this._description = x;
   }
+  get currency() {
+    return this._currency || "";
+  }
+  set currency(x: string) {
+    this._currency = x;
+  }
+  get quantity() {
+    return this._quantity || 1;
+  }
+  set quantity(x: number) {
+    this._quantity = x;
+  }
 
   associateUser(id: string) {
     this._userId = id;
@@ -108,4 +126,10 @@ export default class Transaction {
 export enum TransactionDirection {
   IN = "in",
   OUT = "out",
+}
+
+export enum TransactionCurrency {
+  BRL = "R$",
+  USD = "$",
+  EUR = "£",
 }
