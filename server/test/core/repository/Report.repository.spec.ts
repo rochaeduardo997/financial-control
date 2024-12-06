@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
 import Category from "../../../src/core/entity/Category";
-import Transaction from "../../../src/core/entity/Transaction";
+import Transaction, {
+  TransactionDirection,
+} from "../../../src/core/entity/Transaction";
 import User from "../../../src/core/entity/User";
 import instanceSequelize from "../../../src/infra/database/sequelize/instance";
 import RepositoryFactory from "../../../src/infra/factory/sequelize/Repository.factory";
@@ -44,6 +46,7 @@ async function createCategories(rFactory: RepositoryFactory) {
 }
 async function createTransactions(rFactory: RepositoryFactory) {
   const transactionRepository = rFactory.transaction();
+  transactions[0].direction = TransactionDirection.OUT;
   transactions[0].associateUser(users[0].id);
   transactions[1].associateUser(users[0].id);
   transactions[2].associateUser(users[0].id);
@@ -126,6 +129,17 @@ describe("success", () => {
       start: new Date("2021-01-01"),
       end: new Date("2023-01-01"),
       names: ["NAME1"],
+    };
+    const result = await reportRepository.getAllBy(users[0].id, filters);
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe(transactions[0].id);
+  });
+
+  test("find all transactions filtering by direction", async () => {
+    const filters: TFilters = {
+      start: new Date("2021-01-01"),
+      end: new Date("2023-01-01"),
+      direction: TransactionDirection.OUT,
     };
     const result = await reportRepository.getAllBy(users[0].id, filters);
     expect(result).toHaveLength(1);

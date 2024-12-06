@@ -88,6 +88,14 @@ export default class ReportRepository implements IReportRepository {
 
     if (filters.names?.length)
       where = this.makeLikeArrayFilter(where, filters.names, "t.name");
+
+    if (filters.direction)
+      where = this.makeLikeArrayFilter(
+        where,
+        [filters.direction],
+        "t.direction",
+      );
+
     return where;
   }
 
