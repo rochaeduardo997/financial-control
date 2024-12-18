@@ -48,6 +48,7 @@ class ReportService {
             undefined,
             undefined,
             transaction.description,
+            transaction.currency,
           ),
         );
       return transactions;

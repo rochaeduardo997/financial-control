@@ -23,7 +23,10 @@ import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import Category from "../../../../../../../server/src/core/entity/Category";
 import { TFilters } from "../../../../../../../server/src/core/repository/ReportRepository.interface";
-import { TransactionDirection } from "../../../../../../../server/src/core/entity/Transaction";
+import {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../../../../../../../server/src/core/entity/Transaction";
 
 type Props = {
   onFilter: (filters: TFilters) => void;
@@ -41,6 +44,15 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
   const [valueBetween, setValueBetween] = useState<number[]>([0, 0]);
   const [categoriesId, setCategoriesId] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [currency, setCurrency] = useState<TransactionCurrency>(
+    TransactionCurrency.BRL,
+  );
+  const [currencies] = useState<TransactionCurrency[]>([
+    TransactionCurrency.BRL,
+    TransactionCurrency.EUR,
+    TransactionCurrency.GPB,
+    TransactionCurrency.USD,
+  ]);
 
   useEffect(() => {
     if (categories.length) return;
@@ -75,6 +87,7 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
               names,
               valueBetween: _valueBetween,
               direction,
+              currency,
             });
           }}
         >
@@ -162,7 +175,33 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
                   </Grid>
                   <Grid size={{ xs: 12, md: 6 }}>
                     <Grid container spacing={1}>
-                      <Grid size={{ xs: 12, md: 6 }}>
+                      <Grid size={{ xs: 4, md: 2 }}>
+                        <FormControl fullWidth>
+                          <InputLabel id="currency_label_id">
+                            {intl.formatMessage({
+                              id: "TRANSACTION.TABLE.CURRENCY.HEADER",
+                            })}
+                          </InputLabel>
+                          <Select
+                            labelId="categories_label_id"
+                            id="demo-simple-select"
+                            value={currency}
+                            label={intl.formatMessage({
+                              id: "TRANSACTION.TABLE.CURRENCY.HEADER",
+                            })}
+                            onChange={(e) =>
+                              setCurrency(e.target.value as TransactionCurrency)
+                            }
+                          >
+                            {(currencies || []).map((c) => (
+                              <MenuItem key={c} value={c}>
+                                {c}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 5 }}>
                         <TextField
                           id="value_input"
                           label={intl.formatMessage({
@@ -190,7 +229,7 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
                           }}
                         />
                       </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
+                      <Grid size={{ xs: 12, md: 5 }}>
                         <TextField
                           id="value_input"
                           label={intl.formatMessage({
