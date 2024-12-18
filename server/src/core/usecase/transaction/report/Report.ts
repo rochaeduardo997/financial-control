@@ -1,4 +1,7 @@
-import { TransactionDirection } from "../../../entity/Transaction";
+import {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../../../entity/Transaction";
 import IReportRepository, {
   TFilters,
 } from "../../../repository/ReportRepository.interface";
@@ -12,6 +15,7 @@ type TOutput = {
   when: Date;
   categoriesId?: string[];
   description?: string;
+  currency: TransactionCurrency;
 };
 
 class ReportHandler {
@@ -36,6 +40,7 @@ class ReportHandler {
           when: t.when,
           categoriesId: (t.categories || []).map((c) => c.id),
           description: t.description,
+          currency: t.currency,
         });
       }
 

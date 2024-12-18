@@ -7,6 +7,7 @@ import ITransactionRepository from "../../../core/repository/TransactionReposito
 import CategoryRepository from "./Category.repository";
 import TransactionModel from "./models/Transaction.model";
 import TransactionCategoryRelationModel from "./models/TransactionCategoryRelation.model";
+import InstanceTransaction from "../../../@shared/sequelize/InstanceTransaction";
 
 export default class TransactionRepository implements ITransactionRepository {
   private TRANSACTION_MODEL;
@@ -45,7 +46,7 @@ export default class TransactionRepository implements ITransactionRepository {
         input.categories,
         transaction,
       );
-      const result = this.instanceTransactionFrom(transactions);
+      const result = InstanceTransaction(transactions);
       for (const c of categories) result.associateCategory(c);
       await transaction.commit();
       return result;
@@ -70,7 +71,7 @@ export default class TransactionRepository implements ITransactionRepository {
       const isFromRespectiveUser = transaction.fk_user_id === userId;
       if (!isFromRespectiveUser)
         throw new Error("cannot access transaction from another user");
-      const result = this.instanceTransactionFrom(transaction);
+      const result = InstanceTransaction(transaction);
       for (const c of transaction.categories) {
         const category = await this.categoryRepository.getBy(
           c.fk_category_id,
@@ -119,7 +120,7 @@ export default class TransactionRepository implements ITransactionRepository {
         limit,
         order: [["createdAt", "ASC"]],
       });
-      for (let t of transactions) result.push(this.instanceTransactionFrom(t));
+      for (let t of transactions) result.push(InstanceTransaction(t));
       return result;
     } catch (err: any) {
       console.error(err);
@@ -226,7 +227,7 @@ export default class TransactionRepository implements ITransactionRepository {
         where: { id },
       });
       if (!result) throw new Error();
-      return this.instanceTransactionFrom(result);
+      return InstanceTransaction(result);
     } catch (err: any) {
       console.error(err);
       throw new Error(
@@ -235,21 +236,5 @@ export default class TransactionRepository implements ITransactionRepository {
           "failed on get transaction by id",
       );
     }
-  }
-
-  private instanceTransactionFrom(sequelizeResponse: any) {
-    return new Transaction(
-      sequelizeResponse.id,
-      sequelizeResponse.name,
-      sequelizeResponse.value,
-      sequelizeResponse.direction,
-      new Date(sequelizeResponse.when),
-      new Date(sequelizeResponse.createdAt),
-      new Date(sequelizeResponse.updatedAt),
-      sequelizeResponse.fk_user_id,
-      sequelizeResponse.description,
-      sequelizeResponse.currency,
-      sequelizeResponse.quantity,
-    );
   }
 }

@@ -6,6 +6,7 @@ import IReportRepository, {
 import ICategoryRepository from "../../../core/repository/CategoryRepository.interface";
 import CategoryRepository from "./Category.repository";
 import Category from "../../../core/entity/Category";
+import InstanceTransaction from "../../../@shared/sequelize/InstanceTransaction";
 
 export default class ReportRepository implements IReportRepository {
   private categoryRepository: ICategoryRepository;
@@ -179,7 +180,7 @@ export default class ReportRepository implements IReportRepository {
   ) {
     const result: Transaction[] = [];
     for (const t of transactions as any) {
-      const transaction = this.instanceTransactionFrom(t);
+      const transaction = InstanceTransaction(t);
 
       const tCategoriesId: any = categoriesId.filter((c: any) => c.id === t.id);
       for (const tCId of tCategoriesId) {
@@ -191,19 +192,5 @@ export default class ReportRepository implements IReportRepository {
       result.push(transaction);
     }
     return result;
-  }
-
-  private instanceTransactionFrom(sequelizeResponse: any) {
-    return new Transaction(
-      sequelizeResponse.id,
-      sequelizeResponse.name,
-      sequelizeResponse.value,
-      sequelizeResponse.direction,
-      new Date(sequelizeResponse.when),
-      new Date(sequelizeResponse.createdAt),
-      new Date(sequelizeResponse.updatedAt),
-      sequelizeResponse.fk_user_id,
-      sequelizeResponse.description,
-    );
   }
 }

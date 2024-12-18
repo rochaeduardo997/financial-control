@@ -114,6 +114,7 @@ describe("success", () => {
     expect(body?.result?.[0].categoriesId).toEqual([
       transactions[1].categories[0].id,
     ]);
+    expect(body?.result?.[0].currency).toBe(transactions[1].currency);
     expect(status).toBe(200);
   });
 
@@ -136,6 +137,7 @@ describe("success", () => {
       transactions[0].categories[0].id,
       transactions[0].categories[1].id,
     ]);
+    expect(body?.result?.[0].currency).toBe(transactions[0].currency);
     expect(body?.result?.[1].id).toBeDefined();
     expect(body?.result?.[1].name).toBe(transactions[1].name);
     expect(body?.result?.[1].value).toBe(transactions[1].value);
@@ -144,6 +146,7 @@ describe("success", () => {
     expect(body?.result?.[1].categoriesId).toEqual([
       transactions[1].categories[0].id,
     ]);
+    expect(body?.result?.[1].currency).toBe(transactions[1].currency);
     expect(body?.result?.[2].id).toBeDefined();
     expect(body?.result?.[2].name).toBe(transactions[2].name);
     expect(body?.result?.[2].value).toBe(transactions[2].value);
@@ -152,6 +155,7 @@ describe("success", () => {
     expect(body?.result?.[2].categoriesId).toEqual([
       transactions[2].categories[0].id,
     ]);
+    expect(body?.result?.[2].currency).toBe(transactions[2].currency);
     expect(status).toBe(200);
   });
 
