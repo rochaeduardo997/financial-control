@@ -11,6 +11,10 @@ import BlankCard from "../../shared/BlankCard";
 import BlankTable from "../../shared/BlankTable";
 import TableCustomToolbar from "./TableCustomToolbar";
 import MoreInformations from "./MoreInformations";
+import Throttle from "@/utils/Throttle";
+import Category from "../../../../../../../server/src/core/entity/Category";
+
+const throttle = new Throttle(1000);
 
 const Table = () => {
   const intl = useIntl();
@@ -23,12 +27,13 @@ const Table = () => {
     page: 0,
     pageSize: 10,
   });
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const [filters, setFilters] = useState<TFilters | undefined>();
 
   useEffect(() => {
-    getReportCount();
-    getReport(paginationModel.page, paginationModel.pageSize);
+    throttle.execute(getReportCount);
+    throttle.execute(getReport, paginationModel.page, paginationModel.pageSize);
   }, [filters]);
 
   useEffect(() => {
@@ -155,9 +160,11 @@ const Table = () => {
           isLoading={isLoading}
           CustomToolbarContent={
             <TableCustomToolbar
-              onFilter={(filters: TFilters) => {
+              onFilter={(filters: TFilters, cs: Category[]) => {
+                setCategories(cs);
                 setFilters(filters);
               }}
+              _categories={categories}
               filters={filters}
             />
           }

@@ -27,13 +27,15 @@ import {
   TransactionCurrency,
   TransactionDirection,
 } from "../../../../../../../server/src/core/entity/Transaction";
+import Throttle from "@/utils/Throttle";
 
 type Props = {
-  onFilter: (filters: TFilters) => void;
+  onFilter: (filters: TFilters, cs: Category[]) => void;
+  _categories: Category[];
   filters?: TFilters;
 };
 
-const TableCustomToolbar = ({ onFilter, filters }: Props) => {
+const TableCustomToolbar = ({ onFilter, filters, _categories }: Props) => {
   const intl = useIntl();
   const categoryService = new CategoryService();
 
@@ -50,7 +52,7 @@ const TableCustomToolbar = ({ onFilter, filters }: Props) => {
   const [categoriesId, setCategoriesId] = useState<string[]>(
     filters?.categoriesId || [],
   );
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>(_categories || []);
   const [currency, setCurrency] = useState<TransactionCurrency>(
     filters?.currency || TransactionCurrency.BRL,
   );
@@ -86,17 +88,19 @@ const TableCustomToolbar = ({ onFilter, filters }: Props) => {
           color="success"
           startIcon={<IconCheck />}
           onClick={() => {
-            console.log(1);
             const _valueBetween = valueBetween[1] ? valueBetween : undefined;
-            onFilter({
-              start,
-              end,
-              categoriesId,
-              names,
-              valueBetween: _valueBetween,
-              direction,
-              currency,
-            });
+            onFilter(
+              {
+                start,
+                end,
+                categoriesId,
+                names,
+                valueBetween: _valueBetween,
+                direction,
+                currency,
+              },
+              categories,
+            );
           }}
         >
           {intl.formatMessage({ id: "GENERAL.FILTER" })}
