@@ -166,11 +166,20 @@ const TableCustomToolbar = ({ onFilter, filters, _categories }: Props) => {
                           id="direction_input"
                           value={direction}
                           required
-                          label="Age"
+                          label={intl.formatMessage({
+                            id: "TRANSACTION.TABLE.DIRECTION.HEADER",
+                          })}
                           onChange={(e) =>
                             setDirection(e.target.value as TransactionDirection)
                           }
                         >
+                          <MenuItem value="">
+                            <em>
+                              {intl.formatMessage({
+                                id: "GENERAL.DOESNT_SELECTED",
+                              })}
+                            </em>
+                          </MenuItem>
                           <MenuItem value={TransactionDirection.IN}>
                             {intl.formatMessage({
                               id: "TRANSACTION.TABLE.DIRECTION.VALUE.IN",

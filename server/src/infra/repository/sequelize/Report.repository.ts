@@ -118,7 +118,7 @@ export default class ReportRepository implements IReportRepository {
     if (filters.valueBetween?.length) {
       const v1 = filters.valueBetween[0] || 0;
       const v2 = filters.valueBetween[1] || v1 + 1;
-      where = where.concat(`AND t.value BETWEEN ${v1} AND ${v2}`);
+      where = where.concat(`AND t.value BETWEEN ${v1} AND ${v2} `);
     }
 
     if (filters.names?.length)
