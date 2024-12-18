@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import Category from "../../../src/core/entity/Category";
 import Transaction, {
+  TransactionCurrency,
   TransactionDirection,
 } from "../../../src/core/entity/Transaction";
 import User from "../../../src/core/entity/User";
@@ -62,6 +63,16 @@ async function createTransactions(rFactory: RepositoryFactory) {
 }
 
 describe("success", () => {
+  test("find all transactions filtering by currency", async () => {
+    const filters: TFilters = {
+      start: new Date("2021-01-01"),
+      end: new Date("2023-01-01"),
+      currency: TransactionCurrency.EUR,
+    };
+    const result = await reportRepository.getAllCountBy(users[0].id, filters);
+    expect(result).toBe(1);
+  });
+
   test("find all transactions filtering only by date(start and end)", async () => {
     const filters: TFilters = {
       start: new Date("2021-01-01"),

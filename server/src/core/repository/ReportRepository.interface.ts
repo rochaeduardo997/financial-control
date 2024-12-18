@@ -1,4 +1,7 @@
-import Transaction, { TransactionDirection } from "../entity/Transaction";
+import Transaction, {
+  TransactionCurrency,
+  TransactionDirection,
+} from "../entity/Transaction";
 
 export type TFilters = {
   start: Date;
@@ -7,6 +10,7 @@ export type TFilters = {
   names?: string[];
   valueBetween?: number[];
   direction?: TransactionDirection;
+  currency?: TransactionCurrency;
 };
 
 export default interface IReportRepository {
