@@ -3,9 +3,10 @@ import { Sequelize } from "sequelize-typescript";
 import supertest from "supertest";
 import TestAgent from "supertest/lib/agent";
 import Category from "../../../../src/core/entity/Category";
-import Transaction from "../../../../src/core/entity/Transaction";
+import Transaction, {
+  TransactionCurrency,
+} from "../../../../src/core/entity/Transaction";
 import User from "../../../../src/core/entity/User";
-import ITransactionRepository from "../../../../src/core/repository/TransactionRepository.interface";
 import CacheFake from "../../../../src/infra/cache/cache.fake";
 import ICache from "../../../../src/infra/cache/cache.interface";
 import ReportController from "../../../../src/infra/controller/transaction/Report.controller";
@@ -91,6 +92,28 @@ describe("success", () => {
         end: new Date("2023-01-01"),
       });
     expect(body?.result).toBe(3);
+    expect(status).toBe(200);
+  });
+
+  test("find all transactions filtering by currency", async () => {
+    const { status, body } = await request
+      .post("/api/v1/transactions/report")
+      .set("Authorization", token)
+      .send({
+        ...input,
+        start: new Date("2021-01-01"),
+        end: new Date("2023-01-01"),
+        currency: TransactionCurrency.EUR,
+      });
+    expect(body?.result).toHaveLength(1);
+    expect(body?.result?.[0].id).toBeDefined();
+    expect(body?.result?.[0].name).toBe(transactions[1].name);
+    expect(body?.result?.[0].value).toBe(transactions[1].value);
+    expect(body?.result?.[0].direction).toBe(transactions[1].direction);
+    expect(body?.result?.[0].when).toEqual(transactions[1].when.toISOString());
+    expect(body?.result?.[0].categoriesId).toEqual([
+      transactions[1].categories[0].id,
+    ]);
     expect(status).toBe(200);
   });
 

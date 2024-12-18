@@ -1,7 +1,9 @@
 import { Sequelize } from "sequelize-typescript";
 import instanceSequelize from "../../../../../src/infra/database/sequelize/instance";
 import RepositoryFactory from "../../../../../src/infra/factory/sequelize/Repository.factory";
-import Transaction from "../../../../../src/core/entity/Transaction";
+import Transaction, {
+  TransactionCurrency,
+} from "../../../../../src/core/entity/Transaction";
 import User from "../../../../../src/core/entity/User";
 import Category from "../../../../../src/core/entity/Category";
 import userSeed from "../../../../seed/User.seed";
@@ -96,6 +98,20 @@ describe("success", () => {
     expect(result[2].when).toEqual(transactions[2].when);
     expect(result[2].categoriesId).toEqual([transactions[2].categories[0].id]);
     expect(result[2].description).toEqual(transactions[2].description);
+  });
+
+  test("find all transactions filtering by currency", async () => {
+    const filters: TFilters = {
+      start: new Date("2021-01-01"),
+      end: new Date("2023-01-01"),
+      currency: TransactionCurrency.EUR,
+    };
+    const result = await reportHandler.execute({
+      userId: users[0].id,
+      ...filters,
+    });
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe(transactions[1].id);
   });
 
   test("find all transactions filtering by category", async () => {
