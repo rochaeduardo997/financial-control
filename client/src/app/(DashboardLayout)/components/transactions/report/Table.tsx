@@ -158,6 +158,7 @@ const Table = () => {
               onFilter={(filters: TFilters) => {
                 setFilters(filters);
               }}
+              filters={filters}
             />
           }
         />

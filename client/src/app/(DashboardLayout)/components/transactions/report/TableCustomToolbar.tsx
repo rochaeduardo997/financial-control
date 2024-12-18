@@ -30,22 +30,29 @@ import {
 
 type Props = {
   onFilter: (filters: TFilters) => void;
+  filters?: TFilters;
 };
 
-const TableCustomToolbar = ({ onFilter }: Props) => {
+const TableCustomToolbar = ({ onFilter, filters }: Props) => {
   const intl = useIntl();
   const categoryService = new CategoryService();
 
-  const [start, setStart] = useState(new Date());
-  const [end, setEnd] = useState(new Date());
+  const [start, setStart] = useState(filters?.start || new Date());
+  const [end, setEnd] = useState(filters?.end || new Date());
 
-  const [direction, setDirection] = useState<TransactionDirection>();
-  const [names, setNames] = useState<string[]>([]);
-  const [valueBetween, setValueBetween] = useState<number[]>([0, 0]);
-  const [categoriesId, setCategoriesId] = useState<string[]>([]);
+  const [direction, setDirection] = useState<TransactionDirection | undefined>(
+    filters?.direction,
+  );
+  const [names, setNames] = useState<string[]>(filters?.names || []);
+  const [valueBetween, setValueBetween] = useState<number[]>(
+    filters?.valueBetween || [0, 0],
+  );
+  const [categoriesId, setCategoriesId] = useState<string[]>(
+    filters?.categoriesId || [],
+  );
   const [categories, setCategories] = useState<Category[]>([]);
   const [currency, setCurrency] = useState<TransactionCurrency>(
-    TransactionCurrency.BRL,
+    filters?.currency || TransactionCurrency.BRL,
   );
   const [currencies] = useState<TransactionCurrency[]>([
     TransactionCurrency.BRL,
@@ -79,6 +86,7 @@ const TableCustomToolbar = ({ onFilter }: Props) => {
           color="success"
           startIcon={<IconCheck />}
           onClick={() => {
+            console.log(1);
             const _valueBetween = valueBetween[1] ? valueBetween : undefined;
             onFilter({
               start,
