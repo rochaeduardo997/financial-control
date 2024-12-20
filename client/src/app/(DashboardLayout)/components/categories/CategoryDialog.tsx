@@ -51,7 +51,6 @@ const CategoryDialog = ({ title, category, open, onClose }: Props) => {
       onClose();
     } catch (err) {
       console.error(err);
-    } finally {
     }
   };
 

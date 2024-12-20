@@ -16,6 +16,13 @@
   "GENERAL.NAMES": "Nomes",
   "GENERAL.VIEWING": "Visualizando",
   "GENERAL.DOESNT_SELECTED": "Não selecionado",
+  "GENERAL.LOGIN.USERNAME_EMAIL": "Usuário/E-mail",
+  "GENERAL.PASSWORD": "Senha",
+
+  "LOGIN.NEW_HERE": "Novo por aqui?",
+  "LOGIN.CREATE_ACCOUNT": "Criar uma conta",
+  "LOGIN.SIGN_IN": "Entrar",
+  "LOGIN.FORGOT_PASSWORD": "Esqueceu a senha?",
 
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.OVERVIEW": "Visão geral",
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT": "Relatório",

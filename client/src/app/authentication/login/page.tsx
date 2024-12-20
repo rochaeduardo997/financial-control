@@ -5,8 +5,11 @@ import { Grid, Box, Card, Stack, Typography } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthLogin from "../auth/AuthLogin";
+import { useIntl } from "react-intl";
 
-const Login2 = () => {
+const Login = () => {
+  const intl = useIntl();
+
   return (
     <PageContainer title="Login" description="this is Login page">
       <Box
@@ -48,16 +51,16 @@ const Login2 = () => {
                 <Logo />
               </Box>
               <AuthLogin
-                subtext={
-                  <Typography
-                    variant="subtitle1"
-                    textAlign="center"
-                    color="textSecondary"
-                    mb={1}
-                  >
-                    Your Social Campaigns
-                  </Typography>
-                }
+                // subtext={
+                // <Typography
+                //   variant="subtitle1"
+                //   textAlign="center"
+                //   color="textSecondary"
+                //   mb={1}
+                // >
+                //   Your Social Campaigns
+                // </Typography>
+                // }
                 subtitle={
                   <Stack
                     direction="row"
@@ -70,7 +73,7 @@ const Login2 = () => {
                       variant="h6"
                       fontWeight="500"
                     >
-                      New to Modernize?
+                      {intl.formatMessage({ id: "LOGIN.NEW_HERE" })}
                     </Typography>
                     <Typography
                       component={Link}
@@ -81,7 +84,7 @@ const Login2 = () => {
                         color: "primary.main",
                       }}
                     >
-                      Create an account
+                      {intl.formatMessage({ id: "LOGIN.CREATE_ACCOUNT" })}
                     </Typography>
                   </Stack>
                 }
@@ -93,4 +96,4 @@ const Login2 = () => {
     </PageContainer>
   );
 };
-export default Login2;
+export default Login;

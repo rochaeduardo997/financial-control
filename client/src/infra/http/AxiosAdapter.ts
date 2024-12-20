@@ -6,7 +6,7 @@ class AxiosAdapter implements IHTTP {
     axios.defaults.headers.Accept = "application/json";
     axios.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem(`bearer_token`);
+        const token = localStorage.getItem(`token`);
         config.headers.Authorization = `Bearer ${token}`;
         return config;
       },
@@ -17,7 +17,7 @@ class AxiosAdapter implements IHTTP {
       (value) => value,
       (err) => {
         if (err?.response?.status === 401) {
-          localStorage.removeItem(`bearer_token`);
+          localStorage.removeItem(`token`);
           localStorage.removeItem(`user_informations`);
           window.location.href = "/authentication/login";
         }
