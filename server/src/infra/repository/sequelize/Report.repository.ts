@@ -15,8 +15,8 @@ export default class ReportRepository implements IReportRepository {
   constructor(private sequelize: Sequelize) {
     this.categoryRepository = new CategoryRepository(this.sequelize);
     this.TABLE_JOINS = `FROM transaction_category_relation tcr
-      JOIN transactions t ON tcr.fk_transaction_id = t.id
-      JOIN categories c ON tcr.fk_category_id = c.id
+      FULL JOIN transactions t ON tcr.fk_transaction_id = t.id
+      FULL JOIN categories c ON tcr.fk_category_id = c.id
     `;
   }
 
@@ -86,11 +86,10 @@ export default class ReportRepository implements IReportRepository {
   ) {
     let where = `WHERE
       "when" BETWEEN '${new Date(filters.start).toISOString()}' AND '${new Date(filters.end).toISOString()}'
-      AND tcr.fk_user_id = '${userId}'
+      AND t.fk_user_id = '${userId}'
     `;
 
     where = this.makeFilters(where, filters);
-
     if (isCount)
       return this.sequelize.query({
         query: `
