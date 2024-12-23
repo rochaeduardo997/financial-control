@@ -1,7 +1,5 @@
 import IHTTP from "../http/HTTP.interface";
 import HTTP from "../http/HTTP.provider";
-import Transaction from "../../../../server/src/core/entity/Transaction";
-import { TFilters } from "../../../../server/src/core/repository/ReportRepository.interface";
 
 type TLoginOutput = {
   id: string;

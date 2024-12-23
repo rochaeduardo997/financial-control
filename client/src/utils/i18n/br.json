@@ -17,12 +17,18 @@
   "GENERAL.VIEWING": "Visualizando",
   "GENERAL.DOESNT_SELECTED": "Não selecionado",
   "GENERAL.LOGIN.USERNAME_EMAIL": "Usuário/E-mail",
+  "GENERAL.NAME": "Nome",
+  "GENERAL.USERNAME": "Nome de usuário",
+  "GENERAL.EMAIL": "E-mail",
   "GENERAL.PASSWORD": "Senha",
 
   "LOGIN.NEW_HERE": "Novo por aqui?",
   "LOGIN.CREATE_ACCOUNT": "Criar uma conta",
   "LOGIN.SIGN_IN": "Entrar",
   "LOGIN.FORGOT_PASSWORD": "Esqueceu a senha?",
+
+  "REGISTER.REGISTER": "Registrar",
+  "REGISTER.ALREADY_HAVE_ACCOUNT": "Já tem uma conta?",
 
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.OVERVIEW": "Visão geral",
   "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT": "Relatório",

@@ -72,7 +72,7 @@ const TransactionDialog = ({
     transaction?.currency || TransactionCurrency.BRL,
   );
   const [quantity, setQuantity] = useState<number | undefined>(
-    transaction?.quantity,
+    transaction?.quantity || 1,
   );
 
   useEffect(() => {

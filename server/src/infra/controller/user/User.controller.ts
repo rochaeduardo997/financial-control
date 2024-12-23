@@ -23,8 +23,9 @@ class UserController {
   ) {
     const BASE_URL_PATH = "/users";
 
-    httpAdapter.addRoute("post", "/logout", this.LogoutRoute.bind(this));
+    httpAdapter.addRoute("get", "/logout", this.LogoutRoute.bind(this));
     httpAdapter.addRoute("post", "/login", this.LoginRoute.bind(this));
+    httpAdapter.addRoute("post", "/register", this.CreateRoute.bind(this));
     httpAdapter.addRoute(
       "get",
       `${BASE_URL_PATH}/enable/:id`,
@@ -34,11 +35,6 @@ class UserController {
       "get",
       `${BASE_URL_PATH}/disable/:id`,
       this.DisableByIdRoute.bind(this),
-    );
-    httpAdapter.addRoute(
-      "post",
-      `${BASE_URL_PATH}`,
-      this.CreateRoute.bind(this),
     );
     httpAdapter.addRoute(
       "get",

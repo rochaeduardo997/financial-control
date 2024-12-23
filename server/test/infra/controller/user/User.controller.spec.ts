@@ -49,7 +49,7 @@ describe("success", () => {
   test("logout", async () => {
     await createHandler.execute({ ...input });
     const { status, body } = await request
-      .post("/api/v1/logout")
+      .get("/api/v1/logout")
       .set("Authorization", token);
     expect(body?.result).toBe(true);
     expect(status).toBe(200);
@@ -105,7 +105,7 @@ describe("success", () => {
 
   test("create", async () => {
     const { status, body } = await request
-      .post("/api/v1/users")
+      .post("/api/v1/register")
       .set("Authorization", token)
       .send(input);
     expect(body?.result?.id).toBeDefined();
@@ -204,9 +204,8 @@ describe("fail", () => {
 
   test("fail on request without token", async () => {
     const { status, body } = await request
-      .post("/api/v1/logout")
+      .get("/api/v1/logout")
       .set("Authorization", "invalid_token");
-    console.log(status, body);
     expect(body?.result).toBe("invalid token");
     expect(status).toBe(401);
   });
@@ -231,7 +230,7 @@ describe("fail", () => {
 
   test("fail on create without email", async () => {
     const { status, body } = await request
-      .post("/api/v1/users")
+      .post("/api/v1/register")
       .set("Authorization", token)
       .send({ ...input, email: "email" });
     expect(body?.result).toBe("invalid email format");
@@ -240,7 +239,7 @@ describe("fail", () => {
 
   test("fail on create with invalid email format", async () => {
     const { status, body } = await request
-      .post("/api/v1/users")
+      .post("/api/v1/register")
       .set("Authorization", token)
       .send({ ...input, email: "invalid" });
     expect(body?.result).toBe("invalid email format");
@@ -250,7 +249,7 @@ describe("fail", () => {
   test("fail on create with same email", async () => {
     await createHandler.execute({ ...input });
     const { status, body } = await request
-      .post("/api/v1/users")
+      .post("/api/v1/register")
       .set("Authorization", token)
       .send({ ...input });
     expect(body?.result).toBe("email must be unique");
@@ -260,7 +259,7 @@ describe("fail", () => {
   test("fail on create with same username", async () => {
     await createHandler.execute({ ...input });
     const { status, body } = await request
-      .post("/api/v1/users")
+      .post("/api/v1/register")
       .set("Authorization", token)
       .send({ ...input, email: "email2@email.com" });
     expect(body?.result).toBe("username must be unique");
