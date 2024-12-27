@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import {
   Avatar,
   Box,
@@ -10,16 +9,32 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-
-import { IconListCheck, IconMail, IconUser } from "@tabler/icons-react";
+import { useIntl } from "react-intl";
+import { IconUser } from "@tabler/icons-react";
+import LogoutService from "@/infra/service/Logout.service";
 
 const Profile = () => {
-  const [anchorEl2, setAnchorEl2] = useState(null);
-  const handleClick2 = (event: any) => {
-    setAnchorEl2(event.currentTarget);
+  const intl = useIntl();
+  const logoutService = new LogoutService();
+
+  const [name] = useState(localStorage.getItem("name"));
+  const [username] = useState(localStorage.getItem("username"));
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
   };
-  const handleClose2 = () => {
-    setAnchorEl2(null);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutService.logout();
+      localStorage.clear();
+      window.location.href = "/authentication/login";
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -31,11 +46,11 @@ const Profile = () => {
         aria-controls="msgs-menu"
         aria-haspopup="true"
         sx={{
-          ...(typeof anchorEl2 === "object" && {
+          ...(typeof anchorEl === "object" && {
             color: "primary.main",
           }),
         }}
-        onClick={handleClick2}
+        onClick={handleClick}
       >
         <Avatar
           src="/images/profile/user-1.jpg"
@@ -51,10 +66,10 @@ const Profile = () => {
       {/* ------------------------------------------- */}
       <Menu
         id="msgs-menu"
-        anchorEl={anchorEl2}
+        anchorEl={anchorEl}
         keepMounted
-        open={Boolean(anchorEl2)}
-        onClose={handleClose2}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         sx={{
@@ -70,18 +85,17 @@ const Profile = () => {
           <ListItemText
           // onClick={() => (window.location.href = "/user/my_profile")}
           >
-            My Profile
+            {intl.formatMessage({ id: "GENERAL.MY_PROFILE" })}
           </ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
           <Button
-            href="/authentication/login"
             variant="outlined"
             color="primary"
-            component={Link}
             fullWidth
+            onClick={handleLogout}
           >
-            Logout
+            {intl.formatMessage({ id: "GENERAL.LOGOUT" })}
           </Button>
         </Box>
       </Menu>

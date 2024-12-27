@@ -66,7 +66,7 @@ class UserController {
       const result = await logoutHandler.execute(req.user);
       return { statusCode: 200, result };
     } catch (err: any) {
-      console.error("failed on route: user login, ", err);
+      console.error("failed on route: user logout, ", err);
       throw new Error(err.message);
     }
   }
