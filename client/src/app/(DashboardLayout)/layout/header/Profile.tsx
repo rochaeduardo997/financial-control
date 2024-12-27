@@ -85,15 +85,6 @@ const Profile = () => {
           </ListItemIcon>
           <ListItemText onClick={() => setMyProfileDialog(true)}>
             {intl.formatMessage({ id: "GENERAL.MY_PROFILE" })}
-            {myProfileDialog ? (
-              <MyProfileDialog
-                title={intl.formatMessage({ id: "GENERAL.EDIT" })}
-                open={myProfileDialog}
-                onClose={() => setMyProfileDialog(false)}
-              />
-            ) : (
-              <></>
-            )}
           </ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
@@ -107,6 +98,16 @@ const Profile = () => {
           </Button>
         </Box>
       </Menu>
+
+      {myProfileDialog ? (
+        <MyProfileDialog
+          title={intl.formatMessage({ id: "GENERAL.EDIT" })}
+          open={myProfileDialog}
+          onClose={() => setMyProfileDialog(false)}
+        />
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };
