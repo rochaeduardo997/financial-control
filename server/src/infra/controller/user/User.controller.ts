@@ -27,6 +27,11 @@ class UserController {
     httpAdapter.addRoute("post", "/login", this.LoginRoute.bind(this));
     httpAdapter.addRoute("post", "/register", this.CreateRoute.bind(this));
     httpAdapter.addRoute(
+      "put",
+      "/by_token_id",
+      this.UpdateByTokenIdRoute.bind(this),
+    );
+    httpAdapter.addRoute(
       "get",
       `${BASE_URL_PATH}/enable/:id`,
       this.EnableByIdRoute.bind(this),
@@ -115,6 +120,21 @@ class UserController {
       return { statusCode: 201, result };
     } catch (err: any) {
       console.error("failed on route: user create, ", err);
+      throw new Error(err.message);
+    }
+  }
+
+  private async UpdateByTokenIdRoute(
+    req: any,
+    res: any,
+  ): Promise<TRouteResponse> {
+    try {
+      const { id } = req.user;
+      const updateById = new Update(this.userRepository);
+      const result = await updateById.execute({ ...req.body, id });
+      return { statusCode: 200, result };
+    } catch (err: any) {
+      console.error("failed on route: update token user by id", err);
       throw new Error(err.message);
     }
   }

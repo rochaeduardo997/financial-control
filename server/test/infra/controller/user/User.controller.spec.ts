@@ -12,6 +12,7 @@ import instanceSequelize from "../../../../src/infra/database/sequelize/instance
 import RepositoryFactory from "../../../../src/infra/factory/sequelize/Repository.factory";
 import ExpressAdapter from "../../../../src/infra/http/ExpressAdapter";
 import UserController from "../../../../src/infra/controller/user/User.controller";
+import userSeed from "../../../seed/User.seed";
 dotenv.config();
 
 let request: TestAgent;
@@ -135,6 +136,27 @@ describe("success", () => {
     expect(body.result?.username).toBe(input.username);
     expect(body.result?.name).toBe(input.name);
     expect(body.result?.email).toBe(input.email);
+    expect(status).toBe(200);
+  });
+
+  test("update by token user id with all fields", async () => {
+    const [user] = userSeed(1);
+    await userRepository.create(user);
+    const updateInput = {
+      email: "email_updated@email.com",
+      username: "username_updated",
+      name: "name_updated",
+      password: "password_updated",
+    };
+    const { status, body } = await request
+      .put(`/api/v1/by_token_id`)
+      .set("Authorization", token)
+      .send(updateInput);
+    console.log(body);
+    expect(body.result?.id).toBe(user.id);
+    expect(body.result?.username).toBe(updateInput.username);
+    expect(body.result?.name).toBe(updateInput.name);
+    expect(body.result?.email).toBe(updateInput.email);
     expect(status).toBe(200);
   });
 

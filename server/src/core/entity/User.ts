@@ -6,8 +6,8 @@ export default class User {
   private _password: string;
   private _status: boolean;
   private _role: UserRole;
-  private _createdAt: Date;
-  private _updatedAt: Date;
+  private _createdAt?: Date;
+  private _updatedAt?: Date;
 
   constructor(
     id: string,
@@ -17,8 +17,8 @@ export default class User {
     password: string,
     status: boolean = true,
     role: UserRole,
-    createdAt: Date,
-    updatedAt: Date,
+    createdAt?: Date,
+    updatedAt?: Date,
   ) {
     this._id = id;
     this._name = name;

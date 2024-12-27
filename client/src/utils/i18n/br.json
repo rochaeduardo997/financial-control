@@ -22,6 +22,7 @@
   "GENERAL.EMAIL": "E-mail",
   "GENERAL.PASSWORD": "Senha",
   "GENERAL.LOGOUT": "Sair",
+  "GENERAL.USER": "Usuário",
   "GENERAL.MY_PROFILE": "Meu perfil",
 
   "LOGIN.NEW_HERE": "Novo por aqui?",

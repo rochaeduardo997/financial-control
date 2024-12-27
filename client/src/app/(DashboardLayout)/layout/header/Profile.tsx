@@ -12,13 +12,14 @@ import {
 import { useIntl } from "react-intl";
 import { IconUser } from "@tabler/icons-react";
 import LogoutService from "@/infra/service/Logout.service";
+import CategoryDialog from "../../components/categories/CategoryDialog";
+import MyProfileDialog from "../../components/header/my_profile/MyProfileDialog";
 
 const Profile = () => {
   const intl = useIntl();
   const logoutService = new LogoutService();
 
-  const [name] = useState(localStorage.getItem("name"));
-  const [username] = useState(localStorage.getItem("username"));
+  const [myProfileDialog, setMyProfileDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -82,10 +83,17 @@ const Profile = () => {
           <ListItemIcon>
             <IconUser width={20} />
           </ListItemIcon>
-          <ListItemText
-          // onClick={() => (window.location.href = "/user/my_profile")}
-          >
+          <ListItemText onClick={() => setMyProfileDialog(true)}>
             {intl.formatMessage({ id: "GENERAL.MY_PROFILE" })}
+            {myProfileDialog ? (
+              <MyProfileDialog
+                title={intl.formatMessage({ id: "GENERAL.EDIT" })}
+                open={myProfileDialog}
+                onClose={() => setMyProfileDialog(false)}
+              />
+            ) : (
+              <></>
+            )}
           </ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
