@@ -13,11 +13,11 @@ export type TFilters = {
   currency?: TransactionCurrency;
 };
 
-export type TAnalitycByCategoryOutput = { [key: string]: number };
+export type TAnalyticByCategoryOutput = { [key: string]: number };
 
 export default interface IReportRepository {
   getAllCountBy(userId: string, filters: TFilters): Promise<number>;
-  getAnalyticByCategory(userId: string, filters: TFilters): Promise<TAnalitycByCategoryOutput>;
+  getAnalyticByCategory(userId: string, filters: TFilters): Promise<TAnalyticByCategoryOutput>;
   getAllBy(
     userId: string,
     filters: TFilters,

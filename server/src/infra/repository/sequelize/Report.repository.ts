@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import Transaction from "../../../core/entity/Transaction";
 import IReportRepository, {
-  TFilters, TAnalitycByCategoryOutput
+  TFilters, TAnalyticByCategoryOutput
 } from "../../../core/repository/ReportRepository.interface";
 import ICategoryRepository from "../../../core/repository/CategoryRepository.interface";
 import CategoryRepository from "./Category.repository";
@@ -45,7 +45,7 @@ export default class ReportRepository implements IReportRepository {
     }
   }
 
-  async getAnalyticByCategory(userId: string, filters: TFilters): Promise<TAnalitycByCategoryOutput> {
+  async getAnalyticByCategory(userId: string, filters: TFilters): Promise<TAnalyticByCategoryOutput> {
     try {
       const where = await this.prepareWhere(
         filters,
@@ -59,7 +59,7 @@ export default class ReportRepository implements IReportRepository {
         `,
         values: [],
       });
-      const result: TAnalitycByCategoryOutput = {};
+      const result: TAnalyticByCategoryOutput = {};
       for(const qR of queryResult) result[qR.category] = qR.value;
       return result;
     } catch (err: any) {
