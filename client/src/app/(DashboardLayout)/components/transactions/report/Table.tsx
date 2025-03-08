@@ -5,14 +5,15 @@ import { GridColDef } from "@mui/x-data-grid";
 import DayJS from "dayjs";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
-import Transaction from "../../../../../../../server/src/core/entity/Transaction";
-import { TFilters } from "../../../../../../../server/src/core/repository/ReportRepository.interface";
+import { TFilters, TAnalyticByCategoryOutput } from "../../../../../../../server/src/core/repository/ReportRepository.interface";
 import BlankCard from "../../shared/BlankCard";
 import BlankTable from "../../shared/BlankTable";
 import TableCustomToolbar from "./TableCustomToolbar";
 import MoreInformations from "./MoreInformations";
 import Throttle from "@/utils/Throttle";
 import Category from "../../../../../../../server/src/core/entity/Category";
+import AnalyticByCategoryStackedBarChart from './AnalyticByCategoryStackedBarChart';
+import Transaction, { TransactionCurrency } from "../../../../../../../server/src/core/entity/Transaction";
 
 const throttle = new Throttle(1000);
 
@@ -21,6 +22,7 @@ const Table = () => {
   const reportService = new ReportService();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [analyticCategories,  setAnalyticCategories] = useState<TAnalyticByCategoryOutput>({});
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [paginationModel, setPaginationModel] = useState({
@@ -34,6 +36,7 @@ const Table = () => {
   useEffect(() => {
     throttle.execute(getReportCount);
     throttle.execute(getReport, paginationModel.page, paginationModel.pageSize);
+    throttle.execute(getReportAnalyticByCategory);
   }, [filters]);
 
   useEffect(() => {
@@ -60,6 +63,16 @@ const Table = () => {
       if (!filters) return;
       const result = await reportService.findAllCount({ ...filters });
       setRowCount(result);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getReportAnalyticByCategory = async () => {
+    try {
+      if (!filters) return;
+      const result = await reportService.findAnalyticByCategory({ ...filters });
+      setAnalyticCategories(result);
     } catch (err) {
       console.error(err);
     }
@@ -150,6 +163,7 @@ const Table = () => {
           { id: "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT" },
         )}`}
       >
+          <AnalyticByCategoryStackedBarChart categories={analyticCategories} currency={filters?.currency as TransactionCurrency} />
         <BlankTable
           key="transaction_report_table"
           columns={columns}

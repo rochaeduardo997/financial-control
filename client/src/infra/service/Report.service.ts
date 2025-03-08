@@ -1,7 +1,7 @@
 import IHTTP from "../http/HTTP.interface";
 import HTTP from "../http/HTTP.provider";
 import Transaction from "../../../../server/src/core/entity/Transaction";
-import { TFilters } from "../../../../server/src/core/repository/ReportRepository.interface";
+import { TFilters, TAnalyticByCategoryOutput } from "../../../../server/src/core/repository/ReportRepository.interface";
 
 class ReportService {
   private API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -16,6 +16,19 @@ class ReportService {
     try {
       const { data } = await this.httpRequest.post(
         `${this.API_URL}/transactions/report/count/all`,
+        { ...filters },
+      );
+      return data.result;
+    } catch (err: any) {
+      console.error(err);
+      throw new Error();
+    }
+  }
+
+  async findAnalyticByCategory(filters: TFilters): Promise<TAnalyticByCategoryOutput> {
+    try {
+      const { data } = await this.httpRequest.post(
+        `${this.API_URL}/transactions/report/analytic/category`,
         { ...filters },
       );
       return data.result;
