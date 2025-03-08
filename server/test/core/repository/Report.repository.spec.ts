@@ -63,7 +63,7 @@ async function createTransactions(rFactory: RepositoryFactory) {
 }
 
 describe("success", () => {
-  test("find all transactions filtering by currency", async () => {
+  test("count all transactions filtering by currency", async () => {
     const filters: TFilters = {
       start: new Date("2021-01-01"),
       end: new Date("2023-01-01"),
@@ -73,7 +73,7 @@ describe("success", () => {
     expect(result).toBe(1);
   });
 
-  test("find all transactions filtering only by date(start and end)", async () => {
+  test("count all transactions filtering only by date(start and end)", async () => {
     const filters: TFilters = {
       start: new Date("2021-01-01"),
       end: new Date("2023-01-01"),
@@ -165,6 +165,19 @@ describe("success", () => {
     };
     const result = await reportRepository.getAllBy(users[0].id, filters);
     expect(result).toHaveLength(0);
+  });
+
+  test("count by category filtering only by date(start and end)", async () => {
+    const filters: TFilters = {
+      start: new Date("2021-01-01"),
+      end: new Date("2023-01-01"),
+    };
+    const result = await reportRepository.getAnalyticByCategory(users[0].id, filters);
+    const expected = {
+      [categories[0].name]: 24,
+      [categories[1].name]: 25,
+    };
+    expect(result).toEqual(expected);
   });
 });
 

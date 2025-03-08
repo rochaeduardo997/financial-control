@@ -72,7 +72,7 @@ dotenv.config({ path: __dirname + "/./../.env" });
         login: user.username,
         password: user.password,
       });
-    } catch (_) {}
+    } catch (err: any) {console.log(err)}
   }
 
   httpAdapter.init();

@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import Transaction from "../../../core/entity/Transaction";
 import IReportRepository, {
-  TFilters,
+  TFilters, TAnalitycByCategoryOutput
 } from "../../../core/repository/ReportRepository.interface";
 import ICategoryRepository from "../../../core/repository/CategoryRepository.interface";
 import CategoryRepository from "./Category.repository";
@@ -22,14 +22,46 @@ export default class ReportRepository implements IReportRepository {
 
   async getAllCountBy(userId: string, filters: TFilters): Promise<number> {
     try {
-      const [[total]]: any = await this.getTransactions(
-        0,
-        0,
+      const where = await this.prepareWhere(
         filters,
         userId,
         true,
       );
-      return +total?.total || 0;
+      const [[{total}]]: any = await this.sequelize.query({
+        query: `
+          SELECT COUNT(DISTINCT(t.id)) AS 'total'
+          ${this.TABLE_JOINS} ${where}
+        `,
+        values: [],
+      });
+      return +total || 0;
+    } catch (err: any) {
+      console.error(err);
+      throw new Error(
+        err?.errors?.[0]?.message ||
+          err.message ||
+          "failed on get transactions count",
+      );
+    }
+  }
+
+  async getAnalyticByCategory(userId: string, filters: TFilters): Promise<TAnalitycByCategoryOutput> {
+    try {
+      const where = await this.prepareWhere(
+        filters,
+        userId,
+      );
+      const [queryResult]: any = await this.sequelize.query({
+        query: `
+          SELECT c.name AS 'category', SUM(t.value) AS 'value'
+          ${this.TABLE_JOINS} ${where}
+          GROUP BY c.name
+        `,
+        values: [],
+      });
+      const result: TAnalitycByCategoryOutput = {};
+      for(const qR of queryResult) result[qR.category] = qR.value;
+      return result;
     } catch (err: any) {
       console.error(err);
       throw new Error(
@@ -50,12 +82,19 @@ export default class ReportRepository implements IReportRepository {
     const offset = (page - 1) * limit;
 
     try {
-      const [transactions] = await this.getTransactions(
-        limit,
-        offset,
+      const where = await this.prepareWhere(
         filters,
         userId,
       );
+      const [transactions] = await this.sequelize.query({
+        query: `
+        SELECT DISTINCT(t.id), t.*
+        ${this.TABLE_JOINS} ${where}
+        ORDER BY t.createdAt ASC
+        LIMIT ? OFFSET ?
+      `,
+        values: [limit, offset],
+      });
       const [categoriesId] = await this.getCategoriesId();
 
       const categories = await this.categoryRepository.getAllBy(userId);
@@ -77,9 +116,7 @@ export default class ReportRepository implements IReportRepository {
     }
   }
 
-  private async getTransactions(
-    limit: number,
-    offset: number,
+  private async prepareWhere(
     filters: TFilters,
     userId: string,
     isCount: boolean = false,
@@ -90,24 +127,7 @@ export default class ReportRepository implements IReportRepository {
     `;
 
     where = this.makeFilters(where, filters);
-    if (isCount)
-      return this.sequelize.query({
-        query: `
-          SELECT COUNT(DISTINCT(t.id)) AS 'total'
-          ${this.TABLE_JOINS} ${where}
-        `,
-        values: [],
-      });
-    else
-      return this.sequelize.query({
-        query: `
-        SELECT DISTINCT(t.id), t.*
-        ${this.TABLE_JOINS} ${where}
-        ORDER BY t.createdAt ASC
-        LIMIT ? OFFSET ?
-      `,
-        values: [limit, offset],
-      });
+    return where;
   }
 
   private makeFilters(where: string, filters: TFilters) {
