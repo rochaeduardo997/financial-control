@@ -217,4 +217,21 @@ describe("success", () => {
     expect(body?.result).toHaveLength(0);
     expect(status).toBe(200);
   });
+
+  test("find empty registers when filtering by dates that doesnt has register", async () => {
+    const { status, body } = await request
+      .post("/api/v1/transactions/report/analytic/category")
+      .set("Authorization", token)
+      .send({
+        ...input,
+        start: new Date("2021-01-01"),
+        end: new Date("2023-01-01"),
+      });
+    const expected = {
+      [categories[0].name]: 24,
+      [categories[1].name]: 25,
+    };
+    expect(body?.result).toEqual(expected);
+    expect(status).toBe(200);
+  });
 });
