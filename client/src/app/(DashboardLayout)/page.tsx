@@ -1,13 +1,36 @@
 "use client";
+import DashboardService from "@/infra/service/Dashboard.service";
 import { Typography, Divider, Box, Grid2 as Grid } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import BlankCard from "./components/shared/BlankCard";
 import { useIntl } from "react-intl";
 import BlankPieChart from "./components/shared/BlankPieChart";
 import BlankBarChart from "./components/shared/BlankBarChart";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
   const intl = useIntl();
+  const dashboardService = new DashboardService();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [inOut, setInOut] = useState({in: 0, out: 0});
+
+  useEffect(() => {
+    if(inOut.in > 0 || inOut.out > 0) return;
+    getInOut();
+  }, []);
+
+  const getInOut = async () => {
+    try {
+      setIsLoading(true);
+      const result = await dashboardService.getDashboardInOutTotals(new Date().getFullYear());
+      setInOut(result);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <PageContainer title="Dashboard">
@@ -16,8 +39,12 @@ const Dashboard = () => {
       >
         <Typography component="div" variant="h5" sx={{ paddingBottom: 3 }}>{`${intl.formatMessage({ id: "DASHBOARD.CARD.IN_OUT" })}`}</Typography>
         <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 6 }}><BlankBarChart series={[{ data: [1000, 700]}]} categories={['Entrada', 'Saída']} currency={'R$'} /></Grid>
-          <Grid size={{ xs: 12, md: 6 }}><BlankPieChart series={[1000, 700]} labels={['Entrada', 'Saída']} currency={'R$'} /></Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <BlankBarChart series={[{ data: [inOut.in, inOut.out]}]} categories={['Entrada', 'Saída']} currency={'R$'} />
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <BlankPieChart series={[inOut.in, inOut.out]} labels={['Entrada', 'Saída']} currency={'R$'} />
+          </Grid>
         </Grid>
 
         <Divider sx={{ m: 2 }} />

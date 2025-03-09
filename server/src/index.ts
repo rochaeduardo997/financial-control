@@ -18,6 +18,7 @@ import {
   TransactionDirection,
 } from "./core/entity/Transaction";
 import ReportController from "./infra/controller/transaction/Report.controller";
+import DashboardController from "./infra/controller/transaction/Dashboard.controller";
 dotenv.config({ path: __dirname + "/./../.env" });
 
 (async () => {
@@ -39,6 +40,7 @@ dotenv.config({ path: __dirname + "/./../.env" });
   new CategoryController(httpAdapter, cRepository);
   new TransactionController(httpAdapter, tRepository, cRepository);
   new ReportController(httpAdapter, rRepository);
+  new DashboardController(httpAdapter, rRepository);
 
   if (nodeEnv !== "prod") {
     const [user] = UserSeed(1);

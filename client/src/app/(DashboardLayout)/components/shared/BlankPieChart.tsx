@@ -27,11 +27,19 @@ export default function BlankPieChart({ series, labels, currency }: TProps){
     }
   });
 
+  React.useEffect(() => {
+    setState((prev) => ({
+      ...prev, 
+      series,
+      options: { ...prev.options, labels }
+    }));
+  }, [series, labels]);
+
   return (
     <div>
       <div id="chart">
-          <ReactApexChart options={state.options} series={state.series} type="pie" height={250} />
-        </div>
+        <ReactApexChart options={state.options} series={state.series} type="pie" height={250} />
+      </div>
       <div id="html-dist"></div>
     </div>
   );
