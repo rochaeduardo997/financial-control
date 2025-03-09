@@ -14,8 +14,10 @@ export type TFilters = {
 };
 
 export type TAnalyticByCategoryOutput = { [key: string]: number };
+export type TDashboardInOut = { in: number; out: number; };
 
 export default interface IReportRepository {
+  getDashboardInOutTotals(userId: string, year: number): Promise<TDashboardInOut>;
   getAllCountBy(userId: string, filters: TFilters): Promise<number>;
   getAnalyticByCategory(userId: string, filters: TFilters): Promise<TAnalyticByCategoryOutput>;
   getAllBy(

@@ -179,6 +179,27 @@ describe("success", () => {
     };
     expect(result).toEqual(expected);
   });
+
+  test("get dashboard in/out totals", async () => {
+    const filters: TFilters = { start: new Date("2021-01-01"), end: new Date("2023-01-01") };
+    const userId = users[0].id;
+    const result = await reportRepository.getDashboardInOutTotals(userId, 2022);
+    const expected = {
+      in: transactions.reduce((acc, curr) => {
+        const isOut = curr.direction === TransactionDirection.OUT;
+        const isntSameUser = curr.userId !== userId;
+        if(isOut || isntSameUser) return acc;
+        else return acc + curr.value;
+      }, 0),
+      out: transactions.reduce((acc, curr) => {
+        const isIn = curr.direction === TransactionDirection.IN;
+        const isntSameUser = curr.userId !== userId;
+        if(isIn || isntSameUser) return acc;
+        else return acc + curr.value;
+      }, 0),
+    };
+    expect(result).toEqual(expected);
+  });
 });
 
 describe("fail", () => {});

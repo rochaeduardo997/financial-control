@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import Transaction from "../../../core/entity/Transaction";
 import IReportRepository, {
-  TFilters, TAnalyticByCategoryOutput
+  TFilters, TAnalyticByCategoryOutput, TDashboardInOut
 } from "../../../core/repository/ReportRepository.interface";
 import ICategoryRepository from "../../../core/repository/CategoryRepository.interface";
 import CategoryRepository from "./Category.repository";
@@ -18,6 +18,33 @@ export default class ReportRepository implements IReportRepository {
       FULL JOIN transactions t ON tcr.fk_transaction_id = t.id
       FULL JOIN categories c ON tcr.fk_category_id = c.id
     `;
+  }
+
+  async getDashboardInOutTotals(userId: string, year: number): Promise<TDashboardInOut> {
+    try {
+      const where = await this.prepareWhere(
+        { start: new Date(`01-01-${year}`), end: new Date(`01-01-${++year}`) },
+        userId,
+        true,
+      );
+      const [queryResult]: any = await this.sequelize.query({
+        query: `
+          SELECT DISTINCT(t.id), t.direction AS 'direction', t.value
+          ${this.TABLE_JOINS} ${where}
+        `,
+        values: [],
+      });
+      const result: any = {in: 0, out: 0};
+      for(const qR of queryResult) result[qR.direction] += qR.value;
+      return result;
+    } catch (err: any) {
+      console.error(err);
+      throw new Error(
+        err?.errors?.[0]?.message ||
+          err.message ||
+          "failed on get transactions count",
+      );
+    }
   }
 
   async getAllCountBy(userId: string, filters: TFilters): Promise<number> {
