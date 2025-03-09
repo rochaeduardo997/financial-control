@@ -42,9 +42,7 @@ const TableCustomToolbar = ({ onFilter, filters, _categories }: Props) => {
   const [start, setStart] = useState(filters?.start || new Date());
   const [end, setEnd] = useState(filters?.end || new Date());
 
-  const [direction, setDirection] = useState<TransactionDirection | undefined>(
-    filters?.direction,
-  );
+  const [direction, setDirection] = useState<TransactionDirection>(filters?.direction || TransactionDirection.IN);
   const [names, setNames] = useState<string[]>(filters?.names || []);
   const [valueBetween, setValueBetween] = useState<number[]>(
     filters?.valueBetween || [0, 0],
@@ -173,13 +171,6 @@ const TableCustomToolbar = ({ onFilter, filters, _categories }: Props) => {
                             setDirection(e.target.value as TransactionDirection)
                           }
                         >
-                          <MenuItem value="">
-                            <em>
-                              {intl.formatMessage({
-                                id: "GENERAL.DOESNT_SELECTED",
-                              })}
-                            </em>
-                          </MenuItem>
                           <MenuItem value={TransactionDirection.IN}>
                             {intl.formatMessage({
                               id: "TRANSACTION.TABLE.DIRECTION.VALUE.IN",

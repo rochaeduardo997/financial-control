@@ -7,7 +7,7 @@ export default function AnalyticByCategoryStackedBarChart({ categories, currency
   const [state, setState] = React.useState({ 
     series: [{ data: [] }],
     options: { 
-      chart: { type: 'bar', height: 350 }, 
+      chart: { type: 'bar', height: 350, toolbar: { show: false }}, 
       plotOptions: { 
         bar: { 
           distributed: true,
@@ -16,8 +16,22 @@ export default function AnalyticByCategoryStackedBarChart({ categories, currency
           horizontal: true, 
         } 
       }, 
-      dataLabels: { enabled: true }, 
-      xaxis: { categories: []},
+      dataLabels: { enabled: true, formatter: (x: number) => `${currency}${x}` }, 
+      grid: {
+        show: false,
+      },
+      xaxis: {
+        categories: [], 
+        labels: { show: false },
+        axisBorder: { show: false },
+        axisTicks: { show: false }
+      },
+      tooltip: {
+        enabled: true,
+        y: {
+          formatter: (x: number) => `${currency}${x}`
+        }
+      },
       colors: ['#33b2df', '#546E7A', '#d4526e', '#13d8aa', '#A5978B', '#2b908f', '#f9a3a4', '#90ee7e', '#f48024', '#69d2e7' ],
     }
   });

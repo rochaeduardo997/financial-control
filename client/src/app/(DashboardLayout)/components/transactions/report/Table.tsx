@@ -1,9 +1,9 @@
 "use client";
 import ReportService from "@/infra/service/Report.service";
-import { Box } from "@mui/material";
+import { Box, Grid2 as Grid } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DayJS from "dayjs";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { TFilters, TAnalyticByCategoryOutput } from "../../../../../../../server/src/core/repository/ReportRepository.interface";
 import BlankCard from "../../shared/BlankCard";
@@ -13,6 +13,7 @@ import MoreInformations from "./MoreInformations";
 import Throttle from "@/utils/Throttle";
 import Category from "../../../../../../../server/src/core/entity/Category";
 import AnalyticByCategoryStackedBarChart from './AnalyticByCategoryStackedBarChart';
+import AnalyticByCategoryPieChart from './AnalyticByCategoryPieChart';
 import Transaction, { TransactionCurrency } from "../../../../../../../server/src/core/entity/Transaction";
 
 const throttle = new Throttle(1000);
@@ -22,7 +23,7 @@ const Table = () => {
   const reportService = new ReportService();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [analyticCategories,  setAnalyticCategories] = useState<TAnalyticByCategoryOutput>({});
+  const [analyticCategories,  setAnalyticCategories] = useState<TAnalyticByCategoryOutput | undefined>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [paginationModel, setPaginationModel] = useState({
@@ -156,6 +157,26 @@ const Table = () => {
     },
   ];
 
+  const renderAnalytics = () => {
+    if(!analyticCategories) return <></>;
+    return (
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <AnalyticByCategoryStackedBarChart
+            categories={analyticCategories} 
+            currency={filters?.currency as TransactionCurrency}
+        />
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <AnalyticByCategoryPieChart
+            categories={analyticCategories} 
+            currency={filters?.currency as TransactionCurrency}
+          />
+        </Grid>
+      </Grid>
+    );
+  }
+
   return (
     <Box>
       <BlankCard
@@ -163,7 +184,6 @@ const Table = () => {
           { id: "NAVBAR.ITEM.TRANSACTIONS.TITLE.REPORT" },
         )}`}
       >
-          <AnalyticByCategoryStackedBarChart categories={analyticCategories} currency={filters?.currency as TransactionCurrency} />
         <BlankTable
           key="transaction_report_table"
           columns={columns}
@@ -173,14 +193,17 @@ const Table = () => {
           rowCount={rowCount}
           isLoading={isLoading}
           CustomToolbarContent={
-            <TableCustomToolbar
-              onFilter={(filters: TFilters, cs: Category[]) => {
-                setCategories(cs);
-                setFilters(filters);
-              }}
-              _categories={categories}
-              filters={filters}
-            />
+            <Fragment>
+              <TableCustomToolbar
+                onFilter={(filters: TFilters, cs: Category[]) => {
+                  setCategories(cs);
+                  setFilters(filters);
+                }}
+                _categories={categories}
+                filters={filters}
+              />
+              {renderAnalytics()}
+            </Fragment>
           }
         />
       </BlankCard>

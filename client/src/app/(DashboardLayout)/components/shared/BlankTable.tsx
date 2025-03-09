@@ -4,7 +4,6 @@ import {
   DataGrid,
   GridColDef,
   GridFeatureMode,
-  GridToolbarContainer,
 } from "@mui/x-data-grid";
 import { Dispatch, ElementType, SetStateAction } from "react";
 import { useIntl } from "react-intl";
@@ -40,7 +39,7 @@ const BlankTable = ({
   function CustomToolbar() {
     if (CustomToolbarContent)
       return (
-        <GridToolbarContainer>{CustomToolbarContent}</GridToolbarContainer>
+        <div>{CustomToolbarContent}</div>
       );
 
     return <></>;
