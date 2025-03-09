@@ -12,7 +12,7 @@ import TableCustomToolbar from "./TableCustomToolbar";
 import MoreInformations from "./MoreInformations";
 import Throttle from "@/utils/Throttle";
 import Category from "../../../../../../../server/src/core/entity/Category";
-import AnalyticByCategoryStackedBarChart from './AnalyticByCategoryStackedBarChart';
+import AnalyticByCategoryBarChart from './AnalyticByCategoryBarChart';
 import AnalyticByCategoryPieChart from './AnalyticByCategoryPieChart';
 import Transaction, { TransactionCurrency } from "../../../../../../../server/src/core/entity/Transaction";
 
@@ -162,7 +162,7 @@ const Table = () => {
     return (
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 6 }}>
-          <AnalyticByCategoryStackedBarChart
+          <AnalyticByCategoryBarChart
             categories={analyticCategories} 
             currency={filters?.currency as TransactionCurrency}
         />
